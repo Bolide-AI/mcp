@@ -1,0 +1,277 @@
+/**
+ * Launch Tools - Tools for launching and stopping companion app
+ *
+ * This module provides tools for launching and stopping companion app.
+ *
+ * Responsibilities:
+ * - Launching companion app for marketing project capture
+ * - Stopping running companion app instances
+ */
+
+import { z } from 'zod';
+import { log } from '../utils/logger.js';
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { ToolResponse } from '../types/common.js';
+import { executeCommand, execPromise } from '../utils/command.js';
+import {
+  COMPANION_APP_NAME,
+  COMPANION_APP_PATH,
+  COMPANION_APP_CONTENTS_PATH,
+} from '../utils/constants.js';
+
+export function registerLaunchCompanionAppTool(server: McpServer): void {
+  server.tool(
+    'launch_companion_app',
+    `Launches the companion app for capturing screenshots and videos. IMPORTANT: Unless already created in current session, you MUST create artifact directory before launching the companion app to provide the artifactsDirectory parameter. Example: launch_companion_app({ artifactsDirectory: '/path/to/your/workspace/marketing/artifacts/directory' })'`,
+    {
+      artifactsDirectory: z
+        .string()
+        .describe(
+          'Directory where screenshot and video artifacts will be saved. Must be a valid full directory path, e.g. /Users/yourname/Documents/workspace/marketing/artifacts/<feature>-<datetime>',
+        ),
+    },
+    async (params): Promise<ToolResponse> => {
+      log('info', 'Launching companion app');
+
+      try {
+        const artifactsDir = params.artifactsDirectory;
+
+        const command = [COMPANION_APP_CONTENTS_PATH, '-p', artifactsDir];
+        const result = await executeCommand(command, 'Launch companion app', true, undefined, true);
+
+        if (!result.success) {
+          return {
+            content: [
+              {
+                type: 'text',
+                text: `Launch companion app failed: ${result.error}`,
+              },
+            ],
+          };
+        }
+
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `Companion app launched successfully with output directory: ${artifactsDir} `,
+            },
+            {
+              type: 'text',
+              text: `The companion app will:
+  1. Allow you to start / stop screenshot capture for marketing artifacts
+2. Allow you to start / stop video recording for marketing artifacts
+3. Save all marketing artifacts to: ${artifactsDir}
+
+Next Steps:
+  1. User may request to stop the companion app at any time`,
+            },
+          ],
+        };
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        log('error', `Error during launch companion app operation: ${errorMessage} `);
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `Launch companion app failed: ${errorMessage} `,
+            },
+          ],
+        };
+      }
+    },
+  );
+}
+
+export function registerStopCompanionAppTool(server: McpServer): void {
+  server.tool(
+    'stop_companion_app',
+    'Stops any running instances of the simctl.app companion app. IMPORTANT: ALWAYS use this tool before launching a new instance of the companion app.',
+    {},
+    async (): Promise<ToolResponse> => {
+      log('info', 'Stopping companion app');
+
+      const results: string[] = [];
+
+      try {
+        const checkProcesses = async (): Promise<string[]> => {
+          try {
+            const result = await execPromise(`pgrep -l "${COMPANION_APP_NAME}"`, {
+              encoding: 'utf8',
+            });
+            return result.stdout
+              .trim()
+              .split('\n')
+              .filter((line) => line.length > 0);
+          } catch {
+            return [];
+          }
+        };
+
+        const runningProcessesBefore = await checkProcesses();
+
+        if (runningProcessesBefore.length === 0) {
+          results.push('No running simctl processes found - nothing to stop');
+          return {
+            content: [
+              {
+                type: 'text',
+                text: results.join('\n'),
+              },
+            ],
+          };
+        }
+
+        results.push(
+          `Found ${runningProcessesBefore.length} running simctl processes: ${runningProcessesBefore.join(', ')}`,
+        );
+
+        let processesRemaining = await checkProcesses();
+
+        if (processesRemaining.length > 0) {
+          try {
+            await execPromise(`pkill -f "${COMPANION_APP_NAME}"`, { encoding: 'utf8' });
+            results.push('Attempted to kill processes using pkill');
+            await new Promise((resolve) => setTimeout(resolve, 500));
+            processesRemaining = await checkProcesses();
+          } catch (error) {
+            results.push(`pkill command completed`);
+          }
+        }
+
+        if (processesRemaining.length > 0) {
+          try {
+            await execPromise(`osascript -e 'tell application "${COMPANION_APP_NAME}" to quit'`, {
+              encoding: 'utf8',
+            });
+            results.push('Attempted to quit application using osascript');
+            await new Promise((resolve) => setTimeout(resolve, 500));
+            processesRemaining = await checkProcesses();
+          } catch (error) {
+            results.push(`osascript quit command completed`);
+          }
+        }
+
+        if (processesRemaining.length > 0) {
+          try {
+            await execPromise(`pkill -9 -f "${COMPANION_APP_PATH}"`, { encoding: 'utf8' });
+            results.push('Attempted force kill using full app path');
+            await new Promise((resolve) => setTimeout(resolve, 500));
+            processesRemaining = await checkProcesses();
+          } catch (error) {
+            results.push(`Force kill command completed`);
+          }
+        }
+
+        const runningProcessesAfter = await checkProcesses();
+
+        if (runningProcessesAfter.length === 0) {
+          results.push('All simctl processes successfully stopped');
+        } else {
+          results.push(
+            `Warning: ${runningProcessesAfter.length} simctl processes still running: ${runningProcessesAfter.join(', ')}`,
+          );
+        }
+
+        return {
+          content: [
+            {
+              type: 'text',
+              text: results.join('\n'),
+            },
+          ],
+        };
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        log('error', `Error during stop simctl app operation: ${errorMessage}`);
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `Stop simctl app failed: ${errorMessage}\n${results.join('\n')}`,
+            },
+          ],
+        };
+      }
+    },
+  );
+}
+
+export function registerInstallBrewAndFfmpegTool(server: McpServer): void {
+  server.tool(
+    'install_brew_and_ffmpeg',
+    'Installs Homebrew package manager and then installs FFmpeg via Homebrew. This tool handles the complete setup process for video processing dependencies.',
+    {},
+    async (): Promise<ToolResponse> => {
+      log('info', 'Installing Homebrew and FFmpeg');
+
+      try {
+        log('info', 'Step 1: Installing Homebrew...');
+
+        const brewInstallCommand = [
+          '/bin/bash',
+          '-c',
+          'curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash',
+        ];
+
+        const brewResult = await executeCommand(brewInstallCommand, 'Install Homebrew', false);
+
+        if (!brewResult.success) {
+          return {
+            content: [
+              {
+                type: 'text',
+                text: `Homebrew installation failed: ${brewResult.error}`,
+              },
+            ],
+          };
+        }
+
+        log('info', 'Step 2: Installing FFmpeg via Homebrew...');
+
+        const ffmpegInstallCommand = ['brew', 'install', 'ffmpeg'];
+        const ffmpegResult = await executeCommand(ffmpegInstallCommand, 'Install FFmpeg');
+
+        if (!ffmpegResult.success) {
+          return {
+            content: [
+              {
+                type: 'text',
+                text: `FFmpeg installation failed: ${ffmpegResult.error}. Homebrew was installed successfully.`,
+              },
+            ],
+          };
+        }
+
+        return {
+          content: [
+            {
+              type: 'text',
+              text: 'Successfully installed Homebrew and FFmpeg!',
+            },
+            {
+              type: 'text',
+              text: `Installation completed:
+1. ✅ Homebrew package manager installed
+2. ✅ FFmpeg video processing tool installed
+
+You can now use FFmpeg for video processing tasks. The system is ready for video capture and processing workflows.`,
+            },
+          ],
+        };
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        log('error', `Error during Homebrew and FFmpeg installation: ${errorMessage}`);
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `Installation failed: ${errorMessage}`,
+            },
+          ],
+        };
+      }
+    },
+  );
+}

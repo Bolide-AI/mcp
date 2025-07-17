@@ -1,0 +1,71 @@
+{
+  "name": "dataroutemcp",
+  "version": "1.10.4",
+  "iOSTemplateVersion": "v1.0.8",
+  "macOSTemplateVersion": "v1.0.5",
+  "main": "build/index.js",
+  "type": "module",
+  "bin": {
+    "dataroutemcp": "build/index.js",
+    "dataroutemcp-diagnostic": "build/diagnostic-cli.js"
+  },
+  "scripts": {
+    "build": "node -e \"const fs = require('fs'); const pkg = require('./package.json'); fs.writeFileSync('src/version.ts', \\`export const version = '\\${pkg.version}';\\nexport const iOSTemplateVersion = '\\${pkg.iOSTemplateVersion}';\\nexport const macOSTemplateVersion = '\\${pkg.macOSTemplateVersion}';\\n\\`)\" && tsup && cp -r template build/",
+    "build:watch": "npm run build && tsup --watch",
+    "bundle:axe": "scripts/bundle-axe.sh",
+    "lint": "eslint 'src/**/*.{js,ts}'",
+    "lint:fix": "eslint 'src/**/*.{js,ts}' --fix",
+    "format": "prettier --write 'src/**/*.{js,ts}'",
+    "format:check": "prettier --check 'src/**/*.{js,ts}'",
+    "inspect": "npx @modelcontextprotocol/inspector node build/index.js",
+    "diagnostic": "node build/diagnostic-cli.js"
+  },
+  "files": [
+    "build",
+    "bundled"
+  ],
+  "keywords": [
+    "dataroutemcp",
+    "mcp",
+    "modelcontextprotocol",
+    "marketing",
+    "automation"
+  ],
+  "author": "Data Route LLC",
+  "license": "MIT",
+  "description": "DataRouteMCP is a ModelContextProtocol server that provides tools for marketing automation.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dataroute/DataRouteMCP.git"
+  },
+  "homepage": "https://www.dataroute.com/",
+  "bugs": {
+    "url": "https://github.com/dataroute/DataRouteMCP/issues"
+  },
+  "dependencies": {
+    "@google/genai": "^1.9.0",
+    "@modelcontextprotocol/sdk": "^1.15.1",
+    "@sentry/cli": "^2.47.1",
+    "@sentry/node": "^9.39.0",
+    "openai": "^5.9.2",
+    "uuid": "^11.1.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@bacons/xcode": "^1.0.0-alpha.24",
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.31.0",
+    "@types/node": "^22.16.4",
+    "@typescript-eslint/eslint-plugin": "^8.37.0",
+    "@typescript-eslint/parser": "^8.37.0",
+    "eslint": "^9.31.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.5.1",
+    "prettier": "^3.6.2",
+    "ts-node": "^10.9.2",
+    "tsup": "^8.5.0",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.37.0",
+    "xcode": "^3.0.1"
+  }
+}
