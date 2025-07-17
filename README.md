@@ -15,9 +15,13 @@ DataRouteMCP is a comprehensive ModelContextProtocol (MCP) server that provides 
 - 📊 **Asset Management** - Organize and manage marketing assets
 - 🛠️ **Diagnostic Tools** - System validation and troubleshooting
 
-## Quick Start
+## Getting Started
 
-### Installation
+### Quick Start (NPM Package)
+
+For quick testing without local builds:
+
+#### Installation
 
 ```bash
 npm install -g dataroutemcp
@@ -29,9 +33,9 @@ Or use with npx (recommended):
 npx dataroutemcp@latest
 ```
 
-### Configuration
+#### Configuration
 
-Configure your MCP client (Cursor, Windsurf, etc.) with the following:
+Configure your MCP client with the following:
 
 ```json
 {
@@ -40,27 +44,104 @@ Configure your MCP client (Cursor, Windsurf, etc.) with the following:
       "command": "npx",
       "args": ["-y", "dataroutemcp@latest"],
       "env": {
-        "GOOGLE_API_KEY": "your-gemini-api-key",
-        "PERPLEXITY_API_KEY": "your-perplexity-api-key",
+        "DATAROUTEMCP_GROUP_RESEARCH": "true",
         "OPENAI_API_KEY": "your-openai-api-key",
-        "ELEVENLABS_API_KEY": "your-elevenlabs-api-key",
-        "DATAROUTE_API_TOKEN": "your-dataroute-api-token"
+        "PERPLEXITY_API_KEY": "your-perplexity-api-key"
       }
     }
   }
 }
 ```
 
+### Development Setup (Local Build)
+
+For development or local builds, follow these detailed steps:
+
+#### 1. Install Prerequisites
+
+**Install Node.js 23.11.1**
+```bash
+# Download and install from https://nodejs.org/en/download
+```
+
+**Clone the repositories**
+```bash
+git clone https://github.com/DataRoute-HQ/dataroute-mcp
+git clone https://github.com/DataRoute-HQ/dataroute-companion
+```
+
+#### 2. Build and Install Companion App
+
+**Build Companion App in Xcode:**
+1. Open the project in Xcode
+2. In Xcode menu select **Product → Archive**
+3. Wait for the build to complete
+4. In the opened window click **Distribute App → Debugging**
+5. Wait for packaging
+6. In the opened window click **Export** and select any convenient directory
+7. Open the created directory in Finder and copy the Companion App to Applications (where all applications are located)
+
+#### 3. Build the MCP Server
+
+```bash
+# In the directory of the cloned repository
+npm install && npm run build
+```
+
+#### 4. Configure MCP in Cursor
+
+1. In Cursor menu select **Cursor → Settings → Cursor Settings**
+2. In the opened window select **Tools & Integrations**
+3. Click **New MCP Server**
+4. Insert the MCP server configuration, replacing:
+   - `<PATH TO MCP DIRECTORY>` with the path to the MCP directory
+   - `<DATAROUTE_API_TOKEN>` with your Data Route API key (can be generated at [here](http://dataroute-web-production-kcumuv.laravel.cloud/))
+
+```json
+{
+  "mcpServers": {
+    "dataroutemcp-dev": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "--inspect=9999",
+        "<PATH TO MCP DIRECTORY>/build/index.js"
+      ],
+      "env": {
+        "DATAROUTEMCP_DEBUG": "true",
+        "DATAROUTE_API_TOKEN": "<GEMINI API KEY HERE>"
+      }
+    }
+  }
+}
+```
+
+5. Make sure the workspace is open in Cursor
+6. Launch the application in the simulator
+
+### Start Using Tools
+
+```typescript
+// Create a project
+scaffold_marketing_project()
+
+// Perform research
+use_openai_deep_research({ 
+  query: "AI trends in marketing automation 2024" 
+})
+
+// Analyze video content
+analyze_videos({ 
+  artifactName: "my-project-20240101",
+  videoNames: ["demo.mov"],
+  force: false
+})
+```
+
 ## Environment Variables
 
-### Required API Keys
-
-- **`GOOGLE_API_KEY`** - Required for AI-powered content generation tools
-- **`PERPLEXITY_API_KEY`** - Required for Perplexity AI research tools  
-- **`OPENAI_API_KEY`** - Required for OpenAI deep research tools
-- **`ELEVENLABS_API_KEY`** - Required for audio enhancement tools
-- **`DATAROUTE_API_TOKEN`** - Required for Reddit data fetching tools
-- **`DATAROUTE_API_URL`** - Optional, defaults to http://127.0.0.1:8000/api
+- **`DATAROUTE_API_TOKEN`** - Required
+- **`DATAROUTE_API_URL`** - Optional, defaults to https://dataroute-web-production-kcumuv.laravel.cloud/api
 
 ### Tool Configuration
 
@@ -76,7 +157,7 @@ DataRouteMCP provides **15 tools** across 7 categories:
 - `scaffold_marketing_project` - Create marketing project directory structure
 
 ### 📱 Utility Tools  
-- `launch_companion_app` - Launch simctl.app for marketing capture
+- `launch_companion_app` - Launch Companion App for marketing capture
 - `stop_companion_app` - Stop running companion app instances
 
 ### 🎯 Artifact Management
@@ -258,63 +339,7 @@ Enable only the tools you need to optimize performance:
 
 - **Node.js** 18+ (automatically handled by npx)
 - **ffmpeg** (required for GIF generation tools)
-
-### Companion App
-
-The marketing capture tools require the companion simctl.app:
-- **macOS**: Built-in support for screenshot and video capture
-- **iOS Template**: v1.0.8
-- **macOS Template**: v1.0.5
-
-## Getting Started
-
-### 1. Install Prerequisites
-
-```bash
-# Install ffmpeg (macOS)
-brew install ffmpeg
-
-# Or let DataRouteMCP install it automatically
-```
-
-### 2. Configure MCP Client
-
-Add DataRouteMCP to your MCP client configuration:
-
-```json
-{
-  "mcpServers": {
-    "DataRouteMCP": {
-      "command": "npx",
-      "args": ["-y", "dataroutemcp@latest"],
-      "env": {
-        "DATAROUTEMCP_GROUP_RESEARCH": "true",
-        "OPENAI_API_KEY": "your-openai-api-key",
-        "PERPLEXITY_API_KEY": "your-perplexity-api-key"
-      }
-    }
-  }
-}
-```
-
-### 3. Start Using Tools
-
-```typescript
-// Create a project
-scaffold_marketing_project()
-
-// Perform research
-use_openai_deep_research({ 
-  query: "AI trends in marketing automation 2024" 
-})
-
-// Analyze video content
-analyze_videos({ 
-  artifactName: "my-project-20240101",
-  videoNames: ["demo.mov"],
-  force: false
-})
-```
+- **Companion App**
 
 ## Troubleshooting
 
@@ -350,9 +375,8 @@ MIT © [Data Route LLC](https://www.dataroute.com/)
 
 ## Support
 
-- 🐛 [Report Issues](https://github.com/dataroute/DataRouteMCP/issues)
-- 📖 [Documentation](https://www.dataroute.com/)
-- 💬 [Support](https://github.com/dataroute/DataRouteMCP/discussions)
+- 🐛 [Report Issues](https://github.com/DataRoute-HQ/dataroute-mcp/issues)
+- 💬 [Support](https://github.com/DataRoute-HQ/dataroute-mcp/discussions)
 
 ---
 
