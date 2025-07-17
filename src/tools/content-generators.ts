@@ -4,7 +4,7 @@ import { join } from 'path';
 import { registerTool } from './common.js';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { log } from '../utils/logger.js';
-import { ValidationError } from '../utils/errors.js';
+import { APIError, ValidationError } from '../utils/errors.js';
 import {
   createPartFromUri,
   createUserContent,
@@ -116,20 +116,20 @@ async function fetchRedditPosts(params: FetchRedditPostsParams): Promise<{
       log('error', `Reddit API error: ${response.status} ${response.statusText} - ${errorText}`);
 
       if (response.status === 401) {
-        throw new ValidationError('Authentication failed. Please check your auth token.');
+        throw new APIError('Authentication failed. Please check your Reddit account connection.', 401);
       } else if (response.status === 404) {
-        throw new ValidationError(`Subreddit r/${subreddit} not found or is private.`);
+        throw new APIError(`Subreddit r/${subreddit} not found or is private.`, 404);
       } else if (response.status === 429) {
-        throw new ValidationError('Rate limit exceeded. Please try again later.');
+        throw new APIError('Rate limit exceeded. Please try again later.', 429);
       } else {
-        throw new ValidationError(`Failed to fetch Reddit posts: ${response.status} ${response.statusText}`);
+        throw new APIError(`Failed to fetch Reddit posts: ${errorText}`, response.status);
       }
     }
 
     const data = await response.json();
 
     if (!data.data || !Array.isArray(data.data)) {
-      throw new ValidationError('Invalid response format from Reddit API');
+      throw new APIError('Invalid response format from Reddit API');
     }
 
     log('info', `Successfully fetched ${data.data.length} posts from r/${subreddit}`);
@@ -139,29 +139,27 @@ async function fetchRedditPosts(params: FetchRedditPostsParams): Promise<{
       meta: data.meta,
     };
   } catch (error) {
-    if (error instanceof ValidationError) {
+    if (error instanceof ValidationError || error instanceof APIError) {
       throw error;
     }
 
     log('error', `Failed to fetch Reddit posts: ${error instanceof Error ? error.message : String(error)}`);
-    throw new ValidationError(`Failed to fetch Reddit posts: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new APIError(`Failed to fetch Reddit posts: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }
 
-
-
 async function enhanceAudioWithSpeech(audioPath: string): Promise<string> {
-  const webApiUrl = process.env.DATAROUTE_API_URL || DATAROUTE_API_URL;
-  const authToken = process.env.DATAROUTE_API_TOKEN;
-
-  if (!authToken) {
-    throw new ValidationError('DATAROUTE_API_TOKEN environment variable is required for audio enhancement');
-  }
-
   const enhancedAudioPath = audioPath.replace(/\.mp3$/, '_enhanced.mp3');
 
   try {
     log('info', `Enhancing audio ${audioPath} via web API`);
+
+    const webApiUrl = process.env.DATAROUTE_API_URL || DATAROUTE_API_URL;
+    const authToken = process.env.DATAROUTE_API_TOKEN;
+
+    if (!authToken) {
+      throw new ValidationError('DATAROUTE_API_TOKEN environment variable is required for audio enhancement');
+    }
 
     const formData = new FormData();
     const audioFile = new File([fs.readFileSync(audioPath)], audioPath.split('/').pop() || 'audio.mp3', {
@@ -183,20 +181,20 @@ async function enhanceAudioWithSpeech(audioPath: string): Promise<string> {
       log('error', `DATAROUTE API error: ${response.status} ${response.statusText} - ${errorText}`);
 
       if (response.status === 401) {
-        throw new ValidationError('Authentication failed. Please check your DATAROUTE API token.');
+        throw new APIError('Authentication failed. Please check your DATAROUTE API token.', 401);
       } else if (response.status === 422) {
-        throw new ValidationError('Audio file validation failed. Please check the file format and size.');
+        throw new APIError('Audio file validation failed. Please check the file format and size.', 422);
       } else if (response.status === 429) {
-        throw new ValidationError('Rate limit exceeded. Please try again later.');
+        throw new APIError('Rate limit exceeded. Please try again later.', 429);
       } else {
-        throw new ValidationError(`Failed to enhance audio: ${response.status} ${response.statusText}`);
+        throw new APIError(`Failed to enhance audio: ${errorText}`, response.status);
       }
     }
 
     const data = await response.json();
 
     if (!data.success) {
-      throw new ValidationError(`Audio enhancement failed: ${data.error || 'Unknown error'}`);
+      throw new APIError(`Audio enhancement failed: ${data.error || 'Unknown error'}`);
     }
 
     log('info', `Downloading enhanced audio from temporary URL: ${data.download_url}`);
@@ -204,7 +202,7 @@ async function enhanceAudioWithSpeech(audioPath: string): Promise<string> {
     const downloadResponse = await fetch(data.download_url);
 
     if (!downloadResponse.ok) {
-      throw new ValidationError('Failed to download enhanced audio file from temporary URL');
+      throw new APIError('Failed to download enhanced audio file from temporary URL', 404);
     }
 
     const enhancedAudioBuffer = await downloadResponse.arrayBuffer();
@@ -212,10 +210,16 @@ async function enhanceAudioWithSpeech(audioPath: string): Promise<string> {
 
     log('info', `Successfully enhanced audio: ${enhancedAudioPath}`);
     log('info', `Temporary URL expires in: ${data.url_expires_in}`);
+
     return enhancedAudioPath;
   } catch (error) {
     log('error', `Failed to enhance audio ${audioPath}: ${error}`);
-    throw new ValidationError(`Failed to enhance audio: ${error instanceof Error ? error.message : String(error)}`);
+
+    if (error instanceof ValidationError || error instanceof APIError) {
+      throw error;
+    }
+
+    throw new Error(`Failed to enhance audio: ${error instanceof Error ? error.message : String(error)}`);
   }
 }
 
@@ -273,12 +277,12 @@ async function analyzeVideos(params: AnalyzeVideosParams): Promise<
   const webApiUrl = process.env.DATAROUTE_API_URL || DATAROUTE_API_URL;
   const authToken = process.env.DATAROUTE_API_TOKEN;
 
-  if (!authToken) {
-    throw new ValidationError('DATAROUTE_API_TOKEN environment variable is required for video analysis via web API');
-  }
-
   try {
     log('info', `Calling web API for video analysis: ${webApiUrl}/tools/analyze-videos`);
+
+    if (!authToken) {
+      throw new ValidationError('DATAROUTE_API_TOKEN environment variable is required for video analysis via web API');
+    }
 
     const formData = new FormData();
 
@@ -313,24 +317,24 @@ async function analyzeVideos(params: AnalyzeVideosParams): Promise<
       log('error', `Web API error: ${response.status} ${response.statusText} - ${errorText}`);
 
       if (response.status === 401) {
-        throw new ValidationError('Authentication failed. Please check your auth token.');
+        throw new APIError('Authentication failed. Please check your auth token.', 401);
       } else if (response.status === 422) {
-        throw new ValidationError('Video file validation failed. Please check the file format and size.');
+        throw new APIError('Video file validation failed. Please check the file format and size.', 422);
       } else if (response.status === 429) {
-        throw new ValidationError('Rate limit exceeded. Please try again later.');
+        throw new APIError('Rate limit exceeded. Please try again later.', 429);
       } else {
-        throw new ValidationError(`Failed to analyze videos via web API: ${response.status} ${response.statusText}`);
+        throw new APIError(`Failed to analyze videos via web API: ${errorText}`, response.status);
       }
     }
 
     const data = await response.json();
 
     if (!data.success) {
-      throw new ValidationError(`Video analysis failed: ${data.error || 'Unknown error'}`);
+      throw new APIError(`Video analysis failed: ${data.error || 'Unknown error'}`);
     }
 
     if (!data.analyses || !Array.isArray(data.analyses)) {
-      throw new ValidationError('Invalid response format from web API');
+      throw new APIError('Invalid response format from web API');
     }
 
     log('info', `Successfully received ${data.analyses.length} video analyses from web API`);
@@ -370,7 +374,13 @@ async function analyzeVideos(params: AnalyzeVideosParams): Promise<
 
     return results;
   } catch (error) {
-    throw new ValidationError(
+    log('error', `Failed to analyze videos via web API: ${error}`);
+
+    if (error instanceof ValidationError || error instanceof APIError) {
+      throw error;
+    }
+
+    throw new Error(
       `Failed to analyze videos via web API: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
@@ -390,19 +400,19 @@ async function generateGif(params: GenerateGifParams): Promise<string> {
   const gifsDir = join(artifactDirectory, 'gifs');
   const videoPath = join(videosDir, videoName);
 
-  if (!existsSync(videoPath)) {
-    throw new ValidationError(`Video file not found: ${videoPath}`);
-  }
-
-  if (!existsSync(gifsDir)) {
-    execSync(`mkdir -p "${gifsDir}"`, { stdio: 'pipe' });
-    log('info', `Created gifs directory: ${gifsDir}`);
-  }
-
-  const gifName = `${videoName.replace(/\.[^/.]+$/, '')}_${startTime.replace(/:/g, '-')}_to_${endTime.replace(/:/g, '-')}.gif`;
-  const gifPath = join(gifsDir, gifName);
-
   try {
+    if (!existsSync(videoPath)) {
+      throw new ValidationError(`Video file not found: ${videoPath}`);
+    }
+
+    if (!existsSync(gifsDir)) {
+      execSync(`mkdir -p "${gifsDir}"`, { stdio: 'pipe' });
+      log('info', `Created gifs directory: ${gifsDir}`);
+    }
+
+    const gifName = `${videoName.replace(/\.[^/.]+$/, '')}_${startTime.replace(/:/g, '-')}_to_${endTime.replace(/:/g, '-')}.gif`;
+    const gifPath = join(gifsDir, gifName);
+
     log('info', `Analyzing video properties: ${videoPath}`);
 
     const probeCommand = `ffprobe -v quiet -print_format json -show_streams "${videoPath}"`;
@@ -453,15 +463,23 @@ async function generateGif(params: GenerateGifParams): Promise<string> {
 
     return gifName;
   } catch (error) {
-    throw new ValidationError(
+    log('error', `Failed to generate GIF: ${error}`);
+
+    if (error instanceof ValidationError || error instanceof APIError) {
+      throw error;
+    }
+
+    throw new Error(
       `Failed to generate GIF: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
 
 async function enhanceAudio(params: EnhanceAudioParams): Promise<{
-  enhancedVideoFiles: string[];
-}> {
+  videoName: string;
+  success: boolean;
+  errors: string[];
+}[]> {
   const { artifactName, videoNames } = params;
 
   log('info', `Extracting and enhancing audio from videos in ${artifactName}: ${videoNames.join(', ')}`);
@@ -470,7 +488,12 @@ async function enhanceAudio(params: EnhanceAudioParams): Promise<{
   const artifactDirectory = join(workspacePath, 'marketing', 'artifacts', artifactName);
   const videosDir = join(artifactDirectory, 'videos');
 
-  const enhancedVideoFiles: string[] = [];
+  const results: {
+    videoName: string;
+    success: boolean;
+    errors: string[];
+  }[] = [];
+
   const tempFiles: string[] = [];
 
   for (const videoName of videoNames) {
@@ -486,7 +509,21 @@ async function enhanceAudio(params: EnhanceAudioParams): Promise<{
     const enhancedAudioName = `${videoName.replace(/\.[^/.]+$/, '')}_enhanced.mp3`;
     const enhancedAudioPath = join(videosDir, enhancedAudioName);
 
+    let chunkErrors: Error[] = [];
+
     try {
+      log('info', `Checking if ${videoName} contains audio track`);
+
+      const probeCommand = `ffprobe -v quiet -print_format json -show_streams "${videoPath}"`;
+      const probeOutput = execSync(probeCommand, { encoding: 'utf8' });
+      const probeData = JSON.parse(probeOutput);
+
+      const audioStream = probeData.streams.find((stream: any) => stream.codec_type === 'audio');
+      if (!audioStream) {
+        throw new Error(`Video file ${videoName} does not contain an audio track`);
+      }
+
+      log('info', `Audio track found in ${videoName}, proceeding with extraction`);
       log('info', `Extracting audio from ${videoName} to ${audioName}`);
 
       const ffmpegCommand = `ffmpeg -i "${videoPath}" -vn -acodec mp3 -ab 192k -ar 44100 -y "${audioPath}"`;
@@ -499,110 +536,129 @@ async function enhanceAudio(params: EnhanceAudioParams): Promise<{
       tempFiles.push(audioPath);
       log('info', `Successfully extracted audio: ${audioPath}`);
 
-      try {
-        // Get audio duration
-        const durationCommand = `ffprobe -v quiet -show_entries format=duration -of csv=p=0 "${audioPath}"`;
-        const durationOutput = execSync(durationCommand, { encoding: 'utf8' });
-        const totalDuration = parseFloat(durationOutput.trim());
-        
-        log('info', `Audio duration: ${totalDuration} seconds`);
 
-        const chunkDuration = 300; // 300 seconds = 5 minutes
-        const chunks: string[] = [];
-        const enhancedChunks: string[] = [];
+      // Get audio duration
+      const durationCommand = `ffprobe -v quiet -show_entries format=duration -of csv=p=0 "${audioPath}"`;
+      const durationOutput = execSync(durationCommand, { encoding: 'utf8' });
+      const totalDuration = parseFloat(durationOutput.trim());
 
-        if (totalDuration <= chunkDuration) {
-          // Audio is short enough, enhance directly
-          log('info', `Audio is ${totalDuration}s, enhancing directly without chunking`);
-          await enhanceAudioWithSpeech(audioPath);
+      log('info', `Audio duration: ${totalDuration} seconds`);
+
+      const chunkDuration = 300; // 300 seconds = 5 minutes
+      const chunks: string[] = [];
+      const enhancedChunks: string[] = [];
+
+      if (totalDuration <= chunkDuration) {
+        // Audio is short enough, enhance directly
+        log('info', `Audio is ${totalDuration}s, enhancing directly without chunking`);
+
+        try {
+          const enhancedAudioPath = await enhanceAudioWithSpeech(audioPath);
           tempFiles.push(enhancedAudioPath);
-        } else {
-          // Split audio into chunks
-          log('info', `Audio is ${totalDuration}s, splitting into ${chunkDuration}s chunks`);
-          
-          let chunkIndex = 0;
-          for (let startTime = 0; startTime < totalDuration; startTime += chunkDuration) {
-            const endTime = Math.min(startTime + chunkDuration, totalDuration);
-            const chunkName = `${videoName.replace(/\.[^/.]+$/, '')}_chunk_${chunkIndex}.mp3`;
-            const chunkPath = join(videosDir, chunkName);
-            
-            log('info', `Creating chunk ${chunkIndex}: ${startTime}s to ${endTime}s`);
-            
-            // Extract chunk
-            const chunkCommand = `ffmpeg -i "${audioPath}" -ss ${startTime} -t ${endTime - startTime} -acodec copy -y "${chunkPath}"`;
-            execSync(chunkCommand, { stdio: 'pipe' });
-            
-            if (!existsSync(chunkPath)) {
-              throw new Error(`Chunk file was not created successfully: ${chunkPath}`);
-            }
-            
-            chunks.push(chunkPath);
-            tempFiles.push(chunkPath);
-            
-            // Enhance chunk
-            try {
-              const enhancedChunkPath = await enhanceAudioWithSpeech(chunkPath);
-              enhancedChunks.push(enhancedChunkPath);
-              tempFiles.push(enhancedChunkPath);
-              log('info', `Successfully enhanced chunk ${chunkIndex}`);
-            } catch (error) {
-              log('warn', `Failed to enhance chunk ${chunkIndex}: ${error}`);
-              // Use original chunk if enhancement fails
-              enhancedChunks.push(chunkPath);
-            }
-            
-            chunkIndex++;
+        } catch (error) {
+          log('error', `Failed to enhance audio for ${videoName}: ${error}`);
+          chunkErrors.push(error as Error);
+        }
+      } else {
+        // Split audio into chunks
+        log('info', `Audio is ${totalDuration}s, splitting into ${chunkDuration}s chunks`);
+
+        let chunkIndex = 0;
+
+        for (let startTime = 0; startTime < totalDuration; startTime += chunkDuration) {
+          const endTime = Math.min(startTime + chunkDuration, totalDuration);
+          const chunkName = `${videoName.replace(/\.[^/.]+$/, '')}_chunk_${chunkIndex}.mp3`;
+          const chunkPath = join(videosDir, chunkName);
+
+          log('info', `Creating chunk ${chunkIndex}: ${startTime}s to ${endTime}s`);
+
+          // Extract chunk
+          const chunkCommand = `ffmpeg -i "${audioPath}" -ss ${startTime} -t ${endTime - startTime} -acodec copy -y "${chunkPath}"`;
+          execSync(chunkCommand, { stdio: 'pipe' });
+
+          if (!existsSync(chunkPath)) {
+            throw new Error(`Chunk file was not created successfully: ${chunkPath}`);
           }
 
-          if (enhancedChunks.length === 0) {
-            throw new Error('No chunks were successfully created or enhanced');
+          chunks.push(chunkPath);
+          tempFiles.push(chunkPath);
+
+          // Enhance chunk
+          try {
+            const enhancedChunkPath = await enhanceAudioWithSpeech(chunkPath);
+            enhancedChunks.push(enhancedChunkPath);
+            tempFiles.push(enhancedChunkPath);
+            log('info', `Successfully enhanced chunk ${chunkIndex}`);
+          } catch (error) {
+            log('error', `Failed to enhance chunk ${chunkIndex}: ${error}`);
+
+            chunkErrors.push(error as Error);
+
+            throw new Error(`Failed to enhance chunk ${chunkIndex}: ${error instanceof Error ? error.message : String(error)}`);
           }
 
-          // Create concat file for ffmpeg
-          const concatFileName = `${videoName.replace(/\.[^/.]+$/, '')}_concat.txt`;
-          const concatFilePath = join(videosDir, concatFileName);
-          const concatContent = enhancedChunks.map(chunk => `file '${chunk}'`).join('\n');
-          writeFileSync(concatFilePath, concatContent, 'utf8');
-          tempFiles.push(concatFilePath);
-
-          // Merge enhanced chunks
-          log('info', `Merging ${enhancedChunks.length} enhanced chunks into final audio`);
-          const mergeCommand = `ffmpeg -f concat -safe 0 -i "${concatFilePath}" -c copy -y "${enhancedAudioPath}"`;
-          execSync(mergeCommand, { stdio: 'pipe' });
-
-          if (!existsSync(enhancedAudioPath)) {
-            throw new Error('Enhanced merged audio file was not created successfully');
-          }
+          chunkIndex++;
         }
 
-        log('info', `Successfully enhanced audio: ${enhancedAudioPath}`);
-
-        const enhancedVideoName = `${videoName.replace(/\.[^/.]+$/, '')}_enhanced_audio${videoName.match(/\.[^/.]+$/)?.[0] || '.mov'}`;
-        const enhancedVideoPath = join(videosDir, enhancedVideoName);
-
-        log('info', `Creating enhanced video ${enhancedVideoName} with enhanced audio`);
-
-        const combineCommand = `ffmpeg -i "${videoPath}" -i "${enhancedAudioPath}" -c:v copy -c:a aac -map 0:v:0 -map 1:a:0 -shortest -y "${enhancedVideoPath}"`;
-        execSync(combineCommand, { stdio: 'pipe' });
-
-        if (!existsSync(enhancedVideoPath)) {
-          throw new Error('Enhanced video file was not created successfully');
+        if (enhancedChunks.length === 0) {
+          throw new Error('No chunks were successfully created or enhanced');
         }
 
-        enhancedVideoFiles.push(enhancedVideoName);
-        log('info', `Successfully created enhanced video: ${enhancedVideoPath}`);
+        // Create concat file for ffmpeg
+        const concatFileName = `${videoName.replace(/\.[^/.]+$/, '')}_concat.txt`;
+        const concatFilePath = join(videosDir, concatFileName);
+        const concatContent = enhancedChunks.map(chunk => `file '${chunk}'`).join('\n');
         
-        // Add enhanced audio to temp files for cleanup
-        tempFiles.push(enhancedAudioPath);
-      } catch (error) {
-        log('warn', `Failed to enhance audio for ${videoName}: ${error}`);
+        writeFileSync(concatFilePath, concatContent, 'utf8');
+        tempFiles.push(concatFilePath);
+
+        // Merge enhanced chunks
+        log('info', `Merging ${enhancedChunks.length} enhanced chunks into final audio`);
+        const mergeCommand = `ffmpeg -f concat -safe 0 -i "${concatFilePath}" -c copy -y "${enhancedAudioPath}"`;
+        execSync(mergeCommand, { stdio: 'pipe' });
+
+        if (!existsSync(enhancedAudioPath)) {
+          throw new Error('Enhanced merged audio file was not created successfully');
+        }
       }
+
+      log('info', `Successfully enhanced audio: ${enhancedAudioPath}`);
+
+      const enhancedVideoName = `${videoName.replace(/\.[^/.]+$/, '')}_enhanced_audio${videoName.match(/\.[^/.]+$/)?.[0] || '.mov'}`;
+      const enhancedVideoPath = join(videosDir, enhancedVideoName);
+
+      log('info', `Creating enhanced video ${enhancedVideoName} with enhanced audio`);
+
+      const combineCommand = `ffmpeg -i "${videoPath}" -i "${enhancedAudioPath}" -c:v copy -c:a aac -map 0:v:0 -map 1:a:0 -shortest -y "${enhancedVideoPath}"`;
+      execSync(combineCommand, { stdio: 'pipe' });
+
+      if (!existsSync(enhancedVideoPath)) {
+        throw new Error('Enhanced video file was not created successfully');
+      }
+
+      results.push({
+        videoName: enhancedVideoName,
+        success: true,
+        errors: [],
+      });
+
+      log('info', `Successfully created enhanced video: ${enhancedVideoPath}`);
+
+      // Add enhanced audio to temp files for cleanup
+      tempFiles.push(enhancedAudioPath);
     } catch (error) {
-      log('warn', `Failed to extract audio from ${videoName}: ${error}`);
+      log('error', `Failed to enhance audio for ${videoName}: ${error}`);
+
+      results.push({
+        videoName: videoName,
+        success: false,
+        errors: [error as Error].concat(chunkErrors).map(error => error.message),
+      });
     }
   }
 
   log('info', `Cleaning up temporary files`);
+
   for (const tempFile of tempFiles) {
     try {
       if (existsSync(tempFile)) {
@@ -614,15 +670,15 @@ async function enhanceAudio(params: EnhanceAudioParams): Promise<{
     }
   }
 
-  if (enhancedVideoFiles.length === 0) {
-    throw new ValidationError('No enhanced video files were successfully created');
+  let failedResults = results.filter((result) => !result.success);
+
+  if (failedResults.length > 0) {
+    log('error', `${failedResults.length} videos failed to be enhanced. See the errors for details.`);
+  } else {
+    log('info', `Successfully created enhanced video files for all videos`);
   }
 
-  log('info', `Successfully created ${enhancedVideoFiles.length} enhanced video files`);
-
-  return {
-    enhancedVideoFiles,
-  };
+  return results;
 }
 
 export function registerContentGeneratorTools(server: McpServer): void {
@@ -759,14 +815,9 @@ export function registerContentGeneratorTools(server: McpServer): void {
         ];
 
         const response = {
-          success: true,
-          message: 'Successfully created enhanced video files with improved audio via web API',
-          enhancedVideoFiles: result.enhancedVideoFiles,
+          success: result.every((result) => result.success),
+          result: result,
           artifactName: params.artifactName,
-          speechEnhancementUsed: true,
-          enhancementMethod: 'web-api',
-          voiceIdUsed: '29vD33N1CtxCmqQRPOHJ',
-          tempFilesCleanedUp: true,
           nextSteps: nextSteps,
         };
 

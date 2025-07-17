@@ -38,6 +38,21 @@ export class DataRouteMCPError extends Error {
 }
 
 /**
+ * Error thrown for API-specific errors
+ */
+export class APIError extends DataRouteMCPError {
+  constructor(
+    message: string,
+    public statusCode?: number,
+    public error?: string,
+  ) {
+    super(message);
+    this.name = 'APIError';
+    Object.setPrototypeOf(this, APIError.prototype);
+  }
+}
+
+/**
  * Error thrown when validation of parameters fails
  */
 export class ValidationError extends DataRouteMCPError {
