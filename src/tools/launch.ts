@@ -19,10 +19,70 @@ import {
   COMPANION_APP_CONTENTS_PATH,
 } from '../utils/constants.js';
 
+export function registerCheckCompanionAppStatusTool(server: McpServer): void {
+  server.tool(
+    'check_companion_app_status',
+    'Checks whether the companion app is currently running or not. Use this tool before launching or stopping the companion app to determine the current state.',
+    {},
+    async (): Promise<ToolResponse> => {
+      log('info', 'Checking companion app status');
+
+      try {
+        const checkProcesses = async (): Promise<string[]> => {
+          try {
+            const result = await execPromise(`pgrep -l "${COMPANION_APP_NAME}"`, {
+              encoding: 'utf8',
+            });
+            return result.stdout
+              .trim()
+              .split('\n')
+              .filter((line) => line.length > 0);
+          } catch {
+            return [];
+          }
+        };
+
+        const runningProcesses = await checkProcesses();
+
+        if (runningProcesses.length === 0) {
+          return {
+            content: [
+              {
+                type: 'text',
+                text: 'Companion app status: NOT RUNNING\n\nNo companion app processes found. The app can be safely launched.',
+              },
+            ],
+          };
+        } else {
+          return {
+            content: [
+              {
+                type: 'text',
+                text: `Companion app status: RUNNING\n\nFound ${runningProcesses.length} running companion app processes:\n${runningProcesses.join('\n')}\n\nThe app is currently active. Use stop_companion_app to terminate before launching a new instance.`,
+              },
+            ],
+          };
+        }
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        log('error', `Error checking companion app status: ${errorMessage}`);
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `Failed to check companion app status: ${errorMessage}`,
+            },
+          ],
+        };
+      }
+    },
+  );
+}
+
 export function registerLaunchCompanionAppTool(server: McpServer): void {
   server.tool(
     'launch_companion_app',
-    `Launches the companion app for capturing screenshots and videos. IMPORTANT: Unless already created in current session, you MUST create artifact directory before launching the companion app to provide the artifactsDirectory parameter. Example: launch_companion_app({ artifactsDirectory: '/path/to/your/workspace/marketing/artifacts/directory' })'`,
+    `Launches the companion app for capturing screenshots and videos. IMPORTANT: Use check_companion_app_status first to verify no instance is running. Unless already created in current session, you MUST create artifact directory before launching the companion app to provide the artifactsDirectory parameter. Example: launch_companion_app({ artifactsDirectory: '/path/to/your/workspace/marketing/artifacts/directory' })'`,
     {
       artifactsDirectory: z
         .string()
@@ -87,7 +147,7 @@ Next Steps:
 export function registerStopCompanionAppTool(server: McpServer): void {
   server.tool(
     'stop_companion_app',
-    'Stops any running instances of the simctl.app companion app. IMPORTANT: ALWAYS use this tool before launching a new instance of the companion app.',
+    'Stops any running instances of the companion app. IMPORTANT: Use check_companion_app_status first to verify if the app is running before attempting to stop it.',
     {},
     async (): Promise<ToolResponse> => {
       log('info', 'Stopping companion app');

@@ -1,5 +1,6 @@
 // Import launch tools
 import {
+  registerCheckCompanionAppStatusTool,
   registerLaunchCompanionAppTool,
   registerStopCompanionAppTool,
   registerInstallBrewAndFfmpegTool,
@@ -32,6 +33,11 @@ import { ToolGroup, registerIfEnabled } from './tool-groups.js';
 // Define tool registrations with their workflow-based groups
 const toolRegistrations = [
   // Launch tools
+  {
+    register: registerCheckCompanionAppStatusTool,
+    groups: [ToolGroup.LAUNCH],
+    envVar: 'DATAROUTEMCP_TOOL_CHECK_COMPANION_APP_STATUS',
+  },
   {
     register: registerLaunchCompanionAppTool,
     groups: [ToolGroup.LAUNCH],

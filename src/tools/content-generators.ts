@@ -44,10 +44,6 @@ type GenerateGifParams = z.infer<typeof GenerateGifSchema>;
 type EnhanceAudioParams = z.infer<typeof EnhanceAudioSchema>;
 type FetchRedditPostsParams = z.infer<typeof FetchRedditPostsSchema>;
 
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 async function fetchRedditPosts(params: FetchRedditPostsParams): Promise<{
   posts: Array<{
     id: string;

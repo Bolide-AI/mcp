@@ -10,6 +10,7 @@ Specialized utility tools for development workflows.
 
 | Tool Name | Description |
 |-----------|-------------|
+| `check_companion_app_status` | Checks whether the companion app is currently running or not. Use this tool before launching or stopping the companion app to determine the current state |
 | `launch_companion_app` | Launches the simctl.app for capturing screenshots and videos for marketing projects with directory parameter. For each launch, use a new directory under the current workspace. Must be a valid full directory path, e.g. /Users/yourname/Documents/workspace/marketing/artifacts/<feature>-<datetime> |
 | `stop_companion_app` | Stops any running instances of the simctl.app companion app |
 | `install_brew_and_ffmpeg` | Installs Homebrew package manager and then installs FFmpeg via Homebrew. This tool handles the complete setup process for video processing dependencies |
@@ -80,6 +81,7 @@ Tools for system diagnostics and environment validation.
 2. **Marketing Content Creation**:
    ```
    create_artifact_directory({ artifactName: "feature-name" })
+   check_companion_app_status()
    launch_companion_app({ artifactsDirectory: "/path/to/artifacts/feature-name-timestamp" })
    generate_gif({ artifactName: "feature-name-timestamp", videoName: "video.mov", startTime: "00:00:10", endTime: "00:00:20" })
    create_post_artifact({ artifactName: "feature-name-timestamp", fileName: "post.md", fileContent: "..." })

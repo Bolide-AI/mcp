@@ -24,7 +24,7 @@ DataRouteMCP provides workflow-based tool groups that organise tools logically b
 These groups organise tools based on common developer workflows, making it easier to enable just the tools needed for specific tasks:
 
 - **DATAROUTEMCP_GROUP_LAUNCH=true** - Launch and utility tools
-  - _e.g., Launch simctl app for marketing capture, stop running utilities._
+  - _e.g., Launch companion app for marketing capture, stop running utilities._
 - **DATAROUTEMCP_GROUP_SCAFFOLDING=true** - Project scaffolding and creation tools
   - _e.g., Create marketing project directories and structures._
 - **DATAROUTEMCP_GROUP_ARTIFACTS=true** - Artifact management tools
@@ -63,6 +63,7 @@ To enable specific tools rather than entire groups, use the following environmen
 - **DATAROUTEMCP_TOOL_USE_OPENAI_DEEP_RESEARCH=true** - Perform deep research using OpenAI o4-mini-deep-research model.
 
 ### Utility Tools
+- **DATAROUTEMCP_TOOL_CHECK_COMPANION_APP_STATUS=true** - Check whether the companion app is currently running or not.
 - **DATAROUTEMCP_TOOL_LAUNCH_COMPANION_APP=true** - Launch simctl.app for capturing screenshots and videos for marketing projects.
 - **DATAROUTEMCP_TOOL_STOP_COMPANION_APP=true** - Stop any running instances of the simctl.app companion app.
 - **DATAROUTEMCP_TOOL_INSTALL_BREW_AND_FFMPEG=true** - Install Homebrew package manager and FFmpeg for video processing dependencies.
@@ -96,6 +97,7 @@ DataRouteMCP currently provides **15 tools** across different categories:
 - `use_openai_deep_research` - Perform deep research using OpenAI o4-mini-deep-research model
 
 ### Utility Tools
+- `check_companion_app_status` - Checks whether the companion app is currently running or not
 - `launch_companion_app` - Launches simctl.app for marketing screenshot/video capture
 - `stop_companion_app` - Stops any running instances of the simctl.app companion app
 - `install_brew_and_ffmpeg` - Installs Homebrew package manager and FFmpeg for video processing dependencies
@@ -234,6 +236,7 @@ To enable only specific tools:
 {
       "env": {
       "DATAROUTEMCP_TOOL_SCAFFOLD_PROJECT": "true",
+        "DATAROUTEMCP_TOOL_CHECK_COMPANION_APP_STATUS": "true",
         "DATAROUTEMCP_TOOL_LAUNCH_COMPANION_APP": "true",
   "DATAROUTEMCP_TOOL_STOP_COMPANION_APP": "true"
     }
@@ -321,6 +324,7 @@ With debug mode enabled, you can use the diagnostic tool to troubleshoot issues 
 - `DATAROUTEMCP_TOOL_ENHANCE_AUDIO` - Audio enhancement tool
 - `DATAROUTEMCP_TOOL_FETCH_REDDIT_POSTS` - Reddit data fetching tool
 - `DATAROUTEMCP_TOOL_USE_PERPLEXITY` - Research tool
+- `DATAROUTEMCP_TOOL_CHECK_COMPANION_APP_STATUS` - Status check utility
 - `DATAROUTEMCP_TOOL_LAUNCH_COMPANION_APP` - Launch utility
 - `DATAROUTEMCP_TOOL_STOP_COMPANION_APP` - Stop utility
 - `DATAROUTEMCP_DEBUG` - Diagnostic tool

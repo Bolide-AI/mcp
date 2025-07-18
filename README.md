@@ -157,6 +157,7 @@ DataRouteMCP provides **15 tools** across 7 categories:
 - `scaffold_marketing_project` - Create marketing project directory structure
 
 ### 📱 Utility Tools  
+- `check_companion_app_status` - Check companion app running status
 - `launch_companion_app` - Launch Companion App for marketing capture
 - `stop_companion_app` - Stop running companion app instances
 
@@ -223,8 +224,9 @@ The deep research tool:
    create_artifact_directory({ artifactName: "feature-demo" })
    ```
 
-3. **Capture content**:
+3. **Check app status and capture content**:
    ```typescript
+   check_companion_app_status()
    launch_companion_app({ 
      artifactsDirectory: "/path/to/artifacts/feature-demo-20240101" 
    })
