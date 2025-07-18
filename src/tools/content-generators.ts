@@ -282,7 +282,7 @@ async function analyzeVideos(params: AnalyzeVideosParams): Promise<
       }
 
       const videoFile = new File([readFileSync(videoPath)], videoName, {
-        type: 'video/quicktime'
+        type: 'video/mp4'
       });
       formData.append('video_files[]', videoFile);
     }
@@ -612,7 +612,7 @@ async function enhanceAudio(params: EnhanceAudioParams): Promise<{
 
       log('info', `Successfully enhanced audio: ${enhancedAudioPath}`);
 
-      const enhancedVideoName = `${videoName.replace(/\.[^/.]+$/, '')}_enhanced_audio${videoName.match(/\.[^/.]+$/)?.[0] || '.mov'}`;
+      const enhancedVideoName = `${videoName.replace(/\.[^/.]+$/, '')}_enhanced_audio${videoName.match(/\.[^/.]+$/)?.[0] || '.mp4'}`;
       const enhancedVideoPath = join(videosDir, enhancedVideoName);
 
       log('info', `Creating enhanced video ${enhancedVideoName} with enhanced audio`);
@@ -673,7 +673,7 @@ export function registerContentGeneratorTools(server: McpServer): void {
   registerTool<AnalyzeVideosParams>(
     server,
     'analyze_videos',
-    `Analyzes videos using Gemini API via the web API integration. IMPORTANT: You MUST provide the artifactName, videoNames and force parameters. Example: analyze_videos({ artifactName: 'ARTIFACT_NAME_WITH_TIMESTAMP', videoNames: ['video1.mov', 'video2.mov'], force: false })`,
+    `Analyzes videos using Gemini API via the web API integration. IMPORTANT: You MUST provide the artifactName, videoNames and force parameters. Example: analyze_videos({ artifactName: 'ARTIFACT_NAME_WITH_TIMESTAMP', videoNames: ['video1.mp4', 'video2.mp4'], force: false })`,
     AnalyzeVideosSchema.shape,
     async (params) => {
       try {
@@ -790,7 +790,7 @@ export function registerContentGeneratorTools(server: McpServer): void {
   registerTool<EnhanceAudioParams>(
     server,
     'enhance_audio',
-    `Extracts audio from videos using ffmpeg and saves as MP3 files in the same directory. Automatically enhances audio using the web API which integrates with ElevenLabs speech-to-speech conversion with voice ID 29vD33N1CtxCmqQRPOHJ. Requires WEB_API_TOKEN and optionally WEB_API_URL environment variables. IMPORTANT: You MUST provide the artifactName and videoNames parameters. Example: enhance_audio({ artifactName: 'NAME_OF_ARTIFACT_DIRECTORY_WITH_TIMESTAMP', videoNames: ['video1.mov', 'video2.mov'] })`,
+    `Extracts audio from videos using ffmpeg and saves as MP3 files in the same directory. Automatically enhances audio using the web API which integrates with ElevenLabs speech-to-speech conversion with voice ID 29vD33N1CtxCmqQRPOHJ. Requires WEB_API_TOKEN and optionally WEB_API_URL environment variables. IMPORTANT: You MUST provide the artifactName and videoNames parameters. Example: enhance_audio({ artifactName: 'NAME_OF_ARTIFACT_DIRECTORY_WITH_TIMESTAMP', videoNames: ['video1.mp4', 'video2.mp4'] })`,
     EnhanceAudioSchema.shape,
     async (params) => {
       try {
