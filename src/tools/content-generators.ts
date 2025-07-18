@@ -5,20 +5,12 @@ import { registerTool } from './common.js';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { log } from '../utils/logger.js';
 import { APIError, ValidationError } from '../utils/errors.js';
-import {
-  createPartFromUri,
-  createUserContent,
-  GoogleGenAI,
-  Type,
-} from '@google/genai';
 import { getWorkspacePath } from '../utils/workspace.js';
 import { execSync } from 'child_process';
 import { existsSync } from 'fs';
 import { DATAROUTE_API_URL } from '../utils/constants.js';
 
 import * as fs from 'fs';
-
-
 
 const AnalyzeVideosSchema = z.object({
   artifactName: z.string().describe('Name of the artifact directory where videos are stored'),
