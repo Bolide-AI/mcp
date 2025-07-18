@@ -42,6 +42,27 @@ export function registerCheckCompanionAppStatusTool(server: McpServer): void {
           }
         };
 
+        const getWindowTitle = async (): Promise<string | null> => {
+          try {
+            const result = await execPromise(
+              `osascript -e 'tell application "System Events" to get name of every window of application process "${COMPANION_APP_NAME}"'`,
+              { encoding: 'utf8' }
+            );
+            const windowNames = result.stdout.trim();
+            if (windowNames && windowNames !== 'missing value') {
+              return windowNames.split(', ')[0];
+            }
+            return null;
+          } catch {
+            return null;
+          }
+        };
+
+        const extractArtifactName = (windowTitle: string): string | null => {
+          const match = windowTitle.match(/DataRoute Companion \((.+)\)/);
+          return match ? match[1] : null;
+        };
+
         const runningProcesses = await checkProcesses();
 
         if (runningProcesses.length === 0) {
@@ -53,12 +74,29 @@ export function registerCheckCompanionAppStatusTool(server: McpServer): void {
               },
             ],
           };
+        }
+
+        const windowTitle = await getWindowTitle();
+
+        log('info', `Window title: ${windowTitle}`);
+
+        const currentArtifactName = windowTitle ? extractArtifactName(windowTitle) : null;
+
+        if (currentArtifactName) {
+          return {
+            content: [
+              {
+                type: 'text',
+                text: `Companion app status: RUNNING WITH ARTIFACT\n\nFound ${runningProcesses.length} running companion app processes:\n${runningProcesses.join('\n')}\n\nCurrent artifact directory: ${currentArtifactName}\nWindow title: ${windowTitle}\n\nThe app is currently active with a specific artifact directory. Use stop_companion_app to terminate before launching a new instance.`,
+              },
+            ],
+          };
         } else {
           return {
             content: [
               {
                 type: 'text',
-                text: `Companion app status: RUNNING\n\nFound ${runningProcesses.length} running companion app processes:\n${runningProcesses.join('\n')}\n\nThe app is currently active. Use stop_companion_app to terminate before launching a new instance.`,
+                text: `Companion app status: RUNNING\n\nFound ${runningProcesses.length} running companion app processes:\n${runningProcesses.join('\n')}\n\nThe app is currently active but artifact directory could not be determined. Use stop_companion_app to terminate before launching a new instance.`,
               },
             ],
           };
