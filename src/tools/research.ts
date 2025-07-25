@@ -85,6 +85,7 @@ async function usePerplexity(params: UsePerplexityParams): Promise<ToolResponse>
         const result = data.result;
         const usage = data.usage;
         const model = data.model;
+        const citations = data.citations || [];
 
         log('info', `Search completed successfully via web API. Response length: ${result.length} characters`);
 
@@ -102,6 +103,10 @@ async function usePerplexity(params: UsePerplexityParams): Promise<ToolResponse>
             result,
             '',
             '---',
+            '## Citations',
+            citations.join('\n'),
+            '',
+            '---',
             `*Search powered by Perplexity AI (${model}) via Web API*`,
         ].join('\n');
 
@@ -110,6 +115,7 @@ async function usePerplexity(params: UsePerplexityParams): Promise<ToolResponse>
             message: 'Successfully performed search with Perplexity via web API',
             content: [createTextContent(formattedResponse)],
             nextSteps: [
+                `Display the search results with citations. IMPORTANT: IF CITATIONS ARE PROVIDED, DISPLAY THEM IN THE RESPONSE.`,
                 `Create a research asset file. Example: create_research_asset({ name: "FILE_NAME", content: "RESEARCH_CONTENT" })`,
             ],
         };
@@ -240,7 +246,7 @@ export function registerResearchTools(server: McpServer): void {
     registerTool(
         server,
         'use_perplexity',
-        'Perform search and information gathering using Perplexity AI via web API. Requires DATAROUTE_API_TOKEN for authentication. IMPORTANT: You MUST provide the query and search_mode parameters. Example: use_perplexity({ query: "What is the capital of France?", search_mode: "web" })',
+        'Perform search and information gathering using Perplexity AI via web API. IMPORTANT: You MUST provide the query and search_mode parameters as well as display the citations in the response, if provided. Example: use_perplexity({ query: "What is the capital of France?", search_mode: "web" })',
         UsePerplexitySchema.shape,
         usePerplexity,
     );
