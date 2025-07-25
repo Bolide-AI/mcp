@@ -4,7 +4,7 @@
  * This module provides tools for launching and stopping companion app.
  *
  * Responsibilities:
- * - Launching companion app for marketing project capture
+ * - Launching companion app for project capture
  * - Stopping running companion app instances
  */
 
@@ -22,7 +22,7 @@ import {
 export function registerCheckCompanionAppStatusTool(server: McpServer): void {
   server.tool(
     'check_companion_app_status',
-    'Checks whether the companion app is currently running or not. Use this tool before launching or stopping the companion app to determine the current state.',
+    'Checks whether the companion app is currently running with the same artifact directory or not. Use this tool before launching or stopping the companion app to determine the current state. DO NOT STOP THE APP IF IT IS RUNNING WITH A DIFFERENT ARTIFACT DIRECTORY.',
     {},
     async (): Promise<ToolResponse> => {
       log('info', 'Checking companion app status');
@@ -49,8 +49,11 @@ export function registerCheckCompanionAppStatusTool(server: McpServer): void {
               { encoding: 'utf8' }
             );
             const windowNames = result.stdout.trim();
+
+            log('info', `Window names: ${windowNames}`);
+
             if (windowNames && windowNames !== 'missing value') {
-              return windowNames.split(', ')[0];
+              return windowNames.split(', ').filter((name) => name.includes(COMPANION_APP_NAME))[0];
             }
             return null;
           } catch {
@@ -59,7 +62,7 @@ export function registerCheckCompanionAppStatusTool(server: McpServer): void {
         };
 
         const extractArtifactName = (windowTitle: string): string | null => {
-          const match = windowTitle.match(/DataRoute Companion \((.+)\)/);
+          const match = windowTitle.trim().match(new RegExp(`${COMPANION_APP_NAME} \\((.+)\\)`));
           return match ? match[1] : null;
         };
 
@@ -87,7 +90,7 @@ export function registerCheckCompanionAppStatusTool(server: McpServer): void {
             content: [
               {
                 type: 'text',
-                text: `Companion app status: RUNNING WITH ARTIFACT\n\nFound ${runningProcesses.length} running companion app processes:\n${runningProcesses.join('\n')}\n\nCurrent artifact directory: ${currentArtifactName}\nWindow title: ${windowTitle}\n\nThe app is currently active with a specific artifact directory. Use stop_companion_app to terminate before launching a new instance.`,
+                text: `Companion app status: RUNNING WITH ARTIFACT\n\nFound ${runningProcesses.length} running companion app processes:\n${runningProcesses.join('\n')}\n\nCurrent artifact directory: ${currentArtifactName}\nWindow title: ${windowTitle}\n\nThe app is currently active with a specific artifact directory. Use stop_companion_app to terminate before launching a new instance with the same artifact directory.`,
               },
             ],
           };
@@ -120,12 +123,12 @@ export function registerCheckCompanionAppStatusTool(server: McpServer): void {
 export function registerLaunchCompanionAppTool(server: McpServer): void {
   server.tool(
     'launch_companion_app',
-    `Launches the companion app for capturing screenshots and videos. IMPORTANT: Use check_companion_app_status first to verify no instance is running. Unless already created in current session, you MUST create artifact directory before launching the companion app to provide the artifactsDirectory parameter. Example: launch_companion_app({ artifactsDirectory: '/path/to/your/workspace/marketing/artifacts/directory' })'`,
+    `Launches the companion app for capturing screenshots and videos. IMPORTANT: Use check_companion_app_status first to verify no instance with the same artifact directory is running. Unless already created in current session, you MUST create artifact directory before launching the companion app to provide the artifactsDirectory parameter. DO NOT STOP THE APP IF IT IS RUNNING WITH A DIFFERENT ARTIFACT DIRECTORY. Example: launch_companion_app({ artifactsDirectory: '/path/to/your/workspace/bolide.ai/artifacts/directory' })'`,
     {
       artifactsDirectory: z
         .string()
         .describe(
-          'Directory where screenshot and video artifacts will be saved. Must be a valid full directory path, e.g. /Users/yourname/Documents/workspace/marketing/artifacts/<feature>-<datetime>',
+          'Directory where screenshot and video artifacts will be saved. Must be a valid full directory path, e.g. /Users/yourname/Documents/workspace/bolide.ai/artifacts/<feature>-<datetime>',
         ),
     },
     async (params): Promise<ToolResponse> => {
@@ -157,9 +160,9 @@ export function registerLaunchCompanionAppTool(server: McpServer): void {
             {
               type: 'text',
               text: `The companion app will:
-  1. Allow you to start / stop screenshot capture for marketing artifacts
-2. Allow you to start / stop video recording for marketing artifacts
-3. Save all marketing artifacts to: ${artifactsDir}
+  1. Allow you to start / stop screenshot capture for project artifacts
+2. Allow you to start / stop video recording for project artifacts
+3. Save all project artifacts to: ${artifactsDir}
 
 Next Steps:
   1. User may request to stop the companion app at any time`,
@@ -185,7 +188,7 @@ Next Steps:
 export function registerStopCompanionAppTool(server: McpServer): void {
   server.tool(
     'stop_companion_app',
-    'Stops any running instances of the companion app. IMPORTANT: Use check_companion_app_status first to verify if the app is running before attempting to stop it.',
+    'Stops any running instances of the companion app. IMPORTANT: Use check_companion_app_status first to verify if the app is running with the same artifact directory before attempting to stop it. DO NOT STOP THE APP IF IT IS RUNNING WITH A DIFFERENT ARTIFACT DIRECTORY.',
     {},
     async (): Promise<ToolResponse> => {
       log('info', 'Stopping companion app');

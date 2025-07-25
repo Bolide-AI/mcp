@@ -10,10 +10,11 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { log } from '../utils/logger.js';
 import { ValidationError } from '../utils/errors.js';
 import { getWorkspacePath } from '../utils/workspace.js';
+import { PROJECT_NAME } from '../utils/constants.js';
 
-const ScaffoldMarketingProjectSchema = z.object({});
+const ScaffoldBolideAIProjectSchema = z.object({});
 
-type ScaffoldMarketingProjectParams = z.infer<typeof ScaffoldMarketingProjectSchema>;
+type ScaffoldBolideAIProjectParams = z.infer<typeof ScaffoldBolideAIProjectSchema>;
 
 async function updateWorkspaceFile(workspacePath: string): Promise<void> {
   const workspaceFiles = glob.sync('*.code-workspace', { cwd: workspacePath });
@@ -44,17 +45,17 @@ async function updateWorkspaceFile(workspacePath: string): Promise<void> {
       return;
     }
 
-    const marketingFolderExists = workspace.folders.some(
-      (folder: any) => folder.path === 'marketing' || folder.path === './marketing',
+    const projectFolderExists = workspace.folders.some(
+      (folder: any) => folder.path === PROJECT_NAME || folder.path === `./${PROJECT_NAME}`,
     );
 
-    if (!marketingFolderExists) {
-      workspace.folders.push({ path: 'marketing' });
+    if (!projectFolderExists) {
+      workspace.folders.push({ path: PROJECT_NAME });
 
       writeFileSync(workspaceFilePath, JSON.stringify(workspace, null, 2));
-      log('info', `Added marketing folder to workspace file: ${workspaceFile}`);
+      log('info', `Added project folder to workspace file: ${workspaceFile}`);
     } else {
-      log('info', 'Marketing folder already exists in workspace file');
+      log('info', 'Project folder already exists in workspace file');
     }
   } catch (error) {
     log(
@@ -96,14 +97,14 @@ async function copyTemplateContents(templatePath: string, targetPath: string): P
   }
 }
 
-async function scaffoldMarketingProject(params: ScaffoldMarketingProjectParams): Promise<string> {
+async function scaffoldProject(params: ScaffoldBolideAIProjectParams): Promise<string> {
   const workspacePath = getWorkspacePath();
 
-  log('info', `Scaffolding marketing project at ${workspacePath}`);
+  log('info', `Scaffolding project at ${workspacePath}`);
 
-  const marketingPath = join(workspacePath, 'marketing');
-  const assetsPath = join(marketingPath, 'assets');
-  const artifactsPath = join(marketingPath, 'artifacts');
+  const projectPath = join(workspacePath, PROJECT_NAME);
+  const assetsPath = join(projectPath, 'assets');
+  const artifactsPath = join(projectPath, 'artifacts');
 
   const currentFileUrl = import.meta.url;
   const currentFilePath = fileURLToPath(currentFileUrl);
@@ -115,12 +116,12 @@ async function scaffoldMarketingProject(params: ScaffoldMarketingProjectParams):
 
   log('info', `Template path: ${templatePath}`);
 
-  if (existsSync(marketingPath)) {
-    throw new ValidationError(`Marketing directory already exists at ${marketingPath}`);
+  if (existsSync(projectPath)) {
+    throw new ValidationError(`Project directory already exists at ${projectPath}`);
   }
 
   try {
-    await mkdir(marketingPath, { recursive: true });
+    await mkdir(projectPath, { recursive: true });
     await mkdir(assetsPath, { recursive: true });
     await mkdir(artifactsPath, { recursive: true });
 
@@ -134,34 +135,34 @@ async function scaffoldMarketingProject(params: ScaffoldMarketingProjectParams):
     await writeFile(join(postsPath, '.gitkeep'), '');
     await writeFile(join(researchPath, '.gitkeep'), '');
 
-    await copyTemplateContents(templatePath, marketingPath);
+    await copyTemplateContents(templatePath, projectPath);
 
     await updateWorkspaceFile(workspacePath);
 
-    return marketingPath;
+    return projectPath;
   } catch (error) {
     throw new ValidationError(
-      `Failed to create marketing project: ${error instanceof Error ? error.message : String(error)}`,
+      `Failed to create project: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
 
 export function registerScaffoldTools(server: McpServer): void {
-  registerTool<ScaffoldMarketingProjectParams>(
+  registerTool<ScaffoldBolideAIProjectParams>(
     server,
-    'scaffold_marketing_project',
-    'Create a marketing project directory with assets and artifacts subdirectories. Example: scaffold_marketing_project()',
-    ScaffoldMarketingProjectSchema.shape,
+    'scaffold_bolide_ai_project',
+    'Create a bolide.ai project directory with assets and artifacts subdirectories. Example: scaffold_bolide_ai_project()',
+    ScaffoldBolideAIProjectSchema.shape,
     async (params) => {
       try {
-        const projectPath = await scaffoldMarketingProject(params);
+        const projectPath = await scaffoldProject(params);
 
         const response = {
           success: true,
           projectPath,
-          message: `Successfully created marketing project at ${projectPath}`,
+          message: `Successfully created project at ${projectPath}`,
           structure: {
-            marketing: {
+            [PROJECT_NAME]: {
               artifacts: {
                 description: 'Directory for intermediate materials (screenshots and video recordings of app functionality)',
               },
@@ -179,7 +180,7 @@ export function registerScaffoldTools(server: McpServer): void {
             },
           },
           nextSteps: [
-            `Navigate to ${projectPath} to start organizing your marketing materials`,
+            `Navigate to ${projectPath} to start organizing your project materials`,
             'Create an artifact directory using the create_artifact_directory({ artifactName: "ARTIFACT_NAME" }) to start capturing screenshots, videos, and generating posts',
           ],
         };
@@ -195,7 +196,7 @@ export function registerScaffoldTools(server: McpServer): void {
       } catch (error) {
         log(
           'error',
-          `Failed to scaffold marketing project: ${error instanceof Error ? error.message : String(error)}`,
+          `Failed to scaffold project: ${error instanceof Error ? error.message : String(error)}`,
         );
 
         return {

@@ -8,7 +8,7 @@ import { APIError, ValidationError } from '../utils/errors.js';
 import { getWorkspacePath } from '../utils/workspace.js';
 import { execSync } from 'child_process';
 import { existsSync } from 'fs';
-import { DATAROUTE_API_URL } from '../utils/constants.js';
+import { DATAROUTE_API_URL, PROJECT_NAME } from '../utils/constants.js';
 
 import * as fs from 'fs';
 
@@ -230,7 +230,7 @@ async function analyzeVideos(params: AnalyzeVideosParams): Promise<
   log('info', `Analyzing videos in ${artifactName}: ${videoNames.join(', ')}`);
 
   const workspacePath = getWorkspacePath();
-  const artifactDirectory = join(workspacePath, 'marketing', 'artifacts', artifactName);
+  const artifactDirectory = join(workspacePath, PROJECT_NAME, 'artifacts', artifactName);
   const videosDir = join(artifactDirectory, 'videos');
 
   let results = [];
@@ -383,7 +383,7 @@ async function generateGif(params: GenerateGifParams): Promise<string> {
   );
 
   const workspacePath = getWorkspacePath();
-  const artifactDirectory = join(workspacePath, 'marketing', 'artifacts', artifactName);
+  const artifactDirectory = join(workspacePath, PROJECT_NAME, 'artifacts', artifactName);
   const videosDir = join(artifactDirectory, 'videos');
   const gifsDir = join(artifactDirectory, 'gifs');
   const videoPath = join(videosDir, videoName);
@@ -473,7 +473,7 @@ async function enhanceAudio(params: EnhanceAudioParams): Promise<{
   log('info', `Extracting and enhancing audio from videos in ${artifactName}: ${videoNames.join(', ')}`);
 
   const workspacePath = getWorkspacePath();
-  const artifactDirectory = join(workspacePath, 'marketing', 'artifacts', artifactName);
+  const artifactDirectory = join(workspacePath, PROJECT_NAME, 'artifacts', artifactName);
   const videosDir = join(artifactDirectory, 'videos');
 
   const results: {

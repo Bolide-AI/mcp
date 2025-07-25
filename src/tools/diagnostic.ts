@@ -19,7 +19,6 @@ import { log } from '../utils/logger.js';
 import { version } from '../version.js';
 import * as os from 'os';
 import * as fs from 'fs';
-import * as path from 'path';
 import { ToolGroup, isSelectiveToolsEnabled, listEnabledGroups } from '../utils/tool-groups.js';
 import { COMPANION_APP_CONTENTS_PATH } from '../utils/constants.js';
 

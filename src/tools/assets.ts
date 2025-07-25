@@ -7,6 +7,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { log } from '../utils/logger.js';
 import { ValidationError } from '../utils/errors.js';
 import { getWorkspacePath } from '../utils/workspace.js';
+import { PROJECT_NAME } from '../utils/constants.js';
 
 const CreatePostAssetSchema = z.object({
   name: z.string().describe('Name of the post asset file to create'),
@@ -34,7 +35,7 @@ async function createPostAsset(params: CreatePostAssetParams): Promise<string> {
 
   const workspacePath = getWorkspacePath();
 
-  const assetsDirectory = join(workspacePath, 'marketing', 'assets');
+  const assetsDirectory = join(workspacePath, PROJECT_NAME, 'assets');
 
   log('info', `Creating post asset ${name} in ${assetsDirectory}`);
 
@@ -82,7 +83,7 @@ async function createResearchAsset(params: CreateResearchAssetParams): Promise<s
 
   const workspacePath = getWorkspacePath();
 
-  const assetsDirectory = join(workspacePath, 'marketing', 'assets');
+  const assetsDirectory = join(workspacePath, PROJECT_NAME, 'assets');
 
   log('info', `Creating research asset ${name} in ${assetsDirectory}`);
 
@@ -129,7 +130,7 @@ export function registerAssetGeneratorTools(server: McpServer): void {
   registerTool<CreatePostAssetParams>(
     server,
     'create_post_asset',
-    'Creates a post asset file in the marketing assets directory. IMPORTANT: You MUST provide the name and content parameters. Example: create_post_asset({ name: "FILE_NAME", content: "FILE_CONTENT" })',
+    'Creates a post asset file in the project assets directory. IMPORTANT: You MUST provide the name and content parameters. Example: create_post_asset({ name: "FILE_NAME", content: "FILE_CONTENT" })',
     CreatePostAssetSchema.shape,
     async (params) => {
       try {
@@ -179,7 +180,7 @@ export function registerAssetGeneratorTools(server: McpServer): void {
   registerTool<CreateResearchAssetParams>(
     server,
     'create_research_asset',
-    'Creates a research asset file in the marketing assets directory. IMPORTANT: You MUST provide the name and content parameters. Example: create_research_asset({ name: "FILE_NAME", content: "RESEARCH_CONTENT" })',
+    'Creates a research asset file in the project assets directory. IMPORTANT: You MUST provide the name and content parameters. Example: create_research_asset({ name: "FILE_NAME", content: "RESEARCH_CONTENT" })',
     CreateResearchAssetSchema.shape,
     async (params) => {
       try {

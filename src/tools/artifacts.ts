@@ -7,6 +7,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { log } from '../utils/logger.js';
 import { ValidationError } from '../utils/errors.js';
 import { getWorkspacePath } from '../utils/workspace.js';
+import { PROJECT_NAME } from '../utils/constants.js';
 
 const CreateArtifactDirectorySchema = z.object({
   artifactName: z
@@ -30,7 +31,7 @@ async function createArtifactDirectory(params: CreateArtifactDirectoryParams): P
 
   const workspacePath = getWorkspacePath();
 
-  const artifactsDirectory = join(workspacePath, 'marketing', 'artifacts');
+  const artifactsDirectory = join(workspacePath, PROJECT_NAME, 'artifacts');
 
   if (!existsSync(artifactsDirectory)) {
     throw new ValidationError(`Artifacts directory does not exist at ${artifactsDirectory}`);
@@ -71,7 +72,7 @@ async function createPostArtifact(params: CreatePostArtifactParams): Promise<str
 
   const workspacePath = getWorkspacePath();
 
-  const artifactsDirectory = join(workspacePath, 'marketing', 'artifacts');
+  const artifactsDirectory = join(workspacePath, PROJECT_NAME, 'artifacts');
 
   if (!existsSync(artifactsDirectory)) {
     throw new ValidationError(`Artifacts directory does not exist at ${artifactsDirectory}`);
