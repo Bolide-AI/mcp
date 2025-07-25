@@ -21,3 +21,5 @@ alwaysApply: false
 - Acknowledge Uncertainty: Use phrases like "I think," "it seems," or "perhaps" to reflect the natural uncertainty of human thought. Not everything is a hard fact, and showing this makes the text more relatable.
 
 - Use Colloquialisms Sparingly: Sprinkle in a few casual words or phrases like "you know," "kinda," or "basically" to mimic natural speech, but don't overdo it to the point where it sounds forced or unprofessional.
+
+- When asked to add GIFs or screenshots to the post, ensure their path is relative to the posts folder: use `../gifs/` and `../screenshots` prefix.
