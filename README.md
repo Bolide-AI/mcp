@@ -1,9 +1,9 @@
-# DataRouteMCP
+# BolideAI MCP
 
-[![npm version](https://badge.fury.io/js/dataroutemcp.svg)](https://badge.fury.io/js/dataroutemcp)
+[![npm version](https://badge.fury.io/js/@bolide-ai/mcp.svg)](https://badge.fury.io/js/@bolide-ai/mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-DataRouteMCP is a comprehensive ModelContextProtocol (MCP) server that provides tools for marketing automation, content generation, research, and project management. It integrates with various AI services to streamline workflows for developers and marketers.
+BolideAI MCP is a comprehensive ModelContextProtocol (MCP) server that provides tools for marketing automation, content generation, research, and project management. It integrates with various AI services to streamline workflows for developers and marketers.
 
 ## Features
 
@@ -24,13 +24,13 @@ For quick testing without local builds:
 #### Installation
 
 ```bash
-npm install -g dataroutemcp
+npm install -g @bolide-ai/mcp
 ```
 
 Or use with npx (recommended):
 
 ```bash
-npx dataroutemcp@latest
+npx @bolide-ai/mcp@latest
 ```
 
 #### Configuration
@@ -40,13 +40,11 @@ Configure your MCP client with the following:
 ```json
 {
   "mcpServers": {
-    "DataRouteMCP": {
+    "BolideAI": {
       "command": "npx",
-      "args": ["-y", "dataroutemcp@latest"],
+      "args": ["-y", "@bolide-ai/mcp@latest"],
       "env": {
-        "DATAROUTEMCP_GROUP_RESEARCH": "true",
-        "OPENAI_API_KEY": "your-openai-api-key",
-        "PERPLEXITY_API_KEY": "your-perplexity-api-key"
+        "BOLIDEAIMCP_API_KEY": "your-api-key",
       }
     }
   }
@@ -59,29 +57,16 @@ For development or local builds, follow these detailed steps:
 
 #### 1. Install Prerequisites
 
-**Install Node.js 23.11.1**
+**Install Node.js 22+**
 ```bash
 # Download and install from https://nodejs.org/en/download
 ```
 
 **Clone the repositories**
 ```bash
-git clone https://github.com/DataRoute-HQ/dataroute-mcp
-git clone https://github.com/DataRoute-HQ/dataroute-companion
+git clone https://github.com/Bolide-AI/mcp
 ```
-
-#### 2. Build and Install Companion App
-
-**Build Companion App in Xcode:**
-1. Open the project in Xcode
-2. In Xcode menu select **Product → Archive**
-3. Wait for the build to complete
-4. In the opened window click **Distribute App → Debugging**
-5. Wait for packaging
-6. In the opened window click **Export** and select any convenient directory
-7. Open the created directory in Finder and copy the Companion App to Applications (where all applications are located)
-
-#### 3. Build the MCP Server
+#### 2. Build the MCP Server
 
 ```bash
 # In the directory of the cloned repository
@@ -95,12 +80,12 @@ npm install && npm run build
 3. Click **New MCP Server**
 4. Insert the MCP server configuration, replacing:
    - `<PATH TO MCP DIRECTORY>` with the path to the MCP directory
-   - `<DATAROUTE_API_TOKEN>` with your Data Route API key (can be generated at [here](http://dataroute-web-production-kcumuv.laravel.cloud/))
+   - `<BOLIDEAI_API_TOKEN>` with your BolideAI key (can be generated at [here](https://bolide.ai/settings/api-keys))
 
 ```json
 {
   "mcpServers": {
-    "dataroutemcp-dev": {
+    "BolideAI-dev": {
       "type": "stdio",
       "command": "node",
       "args": [
@@ -108,8 +93,8 @@ npm install && npm run build
         "<PATH TO MCP DIRECTORY>/build/index.js"
       ],
       "env": {
-        "DATAROUTEMCP_DEBUG": "true",
-        "DATAROUTE_API_TOKEN": "<GEMINI API KEY HERE>"
+        "BOLIDEAI_MCP_DEBUG": "true",
+        "BOLIDEAI_API_TOKEN": "<your-api-key-here>"
       }
     }
   }
@@ -140,18 +125,18 @@ analyze_videos({
 
 ## Environment Variables
 
-- **`DATAROUTE_API_TOKEN`** - Required
-- **`DATAROUTE_API_URL`** - Optional, defaults to https://dataroute-web-production-kcumuv.laravel.cloud/api
+- **`BOLIDEAI_API_TOKEN`** - Required
+- **`BOLIDEAI_API_URL`** - Optional, defaults to https://bolide.ai/api
 
 ### Tool Configuration
 
-- **`DATAROUTEMCP_DEBUG=true`** - Enable diagnostic tools and detailed logging
+- **`BOLIDEAIMCP_DEBUG=true`** - Enable diagnostic tools and detailed logging
 - **Tool Groups** - Enable specific tool categories (see [Tool Options](TOOL_OPTIONS.md))
 - **Individual Tools** - Enable specific tools only (see [Tool Options](TOOL_OPTIONS.md))
 
 ## Available Tools
 
-DataRouteMCP provides **15 tools** across 7 categories:
+BolideAI MCP provides **15 tools** across 7 categories:
 
 ### 🚀 Project Scaffolding
 - `scaffold_marketing_project` - Create marketing project directory structure
@@ -311,8 +296,8 @@ Enable only the tools you need to optimize performance:
 ```json
 {
   "env": {
-    "DATAROUTEMCP_GROUP_RESEARCH": "true",
-    "DATAROUTEMCP_GROUP_CONTENT_GENERATORS": "true",
+    "BOLIDEAIMCP_GROUP_RESEARCH": "true",
+    "BOLIDEAIMCP_GROUP_CONTENT_GENERATORS": "true",
     "GOOGLE_API_KEY": "your-api-key",
     "OPENAI_API_KEY": "your-api-key"
   }
@@ -321,13 +306,13 @@ Enable only the tools you need to optimize performance:
 
 ### Available Tool Groups
 
-- `DATAROUTEMCP_GROUP_LAUNCH` - Launch and utility tools
-- `DATAROUTEMCP_GROUP_SCAFFOLDING` - Project scaffolding tools
-- `DATAROUTEMCP_GROUP_ARTIFACTS` - Artifact management tools
-- `DATAROUTEMCP_GROUP_ASSET_GENERATORS` - Asset management tools
-- `DATAROUTEMCP_GROUP_CONTENT_GENERATORS` - Content generation tools
-- `DATAROUTEMCP_GROUP_RESEARCH` - Research and information gathering tools
-- `DATAROUTEMCP_GROUP_DIAGNOSTICS` - Diagnostic tools
+- `BOLIDEAIMCP_GROUP_LAUNCH` - Launch and utility tools
+- `BOLIDEAIMCP_GROUP_SCAFFOLDING` - Project scaffolding tools
+- `BOLIDEAIMCP_GROUP_ARTIFACTS` - Artifact management tools
+- `BOLIDEAIMCP_GROUP_ASSET_GENERATORS` - Asset management tools
+- `BOLIDEAIMCP_GROUP_CONTENT_GENERATORS` - Content generation tools
+- `BOLIDEAIMCP_GROUP_RESEARCH` - Research and information gathering tools
+- `BOLIDEAIMCP_GROUP_DIAGNOSTICS` - Diagnostic tools
 
 ## Documentation
 
@@ -350,7 +335,7 @@ Enable only the tools you need to optimize performance:
 ```json
 {
   "env": {
-    "DATAROUTEMCP_DEBUG": "true"
+    "BOLIDEAIMCP_DEBUG": "true"
   }
 }
 ```
@@ -373,13 +358,13 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 
 ## License
 
-MIT © [Data Route LLC](https://www.dataroute.com/)
+MIT © [Data Route LLC](https://bolide.ai)
 
 ## Support
 
-- 🐛 [Report Issues](https://github.com/DataRoute-HQ/dataroute-mcp/issues)
-- 💬 [Support](https://github.com/DataRoute-HQ/dataroute-mcp/discussions)
+- 🐛 [Report Issues](https://github.com/BolideAI/mcp/issues)
+- 💬 [Support](https://github.com/BolideAI/mcp/discussions)
 
 ---
 
-**DataRouteMCP** - Streamline your marketing automation and research workflows with AI-powered tools. 
+**BolideAI MCP** - Streamline your marketing automation and research workflows with AI-powered tools. 

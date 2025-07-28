@@ -1,13 +1,11 @@
 {
-  "name": "dataroutemcp",
-  "version": "1.10.4",
-  "iOSTemplateVersion": "v1.0.8",
-  "macOSTemplateVersion": "v1.0.5",
+  "name": "@bolide-ai/mcp",
+  "version": "1.0.2",
   "main": "build/index.js",
   "type": "module",
   "bin": {
-    "dataroutemcp": "build/index.js",
-    "dataroutemcp-diagnostic": "build/diagnostic-cli.js"
+    "bolide-ai-mcp": "build/index.js",
+    "bolide-ai-mcp-diagnostic": "build/diagnostic-cli.js"
   },
   "scripts": {
     "build": "node -e \"const fs = require('fs'); const pkg = require('./package.json'); fs.writeFileSync('src/version.ts', \\`export const version = '\\${pkg.version}';\\nexport const iOSTemplateVersion = '\\${pkg.iOSTemplateVersion}';\\nexport const macOSTemplateVersion = '\\${pkg.macOSTemplateVersion}';\\n\\`)\" && tsup && cp -r template build/",
@@ -25,7 +23,7 @@
     "bundled"
   ],
   "keywords": [
-    "dataroutemcp",
+    "bolideai",
     "mcp",
     "modelcontextprotocol",
     "marketing",
@@ -33,14 +31,14 @@
   ],
   "author": "Data Route LLC",
   "license": "MIT",
-  "description": "DataRouteMCP is a ModelContextProtocol server that provides tools for marketing automation.",
+  "description": "BolideAI MCP is a ModelContextProtocol server that provides tools for marketing automation.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dataroute/DataRouteMCP.git"
+    "url": "git+https://github.com/Bolide-AI/mcp.git"
   },
-  "homepage": "https://www.dataroute.com/",
+  "homepage": "https://bolide.ai",
   "bugs": {
-    "url": "https://github.com/dataroute/DataRouteMCP/issues"
+    "url": "https://github.com/Bolide-AI/mcp/issues"
   },
   "dependencies": {
     "@google/genai": "^1.9.0",
