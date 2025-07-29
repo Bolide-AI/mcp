@@ -12,14 +12,8 @@ import { registerDiagnosticTool } from '../tools/diagnostic.js';
 // Import scaffold tool
 import { registerScaffoldTools } from '../tools/scaffold.js';
 
-// Import artifact tools
-import { registerArtifactTools } from '../tools/artifacts.js';
-
 // Import content generator tools
 import { registerContentGeneratorTools } from '../tools/content-generators.js';
-
-// Import asset generator tools
-import { registerAssetGeneratorTools } from '../tools/assets.js';
 
 // Import research tools
 import { registerResearchTools } from '../tools/research.js';
@@ -61,25 +55,11 @@ const toolRegistrations = [
     envVar: 'BOLIDEAI_MCP_TOOL_SCAFFOLD_PROJECT',
   },
 
-  // Artifact tools
-  {
-    register: registerArtifactTools,
-    groups: [ToolGroup.ARTIFACTS],
-    envVar: 'BOLIDEAI_MCP_TOOL_CREATE_ARTIFACT_DIRECTORY',
-  },
-
   // Content generator tools
   {
     register: registerContentGeneratorTools,
     groups: [ToolGroup.CONTENT_GENERATORS],
     envVar: 'BOLIDEAI_MCP_TOOL_CONTENT_GENERATORS',
-  },
-
-  // Asset generator tools
-  {
-    register: registerAssetGeneratorTools,
-    groups: [ToolGroup.ASSET_GENERATORS],
-    envVar: 'BOLIDEAI_MCP_TOOL_CREATE_POST_ASSET',
   },
 
   // Research tools

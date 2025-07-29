@@ -1,6 +1,7 @@
 import { dirname } from 'path';
 import { ValidationError } from './errors.js';
 import { log } from './logger.js';
+import { PROJECT_NAME } from './constants.js';
 
 export const getWorkspacePath = () => {
   let workspacePath = process.env.WORKSPACE_FOLDER_PATHS;
@@ -19,4 +20,10 @@ export const getWorkspacePath = () => {
   }
 
   return workspacePath;
+};
+
+export const getProjectPath = (): string => {
+  const workspacePath = getWorkspacePath();
+  
+  return `${workspacePath}/${PROJECT_NAME}`;
 };

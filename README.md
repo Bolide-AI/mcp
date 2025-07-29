@@ -9,10 +9,8 @@ BolideAI MCP is a comprehensive ModelContextProtocol (MCP) server that provides 
 
 - 🚀 **Project Scaffolding** - Create marketing project directories and structures
 - 📱 **Marketing Automation** - Capture screenshots and videos using companion app
-- 🎯 **Artifact Management** - Organize marketing materials with structured directories
 - 🤖 **AI-Powered Content Generation** - Generate social media posts using Gemini AI
 - 🔍 **Research Tools** - Comprehensive research using Perplexity AI and OpenAI
-- 📊 **Asset Management** - Organize and manage marketing assets
 - 🛠️ **Diagnostic Tools** - System validation and troubleshooting
 
 ## Getting Started
@@ -116,7 +114,6 @@ use_openai_deep_research({
 
 // Analyze video content
 analyze_videos({ 
-  artifactName: "my-project-20240101",
   videoNames: ["demo.mov"],
   force: false
 })
@@ -124,7 +121,7 @@ analyze_videos({
 
 ## Environment Variables
 
-- **`BOLIDEAI_API_TOKEN`** - Required for research tools and Reddit data fetching
+- **`BOLIDEAI_API_TOKEN`** - Required for research tools
 - **`BOLIDEAI_API_URL`** - Optional, defaults to https://bolide.ai/api
 
 ### Tool Configuration
@@ -135,7 +132,7 @@ analyze_videos({
 
 ## Available Tools
 
-BolideAI MCP provides **15 tools** across 7 categories:
+BolideAI MCP provides **10 tools** across 5 categories:
 
 ### 🚀 Project Scaffolding
 - `scaffold_bolide_ai_project` - Create bolide.ai project directory structure
@@ -146,19 +143,10 @@ BolideAI MCP provides **15 tools** across 7 categories:
 - `stop_companion_app` - Stop running companion app instances
 - `install_brew_and_ffmpeg` - Install Homebrew package manager and FFmpeg
 
-### 🎯 Artifact Management
-- `create_artifact_directory` - Create organized artifact directories
-- `create_post_artifact` - Store post artifacts with metadata
-
-### 📊 Asset Management
-- `create_post_asset` - Create marketing asset files
-- `create_research_asset` - Create research asset files
-
 ### 🤖 Content Generation
 - `analyze_videos` - Analyze video content using Gemini AI
 - `generate_gif` - Convert video segments to GIFs
 - `enhance_audio` - Extract and enhance audio from videos using ElevenLabs
-- `fetch_reddit_posts` - Fetch Reddit posts from specified subreddits
 
 ### 🔍 Research Tools
 - `use_perplexity` - Research using Perplexity AI
@@ -204,41 +192,16 @@ The deep research tool:
    scaffold_bolide_ai_project()
    ```
 
-2. **Create artifact directory**:
-   ```typescript
-   create_artifact_directory({ artifactName: "feature-demo" })
-   ```
-
-3. **Check app status and capture content**:
+2. **Check app status and capture content**:
    ```typescript
    check_companion_app_status()
-   launch_companion_app({ 
-     artifactsDirectory: "/path/to/artifacts/feature-demo-20240101" 
-   })
+   launch_companion_app()
    ```
 
-4. **Enhance audio quality**:
+3. **Enhance audio quality**:
    ```typescript
    enhance_audio({ 
-     artifactName: "feature-demo-20240101",
      videoNames: ["demo.mov"]
-   })
-   ```
-
-5. **Store results**:
-   ```typescript
-   create_post_artifact({ 
-     artifactName: "feature-demo-20240101",
-     fileName: "final-post.md",
-     fileContent: "Generated content..."
-   })
-   ```
-
-6. **Store research**:
-   ```typescript
-   create_research_asset({ 
-     name: "market-research.md",
-     content: "Detailed research findings..."
    })
    ```
 
@@ -259,33 +222,9 @@ The deep research tool:
    })
    ```
 
-3. **Store research findings**:
-   ```typescript
-   create_research_asset({ 
-     name: "market-analysis.md",
-     content: "Research findings and analysis..."
-   })
-   ```
 
-### Reddit Data Collection
 
-1. **Fetch Reddit posts**:
-   ```typescript
-   fetch_reddit_posts({ 
-     subreddit: "programming",
-     limit: 25,
-     sort: "top",
-     timePeriod: "day"
-   })
-   ```
 
-2. **Store Reddit data**:
-   ```typescript
-   create_research_asset({ 
-     name: "reddit-programming-trends.md",
-     content: "Analysis of top programming posts..."
-   })
-   ```
 
 ## Configuration Options
 
@@ -307,8 +246,6 @@ Enable only the tools you need to optimize performance:
 
 - `BOLIDEAI_MCP_GROUP_LAUNCH` - Launch and utility tools
 - `BOLIDEAI_MCP_GROUP_SCAFFOLDING` - Project scaffolding tools
-- `BOLIDEAI_MCP_GROUP_ARTIFACTS` - Artifact management tools
-- `BOLIDEAI_MCP_GROUP_ASSET_GENERATORS` - Asset management tools
 - `BOLIDEAI_MCP_GROUP_CONTENT_GENERATORS` - Content generation tools
 - `BOLIDEAI_MCP_GROUP_RESEARCH` - Research and information gathering tools
 - `BOLIDEAI_MCP_GROUP_DIAGNOSTICS` - Diagnostic tools
@@ -323,7 +260,7 @@ Enable only the tools you need to optimize performance:
 
 ### Dependencies
 
-- **Node.js** 18+ (automatically handled by npx)
+- **Node.js** 22+
 - **ffmpeg** (required for GIF generation tools)
 - **Companion App**
 
@@ -349,7 +286,7 @@ diagnostic() // Available in debug mode
 
 1. **Missing API Keys**: Ensure all required environment variables are set
 2. **ffmpeg Not Found**: Install ffmpeg using `brew install ffmpeg`
-3. **Permission Issues**: Check file system permissions for artifact directories
+3. **Permission Issues**: Check file system permissions for project directories
 
 ## Contributing
 

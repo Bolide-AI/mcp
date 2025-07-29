@@ -17,17 +17,11 @@ export enum ToolGroup {
   // Project scaffolding and creation tools
   SCAFFOLDING = 'BOLIDEAI_MCP_GROUP_SCAFFOLDING',
 
-  // Artifact management tools
-  ARTIFACTS = 'BOLIDEAI_MCP_GROUP_ARTIFACTS',
-
   // Logging and diagnostics
   DIAGNOSTICS = 'BOLIDEAI_MCP_GROUP_DIAGNOSTICS',
 
   // Content generation tools
   CONTENT_GENERATORS = 'BOLIDEAI_MCP_GROUP_CONTENT_GENERATORS',
-
-  // Asset generation tools
-  ASSET_GENERATORS = 'BOLIDEAI_MCP_GROUP_ASSET_GENERATORS',
 
   // Research tools
   RESEARCH = 'BOLIDEAI_MCP_GROUP_RESEARCH',

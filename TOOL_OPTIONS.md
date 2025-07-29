@@ -27,12 +27,8 @@ These groups organise tools based on common developer workflows, making it easie
   - _e.g., Launch companion app for marketing capture, stop running utilities._
 - **BOLIDEAI_MCP_GROUP_SCAFFOLDING=true** - Project scaffolding and creation tools
   - _e.g., Create marketing project directories and structures._
-- **BOLIDEAI_MCP_GROUP_ARTIFACTS=true** - Artifact management tools
-  - _e.g., Create artifact directories with organized structure for screenshots and videos, store post artifacts._
-- **BOLIDEAI_MCP_GROUP_ASSET_GENERATORS=true** - Asset management tools
-  - _e.g., Create asset files in the marketing assets directory structure._
 - **BOLIDEAI_MCP_GROUP_CONTENT_GENERATORS=true** - Content generation tools
-  - _e.g., Generate social media posts using AI from artifact screenshots and videos._
+  - _e.g., Generate social media posts using AI from captured screenshots and videos._
 - **BOLIDEAI_MCP_GROUP_RESEARCH=true** - Research and information gathering tools
   - _e.g., Perform research using Perplexity AI for information gathering and question answering._
 - **BOLIDEAI_MCP_GROUP_DIAGNOSTICS=true** - Logging and diagnostics tools
@@ -45,16 +41,8 @@ To enable specific tools rather than entire groups, use the following environmen
 ### Project Scaffolding Tools
 - **BOLIDEAI_MCP_TOOL_SCAFFOLD_PROJECT=true** - Create bolide.ai project directories.
 
-### Artifact Management Tools
-- **BOLIDEAI_MCP_TOOL_CREATE_ARTIFACT_DIRECTORY=true** - Create artifact directories with screenshots, videos, and posts subfolders.
-- **BOLIDEAI_MCP_TOOL_CREATE_POST_ARTIFACT=true** - Store post artifacts in artifact directories.
-
-### Asset Management Tools
-- **BOLIDEAI_MCP_TOOL_CREATE_POST_ASSET=true** - Create post asset files in the project assets directory.
-- **BOLIDEAI_MCP_TOOL_CREATE_RESEARCH_ASSET=true** - Create research asset files in the project assets directory.
-
 ### Content Generation Tools
-- **BOLIDEAI_MCP_TOOL_CONTENT_GENERATORS=true** - Analyze videos, generate GIFs, enhance audio, and fetch Reddit posts using AI.
+- **BOLIDEAI_MCP_TOOL_CONTENT_GENERATORS=true** - Analyze videos, generate GIFs, and enhance audio using AI.
 
 ### Research Tools
 - **BOLIDEAI_MCP_TOOL_USE_PERPLEXITY=true** - Perform research and information gathering using Perplexity AI.
@@ -71,24 +59,15 @@ To enable specific tools rather than entire groups, use the following environmen
 
 ## Available Tools
 
-BolideAIMCP currently provides **15 tools** across different categories:
+BolideAIMCP currently provides **10 tools** across different categories:
 
 ### Project Scaffolding Tools  
-- `scaffold_bolide_ai_project` - Create a bolide.ai project directory with assets and artifacts subdirectories
-
-### Artifact Management Tools
-- `create_artifact_directory` - Create a new artifact directory with screenshots, videos, and posts subfolders
-- `create_post_artifact` - Store a post artifact in the given artifact directory
-
-### Asset Management Tools
-- `create_post_asset` - Create post asset files in the project assets directory
-- `create_research_asset` - Create research asset files in the project assets directory
+- `scaffold_bolide_ai_project` - Create a bolide.ai project directory with organized directory structure
 
 ### Content Generation Tools
 - `analyze_videos` - Analyze videos using Gemini API via web API integration
 - `generate_gif` - Generate GIFs from video segments using ffmpeg
 - `enhance_audio` - Extract and enhance audio from videos using ElevenLabs speech-to-speech conversion
-- `fetch_reddit_posts` - Fetch Reddit posts from specified subreddits using BolideAI API
 
 ### Research Tools
 - `use_perplexity` - Perform research and information gathering using Perplexity AI
@@ -139,38 +118,7 @@ This provides tools for:
 1. Launching simctl for marketing capture
 2. Managing running utility applications
 
-### Artifact Management
 
-For managing marketing artifacts and posts:
-
-```json
-{
-  "env": {
-    "BOLIDEAI_MCP_GROUP_ARTIFACTS": "true"
-  }
-}
-```
-
-This provides tools for:
-1. Creating artifact directories
-2. Storing post artifacts
-3. Organizing marketing materials
-
-### Asset Management
-
-For managing marketing assets and files:
-
-```json
-{
-  "env": {
-    "BOLIDEAI_MCP_GROUP_ASSET_GENERATORS": "true"
-  }
-}
-```
-
-This provides tools for:
-1. Creating post and research asset files
-2. Managing marketing asset directory structure
 
 ### Diagnostics and Troubleshooting
 
@@ -206,7 +154,6 @@ This provides tools for:
 1. Analyzing video content using Gemini AI via web API
 2. Generating GIFs from video segments
 3. Enhancing audio quality using ElevenLabs
-4. Fetching Reddit posts from specified subreddits
 
 ### Complete Marketing Workflow
 
@@ -217,8 +164,6 @@ For a complete marketing content creation workflow:
   "env": {
     "BOLIDEAI_MCP_GROUP_SCAFFOLDING": "true",
     "BOLIDEAI_MCP_GROUP_LAUNCH": "true",
-    "BOLIDEAI_MCP_GROUP_ARTIFACTS": "true",
-    "BOLIDEAI_MCP_GROUP_ASSET_GENERATORS": "true",
     "BOLIDEAI_MCP_GROUP_CONTENT_GENERATORS": "true",
     "BOLIDEAI_MCP_GROUP_RESEARCH": "true",
     "BOLIDEAI_API_TOKEN": "your-api-token"
@@ -286,25 +231,19 @@ With debug mode enabled, you can use the diagnostic tool to troubleshoot issues 
 ## Environment Variables Summary
 
 ### Required for All API Operations
-- `BOLIDEAI_API_TOKEN` - Required for content generation, research, and Reddit data fetching tools
+- `BOLIDEAI_API_TOKEN` - Required for content generation and research tools
 - `BOLIDEAI_API_URL` - Optional, defaults to https://bolide.ai/api
 
 ### Tool Groups
 - `BOLIDEAI_MCP_GROUP_LAUNCH` - Launch and utility tools
 - `BOLIDEAI_MCP_GROUP_SCAFFOLDING` - Project scaffolding tools
-- `BOLIDEAI_MCP_GROUP_ARTIFACTS` - Artifact management tools  
-- `BOLIDEAI_MCP_GROUP_ASSET_GENERATORS` - Asset management tools
 - `BOLIDEAI_MCP_GROUP_CONTENT_GENERATORS` - Content generation tools
 - `BOLIDEAI_MCP_GROUP_RESEARCH` - Research tools
 - `BOLIDEAI_MCP_GROUP_DIAGNOSTICS` - Diagnostic tools
 
 ### Individual Tools
 - `BOLIDEAI_MCP_TOOL_SCAFFOLD_PROJECT` - Project scaffolding
-- `BOLIDEAI_MCP_TOOL_CREATE_ARTIFACT_DIRECTORY` - Artifact directory creation
-- `BOLIDEAI_MCP_TOOL_CREATE_POST_ARTIFACT` - Post artifact storage
-- `BOLIDEAI_MCP_TOOL_CREATE_POST_ASSET` - Post asset file creation
-- `BOLIDEAI_MCP_TOOL_CREATE_RESEARCH_ASSET` - Research asset file creation  
-- `BOLIDEAI_MCP_TOOL_CONTENT_GENERATORS` - Content generation tools (analyze videos, generate GIFs, enhance audio, fetch Reddit posts)
+- `BOLIDEAI_MCP_TOOL_CONTENT_GENERATORS` - Content generation tools (analyze videos, generate GIFs, enhance audio)
 - `BOLIDEAI_MCP_TOOL_USE_PERPLEXITY` - Perplexity AI research tool
 - `BOLIDEAI_MCP_TOOL_USE_OPENAI_DEEP_RESEARCH` - OpenAI deep research tool
 - `BOLIDEAI_MCP_TOOL_CHECK_COMPANION_APP_STATUS` - Status check utility

@@ -9,7 +9,7 @@ import { registerTool } from './common.js';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { log } from '../utils/logger.js';
 import { ValidationError } from '../utils/errors.js';
-import { getWorkspacePath } from '../utils/workspace.js';
+import { getWorkspacePath, getProjectPath } from '../utils/workspace.js';
 import { PROJECT_NAME } from '../utils/constants.js';
 
 const ScaffoldBolideAIProjectSchema = z.object({});
@@ -102,9 +102,12 @@ async function scaffoldProject(params: ScaffoldBolideAIProjectParams): Promise<s
 
   log('info', `Scaffolding project at ${workspacePath}`);
 
-  const projectPath = join(workspacePath, PROJECT_NAME);
-  const assetsPath = join(projectPath, 'assets');
-  const artifactsPath = join(projectPath, 'artifacts');
+  const projectPath = getProjectPath();
+  const callsPath = join(projectPath, 'calls');
+  const dictationPath = join(projectPath, 'dictation');
+  const gifsPath = join(projectPath, 'gifs');
+  const screencastsPath = join(projectPath, 'screencasts');
+  const screenshotsPath = join(projectPath, 'screenshots');
 
   const currentFileUrl = import.meta.url;
   const currentFilePath = fileURLToPath(currentFileUrl);
@@ -122,18 +125,17 @@ async function scaffoldProject(params: ScaffoldBolideAIProjectParams): Promise<s
 
   try {
     await mkdir(projectPath, { recursive: true });
-    await mkdir(assetsPath, { recursive: true });
-    await mkdir(artifactsPath, { recursive: true });
+    await mkdir(callsPath, { recursive: true });
+    await mkdir(dictationPath, { recursive: true });
+    await mkdir(gifsPath, { recursive: true });
+    await mkdir(screencastsPath, { recursive: true });
+    await mkdir(screenshotsPath, { recursive: true });
 
-    const postsPath = join(assetsPath, 'posts');
-    const researchPath = join(assetsPath, 'research');
-    await mkdir(postsPath, { recursive: true });
-    await mkdir(researchPath, { recursive: true });
-
-    await writeFile(join(assetsPath, '.gitkeep'), '');
-    await writeFile(join(artifactsPath, '.gitkeep'), '');
-    await writeFile(join(postsPath, '.gitkeep'), '');
-    await writeFile(join(researchPath, '.gitkeep'), '');
+    await writeFile(join(callsPath, '.gitkeep'), '');
+    await writeFile(join(dictationPath, '.gitkeep'), '');
+    await writeFile(join(gifsPath, '.gitkeep'), '');
+    await writeFile(join(screencastsPath, '.gitkeep'), '');
+    await writeFile(join(screenshotsPath, '.gitkeep'), '');
 
     await copyTemplateContents(templatePath, projectPath);
 
@@ -151,7 +153,7 @@ export function registerScaffoldTools(server: McpServer): void {
   registerTool<ScaffoldBolideAIProjectParams>(
     server,
     'scaffold_bolide_ai_project',
-    'Create a bolide.ai project directory with assets and artifacts subdirectories. Example: scaffold_bolide_ai_project()',
+    'Create a bolide.ai project directory with calls, dictation, gifs, screencasts, and screenshots subdirectories. Example: scaffold_bolide_ai_project()',
     ScaffoldBolideAIProjectSchema.shape,
     async (params) => {
       try {
@@ -163,25 +165,25 @@ export function registerScaffoldTools(server: McpServer): void {
           message: `Successfully created project at ${projectPath}`,
           structure: {
             [PROJECT_NAME]: {
-              artifacts: {
-                description: 'Directory for intermediate materials (screenshots and video recordings of app functionality)',
+              calls: {
+                description: 'Directory for call recordings',
               },
-              assets: {
-                description: 'Directory for final materials (documentation, social media posts, help desk materials, etc.)',
-                subdirectories: {
-                  posts: {
-                    description: 'Directory for social media posts and content',
-                  },
-                  research: {
-                    description: 'Directory for research results',
-                  },
-                },
+              dictation: {
+                description: 'Directory for dictation recordings',
+              },
+              gifs: {
+                description: 'Directory for generated GIFs',
+              },
+              screencasts: {
+                description: 'Directory for screencast recordings',
+              },
+              screenshots: {
+                description: 'Directory for screenshot recordings',
               },
             },
           },
           nextSteps: [
-            `Navigate to ${projectPath} to start organizing your project materials`,
-            'Create an artifact directory using the create_artifact_directory({ artifactName: "ARTIFACT_NAME" }) to start capturing screenshots, videos, and generating posts',
+            `Navigate to ${projectPath} to start organizing your project materials`
           ],
         };
 
