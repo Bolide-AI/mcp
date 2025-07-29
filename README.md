@@ -30,7 +30,7 @@ npm install -g @bolide-ai/mcp
 Or use with npx (recommended):
 
 ```bash
-npx @bolide-ai/mcp@latest
+npx --package=@bolide-ai/mcp bolide-ai-mcp
 ```
 
 #### Configuration
@@ -41,8 +41,7 @@ Configure your MCP client with the following:
 {
   "mcpServers": {
     "BolideAI": {
-      "command": "npx",
-      "args": ["-y", "@bolide-ai/mcp@latest"],
+      "command": "npx --package=@bolide-ai/mcp bolide-ai-mcp",
       "env": {
         "BOLIDEAI_MCP_API_KEY": "your-api-key",
       }
