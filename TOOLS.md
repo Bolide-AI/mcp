@@ -29,7 +29,7 @@ Tools for generating social media content using AI.
 
 | Tool Name | Description |
 |-----------|-------------|
-| `analyze_screencasts` | Analyzes screencasts using Gemini API via the web API integration. IMPORTANT: You MUST provide the screencastNames and force parameters. Example: analyze_screencasts({ screencastNames: ['screencast1.mp4', 'screencast2.mp4'], force: false }) |
+| `analyze_screencasts` | Analyzes screencasts using Gemini API via the web API integration. IMPORTANT: You MUST provide the screencastNames and force parameters. Optionally provide customPrompt for specialized analysis. When customPrompt is used, Gemini returns a short file suffix that gets appended to the JSON filename. Example: analyze_screencasts({ screencastNames: ['bug_demo.mp4'], force: false, customPrompt: 'Focus on UI errors and bugs' }) creates `bug_demo_ui-errors.json` |
 | `generate_gif` | Generates a GIF from a screencast. IMPORTANT: You MUST provide the screencastName, startTime, and endTime parameters. Example: generate_gif({ screencastName: 'NAME_OF_SCREENCAST_FILE', startTime: '00:00:00', endTime: '00:00:00' }) |
 | `enhance_audio` | Extracts audio from screencasts using ffmpeg and saves as MP3 files in the same directory. Automatically enhances audio using the web API which integrates with ElevenLabs speech-to-speech conversion with voice ID 29vD33N1CtxCmqQRPOHJ. Requires BOLIDEAI_API_TOKEN and optionally BOLIDEAI_API_URL environment variables. IMPORTANT: You MUST provide the screencastNames parameter. Example: enhance_audio({ screencastNames: ['screencast1.mp4', 'screencast2.mp4'] }) |
 

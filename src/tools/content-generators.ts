@@ -17,6 +17,10 @@ const AnalyzeScreencastsSchema = z.object({
   force: z
     .boolean()
     .describe('Whether to force the analysis even if the analysis file already exists'),
+  customPrompt: z
+    .string()
+    .optional()
+    .describe('Optional custom prompt for video analysis. If not provided, uses the default comprehensive analysis prompt.'),
 });
 
 const GenerateGifSchema = z.object({
@@ -122,9 +126,13 @@ async function analyzeScreencasts(params: AnalyzeScreencastsParams): Promise<
     }[];
   }[]
 > {
-  let { screencastNames, force } = params;
+  let { screencastNames, force, customPrompt } = params;
 
   log('info', `Analyzing screencasts: ${screencastNames.join(', ')}`);
+  
+  if (customPrompt) {
+    log('info', `Using custom prompt for analysis: ${customPrompt}`);
+  }
 
   const projectPath = getProjectPath();
   const screencastsPath = join(projectPath, 'screencasts');
@@ -187,6 +195,10 @@ async function analyzeScreencasts(params: AnalyzeScreencastsParams): Promise<
       formData.append('force', 'true');
     }
 
+    if (customPrompt) {
+      formData.append('custom_prompt', customPrompt);
+    }
+
     const response = await fetch(`${webApiUrl}/tools/analyze-videos`, {
       method: 'POST',
       headers: {
@@ -228,12 +240,28 @@ async function analyzeScreencasts(params: AnalyzeScreencastsParams): Promise<
     for (let i = 0; i < data.analyses.length; i++) {
       const analysis = data.analyses[i];
       const screencastName = analysis.screencastName || analysis.videoName;
-      const jsonFileName = screencastName.replace(/\.[^/.]+$/, '.json');
+      
+      let jsonFileName = screencastName.replace(/\.[^/.]+$/, '.json');
+      
+      if (analysis.fileSuffix) {
+        const baseName = screencastName.replace(/\.[^/.]+$/, '');
+        jsonFileName = `${baseName}_${analysis.fileSuffix.replace(/[^a-zA-Z0-9-]/g, '-').toLowerCase()}.json`;
+        log('info', `Using custom file suffix: ${analysis.fileSuffix} for ${screencastName}`);
+      }
+      
       const jsonFilePath = join(screencastsPath, jsonFileName);
 
       try {
-        const updatedAnalysis = { ...analysis, screencastName };
+        const updatedAnalysis = { ...analysis };
+
+        if (analysis.fileSuffix) {
+          updatedAnalysis.result = analysis.description;
+          delete updatedAnalysis.description;
+        }
+
         delete updatedAnalysis.videoName;
+        delete updatedAnalysis.fileSuffix;
+        
         writeFileSync(jsonFilePath, JSON.stringify(updatedAnalysis, null, 2), 'utf8');
 
         analysisResults.push({
@@ -570,7 +598,7 @@ export function registerContentGeneratorTools(server: McpServer): void {
   registerTool<AnalyzeScreencastsParams>(
     server,
     'analyze_screencasts',
-    `Analyzes screencasts using Gemini API via the web API integration. IMPORTANT: You MUST provide the screencastNames and force parameters. Example: analyze_screencasts({ screencastNames: ['screencast1.mp4', 'screencast2.mp4'], force: false })`,
+    `Analyzes screencasts using Gemini API via the web API integration. IMPORTANT: You MUST provide the screencastNames and force parameters. Optionally provide customPrompt for specialized analysis. DO NOT MODIFY THE CUSTOM PROMPT, NEVER ASK FOR VISUAL ANALYSIS UNLESS USER EXPLICITLY ASKS FOR IT, USE WHAT THE USER ASKED FOR AS CUSTOM PROMPT. Example: analyze_screencasts({ screencastNames: ['screencast1.mp4', 'screencast2.mp4'], force: false, customPrompt: 'Focus on user interface errors and bugs' })`,
     AnalyzeScreencastsSchema.shape,
     async (params) => {
       try {
