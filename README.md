@@ -43,7 +43,7 @@ Configure your MCP client with the following:
     "BolideAI": {
       "command": "npx --package=@bolide-ai/mcp bolide-ai-mcp",
       "env": {
-        "BOLIDEAI_MCP_API_KEY": "your-api-key",
+        "BOLIDEAI_API_KEY": "your-api-key",
       }
     }
   }
