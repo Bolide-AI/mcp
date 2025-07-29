@@ -1,6 +1,6 @@
 # Contributing
 
-Contributions are welcome! Here's how you can help improve BolideAIMCP.
+Contributions are welcome! Here's how you can help improve BolideAI MCP.
 
 ## Local development setup
 
@@ -39,15 +39,15 @@ brew install axe
 
 ### Configure your MCP client
 
-To configure your MCP client to use your local BolideAIMCP server you can use the following configuration:
+To configure your MCP client to use your local BolideA IMCP server you can use the following configuration:
 
 ```json
 {
   "mcpServers": {
-    "BolideAIMCP": {
+    "BolideAI-dev": {
       "command": "node",
       "args": [
-        "/path_to/BolideAIMCP/build/index.js"
+        "/path_to/mcp/build/index.js"
       ]
     }
   }
@@ -56,7 +56,7 @@ To configure your MCP client to use your local BolideAIMCP server you can use th
 
 ### Developing using VS Code
 
-VS Code is especially good for developing BolideAIMCP as it has a built-in way to view MCP client/server logs as well as the ability to configure MCP servers at a project level. It probably has the most comprehensive support for MCP development. 
+VS Code is especially good for developing BolideAI MCP as it has a built-in way to view MCP client/server logs as well as the ability to configure MCP servers at a project level. It probably has the most comprehensive support for MCP development. 
 
 To make your development workflow in VS Code more efficient:
 
@@ -82,7 +82,7 @@ npx @modelcontextprotocol/inspector node build/index.js
 
 #### Using the diagnostic tool
 
-Running the BolideAIMCP server with the environmental variable `BOLIDEAI_MCP_DEBUG=true` will expose a new diagnostic tool which you can run using MCP Inspector:
+Running the BolideAI MCP server with the environmental variable `BOLIDEAI_MCP_DEBUG=true` will expose a new diagnostic tool which you can run using MCP Inspector:
 
 
 ```bash
@@ -103,7 +103,7 @@ node build/diagnostic-cli.js
 
 ### Working with Marketing Projects
 
-BolideAIMCP provides tools for marketing automation and content generation. The main workflow involves:
+BolideAI MCP provides tools for marketing automation and content generation. The main workflow involves:
 
 1. **Project scaffolding** - Create marketing directory structures
 2. **Artifact management** - Organize screenshots, videos, and posts
@@ -112,7 +112,7 @@ BolideAIMCP provides tools for marketing automation and content generation. The 
 
 #### Marketing Project Structure
 
-When you scaffold a marketing project, BolideAIMCP creates:
+When you scaffold a marketing project, BolideAI MCP creates:
 
 ```
 marketing/

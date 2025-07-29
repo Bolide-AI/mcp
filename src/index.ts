@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 /**
- * BolideAIMCP - Main entry point
+ * BolideAI MCP - Main entry point
  *
- * This file serves as the entry point for the BolideAIMCP server, importing and registering
+ * This file serves as the entry point for the BolideAI MCP server, importing and registering
  * all tool modules with the MCP server. It follows the platform-specific approach for Xcode tools.
  *
  * Responsibilities:
@@ -52,7 +52,7 @@ async function main(): Promise<void> {
     });
 
     // Log successful startup
-    log('info', `BolideAIMCP server (version ${version}) started successfully`);
+    log('info', `BolideAI MCP server (version ${version}) started successfully`);
   } catch (error) {
     console.error('Fatal error in main():', error);
     process.exit(1);

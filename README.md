@@ -112,9 +112,9 @@ use_openai_deep_research({
   query: "AI trends in marketing automation 2024" 
 })
 
-// Analyze video content
-analyze_videos({ 
-  videoNames: ["demo.mov"],
+// Analyze screencast content
+analyze_screencasts({ 
+  screencastNames: ["demo.mov"],
   force: false
 })
 ```
@@ -144,9 +144,9 @@ BolideAI MCP provides **10 tools** across 5 categories:
 - `install_brew_and_ffmpeg` - Install Homebrew package manager and FFmpeg
 
 ### 🤖 Content Generation
-- `analyze_videos` - Analyze video content using Gemini AI
-- `generate_gif` - Convert video segments to GIFs
-- `enhance_audio` - Extract and enhance audio from videos using ElevenLabs
+- `analyze_screencasts` - Analyze screencast content using Gemini AI
+- `generate_gif` - Convert screencast segments to GIFs
+- `enhance_audio` - Extract and enhance audio from screencasts using ElevenLabs
 
 ### 🔍 Research Tools
 - `use_perplexity` - Research using Perplexity AI
@@ -201,7 +201,7 @@ The deep research tool:
 3. **Enhance audio quality**:
    ```typescript
    enhance_audio({ 
-     videoNames: ["demo.mov"]
+     screencastNames: ["demo.mov"]
    })
    ```
 

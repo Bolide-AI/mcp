@@ -1,6 +1,6 @@
 {
   "name": "@bolide-ai/mcp",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "main": "build/index.js",
   "type": "module",
   "bin": {

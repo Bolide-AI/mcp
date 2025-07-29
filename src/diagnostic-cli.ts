@@ -15,7 +15,7 @@ process.env.BOLIDEAI_MCP_DEBUG = 'true';
 async function runDiagnostic(): Promise<void> {
   try {
     // Using console.error to avoid linting issues as it's allowed by the project's linting rules
-    console.error(`Running BolideAIMCP Diagnostic Tool (v${version})...`);
+    console.error(`Running BolideAI MCP Diagnostic Tool (v${version})...`);
     console.error('Collecting system information and checking dependencies...\n');
 
     const { runDiagnosticTool } = await import('./tools/diagnostic.js');

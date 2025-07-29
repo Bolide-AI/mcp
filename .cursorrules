@@ -1,10 +1,10 @@
-# BolideAIMCP Rules
+# BolideAI MCP Rules
 
-You are an AI assistant helping with the BolideAIMCP project - a Model Context Protocol (MCP) server that provides marketing automation tools for AI assistants and MCP clients.
+You are an AI assistant helping with the BolideAI MCP project - a Model Context Protocol (MCP) server that provides marketing automation tools for AI assistants and MCP clients.
 
 ## Project Overview
 
-- **Project**: BolideAIMCP - MCP server for marketing automation
+- **Project**: BolideAI MCP - MCP server for marketing automation
 - **Tech Stack**: TypeScript, Node.js (ES modules), MCP SDK
 - **Purpose**: Standardized interface for AI agents to interact with marketing automation tools
 - **Target Platforms**: macOS
@@ -157,7 +157,7 @@ You are an AI assistant helping with the BolideAIMCP project - a Model Context P
 ## Testing & Validation
 
 ### Development Testing Workflow
-The BolideAIMCP server is available within this development environment as "BolideAIMCP" or "data-route-mcp-server-dev" (or similar variations) and exposes all tools for testing.
+The BolideAI MCP server is available within this development environment as "BolideAI MCP" or "BolideAI-dev" (or similar variations) and exposes all tools for testing.
 
 **Testing Process for Changes:**
 1. `npm run lint` - Check for linting issues

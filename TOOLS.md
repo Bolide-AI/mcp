@@ -1,6 +1,6 @@
-# BolideAIMCP Tools Reference
+# BolideAI MCP Tools Reference
 
-This document provides a comprehensive list of all tools available in BolideAIMCP, organized by functionality.
+This document provides a comprehensive list of all tools available in BolideAI MCP, organized by functionality.
 
 ## Tool Categories
 
@@ -29,9 +29,9 @@ Tools for generating social media content using AI.
 
 | Tool Name | Description |
 |-----------|-------------|
-| `analyze_videos` | Analyzes videos using Gemini API via the web API integration. IMPORTANT: You MUST provide the videoNames and force parameters. Example: analyze_videos({ videoNames: ['video1.mp4', 'video2.mp4'], force: false }) |
-| `generate_gif` | Generates a GIF from a video. IMPORTANT: You MUST provide the videoName, startTime, and endTime parameters. Example: generate_gif({ videoName: 'NAME_OF_VIDEO_FILE', startTime: '00:00:00', endTime: '00:00:00' }) |
-| `enhance_audio` | Extracts audio from videos using ffmpeg and saves as MP3 files in the same directory. Automatically enhances audio using the web API which integrates with ElevenLabs speech-to-speech conversion with voice ID 29vD33N1CtxCmqQRPOHJ. Requires BOLIDEAI_API_TOKEN and optionally BOLIDEAI_API_URL environment variables. IMPORTANT: You MUST provide the videoNames parameter. Example: enhance_audio({ videoNames: ['video1.mp4', 'video2.mp4'] }) |
+| `analyze_screencasts` | Analyzes screencasts using Gemini API via the web API integration. IMPORTANT: You MUST provide the screencastNames and force parameters. Example: analyze_screencasts({ screencastNames: ['screencast1.mp4', 'screencast2.mp4'], force: false }) |
+| `generate_gif` | Generates a GIF from a screencast. IMPORTANT: You MUST provide the screencastName, startTime, and endTime parameters. Example: generate_gif({ screencastName: 'NAME_OF_SCREENCAST_FILE', startTime: '00:00:00', endTime: '00:00:00' }) |
+| `enhance_audio` | Extracts audio from screencasts using ffmpeg and saves as MP3 files in the same directory. Automatically enhances audio using the web API which integrates with ElevenLabs speech-to-speech conversion with voice ID 29vD33N1CtxCmqQRPOHJ. Requires BOLIDEAI_API_TOKEN and optionally BOLIDEAI_API_URL environment variables. IMPORTANT: You MUST provide the screencastNames parameter. Example: enhance_audio({ screencastNames: ['screencast1.mp4', 'screencast2.mp4'] }) |
 
 ### Research Tools
 
@@ -63,7 +63,7 @@ Tools for system diagnostics and environment validation.
    ```
    check_companion_app_status()
    launch_companion_app()
-   generate_gif({ videoName: "video.mov", startTime: "00:00:10", endTime: "00:00:20" })
+   generate_gif({ screencastName: "screencast.mov", startTime: "00:00:10", endTime: "00:00:20" })
    ```
 
 3. **Research Workflow**:
@@ -76,7 +76,7 @@ Tools for system diagnostics and environment validation.
 
 Many tools require specific parameters:
 - **Project scaffolding**: No parameters required
-- **Content generation tools**: `videoNames` required for analysis tools; specific parameters for each tool
+- **Content generation tools**: `screencastNames` required for analysis tools; specific parameters for each tool
 - **Launch tools**: No parameters required
 - **Research tools**: `query` required; `search_mode` for Perplexity
 
@@ -103,7 +103,7 @@ Available tool groups:
 - Debug tool requires `BOLIDEAI_MCP_DEBUG=true` environment variable
 - Content generation and research tools require `BOLIDEAI_API_TOKEN` environment variable
 - GIF generation tool requires `ffmpeg` to be installed on the system
-- Content generation tools work with video files directly
+- Content generation tools work with screencast files directly
 
 ## Total Tool Count
 

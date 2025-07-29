@@ -12,24 +12,24 @@ import { BOLIDEAI_API_URL } from '../utils/constants.js';
 
 import * as fs from 'fs';
 
-const AnalyzeVideosSchema = z.object({
-  videoNames: z.array(z.string()).describe('Names of the video files to analyze'),
+const AnalyzeScreencastsSchema = z.object({
+  screencastNames: z.array(z.string()).describe('Names of the screencast files to analyze'),
   force: z
     .boolean()
     .describe('Whether to force the analysis even if the analysis file already exists'),
 });
 
 const GenerateGifSchema = z.object({
-  videoName: z.string().describe('Name of the video file to convert to GIF'),
+  screencastName: z.string().describe('Name of the screencast file to convert to GIF'),
   startTime: z.string().describe('Start timestamp in format HH:MM:SS or MM:SS'),
   endTime: z.string().describe('End timestamp in format HH:MM:SS or MM:SS'),
 });
 
 const EnhanceAudioSchema = z.object({
-  videoNames: z.array(z.string()).describe('Names of the video files to extract audio from'),
+  screencastNames: z.array(z.string()).describe('Names of the screencast files to extract audio from'),
 });
 
-type AnalyzeVideosParams = z.infer<typeof AnalyzeVideosSchema>;
+type AnalyzeScreencastsParams = z.infer<typeof AnalyzeScreencastsSchema>;
 type GenerateGifParams = z.infer<typeof GenerateGifSchema>;
 type EnhanceAudioParams = z.infer<typeof EnhanceAudioSchema>;
 
@@ -108,11 +108,11 @@ async function enhanceAudioWithSpeech(audioPath: string): Promise<string> {
   }
 }
 
-async function analyzeVideos(params: AnalyzeVideosParams): Promise<
+async function analyzeScreencasts(params: AnalyzeScreencastsParams): Promise<
   {
     analysis_file: string;
     existing_analysis: boolean;
-    videoName: string;
+    screencastName: string;
     description: string;
     timestampedEvents: {
       startTime: string;
@@ -122,22 +122,22 @@ async function analyzeVideos(params: AnalyzeVideosParams): Promise<
     }[];
   }[]
 > {
-  let { videoNames, force } = params;
+  let { screencastNames, force } = params;
 
-  log('info', `Analyzing videos: ${videoNames.join(', ')}`);
+  log('info', `Analyzing screencasts: ${screencastNames.join(', ')}`);
 
   const projectPath = getProjectPath();
-  const videosPath = join(projectPath, 'videos');
+  const screencastsPath = join(projectPath, 'screencasts');
 
   let results = [];
 
   if (!force) {
-    for (const videoName of videoNames) {
-      const jsonFileName = videoName.replace(/\.[^/.]+$/, '.json');
-      const jsonFilePath = join(videosPath, jsonFileName);
+    for (const screencastName of screencastNames) {
+      const jsonFileName = screencastName.replace(/\.[^/.]+$/, '.json');
+      const jsonFilePath = join(screencastsPath, jsonFileName);
 
       if (existsSync(jsonFilePath)) {
-        log('info', `Analysis file already exists for ${videoName}, skipping analysis`);
+        log('info', `Analysis file already exists for ${screencastName}, skipping analysis`);
 
         const analysis = JSON.parse(readFileSync(jsonFilePath, 'utf8'));
 
@@ -147,13 +147,13 @@ async function analyzeVideos(params: AnalyzeVideosParams): Promise<
           existing_analysis: true,
         });
 
-        videoNames = videoNames.filter((name: string) => name !== videoName);
+        screencastNames = screencastNames.filter((name: string) => name !== screencastName);
         continue;
       }
     }
 
-    if (videoNames.length === 0) {
-      log('info', `All videos have existing analyses, returning existing results`);
+    if (screencastNames.length === 0) {
+      log('info', `All screencasts have existing analyses, returning existing results`);
       return results;
     }
   }
@@ -162,25 +162,25 @@ async function analyzeVideos(params: AnalyzeVideosParams): Promise<
   const authToken = process.env.BOLIDEAI_API_TOKEN;
 
   try {
-    log('info', `Calling web API for video analysis: ${webApiUrl}/tools/analyze-videos`);
+    log('info', `Calling web API for screencast analysis: ${webApiUrl}/tools/analyze-videos`);
 
     if (!authToken) {
-      throw new ValidationError('BOLIDEAI_API_TOKEN environment variable is required for video analysis via web API');
+      throw new ValidationError('BOLIDEAI_API_TOKEN environment variable is required for screencast analysis via web API');
     }
 
     const formData = new FormData();
 
-    for (const videoName of videoNames) {
-      const videoPath = join(videosPath, videoName);
+    for (const screencastName of screencastNames) {
+      const screencastPath = join(screencastsPath, screencastName);
 
-      if (!existsSync(videoPath)) {
-        throw new ValidationError(`Video file not found: ${videoPath}`);
+      if (!existsSync(screencastPath)) {
+        throw new ValidationError(`Screencast file not found: ${screencastPath}`);
       }
 
-      const videoFile = new File([readFileSync(videoPath)], videoName, {
+      const screencastFile = new File([readFileSync(screencastPath)], screencastName, {
         type: 'video/mp4'
       });
-      formData.append('video_files[]', videoFile);
+      formData.append('video_files[]', screencastFile);
     }
 
     if (force) {
@@ -203,49 +203,52 @@ async function analyzeVideos(params: AnalyzeVideosParams): Promise<
       if (response.status === 401) {
         throw new APIError('Authentication failed. Please check your auth token.', 401);
       } else if (response.status === 422) {
-        throw new APIError('Video file validation failed. Please check the file format and size.', 422);
+        throw new APIError('Screencast file validation failed. Please check the file format and size.', 422);
       } else if (response.status === 429) {
         throw new APIError('Rate limit exceeded. Please try again later.', 429);
       } else {
-        throw new APIError(`Failed to analyze videos via web API: ${errorText}`, response.status);
+        throw new APIError(`Failed to analyze screencasts via web API: ${errorText}`, response.status);
       }
     }
 
     const data = await response.json();
 
     if (!data.success) {
-      throw new APIError(`Video analysis failed: ${data.error || 'Unknown error'}`);
+      throw new APIError(`Screencast analysis failed: ${data.error || 'Unknown error'}`);
     }
 
     if (!data.analyses || !Array.isArray(data.analyses)) {
       throw new APIError('Invalid response format from web API');
     }
 
-    log('info', `Successfully received ${data.analyses.length} video analyses from web API`);
+    log('info', `Successfully received ${data.analyses.length} screencast analyses from web API`);
 
     const analysisResults = [];
 
     for (let i = 0; i < data.analyses.length; i++) {
       const analysis = data.analyses[i];
-      const videoName = analysis.videoName;
-      const jsonFileName = videoName.replace(/\.[^/.]+$/, '.json');
-      const jsonFilePath = join(videosPath, jsonFileName);
+      const screencastName = analysis.screencastName || analysis.videoName;
+      const jsonFileName = screencastName.replace(/\.[^/.]+$/, '.json');
+      const jsonFilePath = join(screencastsPath, jsonFileName);
 
       try {
-        writeFileSync(jsonFilePath, JSON.stringify(analysis, null, 2), 'utf8');
+        const updatedAnalysis = { ...analysis, screencastName };
+        delete updatedAnalysis.videoName;
+        writeFileSync(jsonFilePath, JSON.stringify(updatedAnalysis, null, 2), 'utf8');
 
         analysisResults.push({
-          ...analysis,
+          ...updatedAnalysis,
           analysis_file: jsonFilePath,
           existing_analysis: false,
         });
 
-        log('info', `Saved analysis for ${videoName} to ${jsonFilePath}`);
+        log('info', `Saved analysis for ${screencastName} to ${jsonFilePath}`);
       } catch (error) {
-        log('warn', `Failed to save analysis for ${videoName}: ${error}`);
+        log('warn', `Failed to save analysis for ${screencastName}: ${error}`);
 
         analysisResults.push({
           ...analysis,
+          screencastName,
           analysis_file: '',
           existing_analysis: false,
         });
@@ -254,38 +257,38 @@ async function analyzeVideos(params: AnalyzeVideosParams): Promise<
 
     results.push(...analysisResults);
 
-    log('info', `Successfully analyzed all ${videoNames.length} videos via web API and saved JSON files`);
+    log('info', `Successfully analyzed all ${screencastNames.length} screencasts via web API and saved JSON files`);
 
     return results;
   } catch (error) {
-    log('error', `Failed to analyze videos via web API: ${error}`);
+    log('error', `Failed to analyze screencasts via web API: ${error}`);
 
     if (error instanceof ValidationError || error instanceof APIError) {
       throw error;
     }
 
     throw new Error(
-      `Failed to analyze videos via web API: ${error instanceof Error ? error.message : String(error)}`,
+      `Failed to analyze screencasts via web API: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 }
 
 async function generateGif(params: GenerateGifParams): Promise<string> {
-  const { videoName, startTime, endTime } = params;
+  const { screencastName, startTime, endTime } = params;
 
   log(
     'info',
-    `Generating GIF from video ${videoName} from ${startTime} to ${endTime}`,
+    `Generating GIF from screencast ${screencastName} from ${startTime} to ${endTime}`,
   );
 
   const projectPath = getProjectPath();
-  const videosPath = join(projectPath, 'videos');
-  const videoPath = join(videosPath, videoName);
+  const screencastsPath = join(projectPath, 'screencasts');
+  const screencastPath = join(screencastsPath, screencastName);
   const gifsPath = join(projectPath, 'gifs');
 
   try {
-    if (!existsSync(videoPath)) {
-      throw new ValidationError(`Video file not found: ${videoPath}`);
+    if (!existsSync(screencastPath)) {
+      throw new ValidationError(`Screencast file not found: ${screencastPath}`);
     }
 
     if (!existsSync(gifsPath)) {
@@ -293,12 +296,12 @@ async function generateGif(params: GenerateGifParams): Promise<string> {
       log('info', `Created gifs directory: ${gifsPath}`);
     }
 
-    const gifName = `${videoName.replace(/\.[^/.]+$/, '')}_${startTime.replace(/:/g, '-')}_to_${endTime.replace(/:/g, '-')}.gif`;
+    const gifName = `${screencastName.replace(/\.[^/.]+$/, '')}_${startTime.replace(/:/g, '-')}_to_${endTime.replace(/:/g, '-')}.gif`;
     const gifPath = join(gifsPath, gifName);
 
-    log('info', `Analyzing video properties: ${videoPath}`);
+    log('info', `Analyzing screencast properties: ${screencastPath}`);
 
-    const probeCommand = `ffprobe -v quiet -print_format json -show_streams "${videoPath}"`;
+    const probeCommand = `ffprobe -v quiet -print_format json -show_streams "${screencastPath}"`;
     const probeOutput = execSync(probeCommand, { encoding: 'utf8' });
     const probeData = JSON.parse(probeOutput);
 
@@ -319,7 +322,7 @@ async function generateGif(params: GenerateGifParams): Promise<string> {
 
     log(
       'info',
-      `Video properties - Width: ${width}, Height: ${height}, Original Frame Rate: ${originalFrameRate} fps`,
+      `Screencast properties - Width: ${width}, Height: ${height}, Original Frame Rate: ${originalFrameRate} fps`,
     );
     log(
       'info',
@@ -327,10 +330,10 @@ async function generateGif(params: GenerateGifParams): Promise<string> {
     );
     log('info', `Creating GIF: ${gifPath}`);
 
-    const paletteCommand = `ffmpeg -ss ${startTime} -to ${endTime} -i "${videoPath}" -vf "fps=${gifFrameRate},scale=${width}:${height}:flags=lanczos,palettegen" -y "${gifPath}.palette.png"`;
+    const paletteCommand = `ffmpeg -ss ${startTime} -to ${endTime} -i "${screencastPath}" -vf "fps=${gifFrameRate},scale=${width}:${height}:flags=lanczos,palettegen" -y "${gifPath}.palette.png"`;
     execSync(paletteCommand, { stdio: 'pipe' });
 
-    const gifCommand = `ffmpeg -ss ${startTime} -to ${endTime} -i "${videoPath}" -i "${gifPath}.palette.png" -lavfi "fps=${gifFrameRate},scale=${width}:${height}:flags=lanczos[x];[x][1:v]paletteuse" -y "${gifPath}"`;
+    const gifCommand = `ffmpeg -ss ${startTime} -to ${endTime} -i "${screencastPath}" -i "${gifPath}.palette.png" -lavfi "fps=${gifFrameRate},scale=${width}:${height}:flags=lanczos[x];[x][1:v]paletteuse" -y "${gifPath}"`;
     execSync(gifCommand, { stdio: 'pipe' });
 
     execSync(`rm "${gifPath}.palette.png"`, { stdio: 'pipe' });
@@ -359,56 +362,56 @@ async function generateGif(params: GenerateGifParams): Promise<string> {
 }
 
 async function enhanceAudio(params: EnhanceAudioParams): Promise<{
-  videoName: string;
+  screencastName: string;
   success: boolean;
   errors: string[];
 }[]> {
-  const { videoNames } = params;
+  const { screencastNames } = params;
 
-  log('info', `Extracting and enhancing audio from videos: ${videoNames.join(', ')}`);
+  log('info', `Extracting and enhancing audio from screencasts: ${screencastNames.join(', ')}`);
 
   const projectPath = getProjectPath();
-  const videosPath = join(projectPath, 'videos');
+  const screencastsPath = join(projectPath, 'screencasts');
 
   const results: {
-    videoName: string;
+    screencastName: string;
     success: boolean;
     errors: string[];
   }[] = [];
 
   const tempFiles: string[] = [];
 
-  for (const videoName of videoNames) {
-    const videoPath = join(videosPath, videoName);
+  for (const screencastName of screencastNames) {
+    const screencastPath = join(screencastsPath, screencastName);
 
-    if (!existsSync(videoPath)) {
-      log('warn', `Video file not found: ${videoPath}, skipping`);
+    if (!existsSync(screencastPath)) {
+      log('warn', `Screencast file not found: ${screencastPath}, skipping`);
       continue;
     }
 
-    const audioName = `${videoName.replace(/\.[^/.]+$/, '')}.mp3`;
-    const audioPath = join(videosPath, audioName);
-    const enhancedAudioName = `${videoName.replace(/\.[^/.]+$/, '')}_enhanced.mp3`;
-    const enhancedAudioPath = join(videosPath, enhancedAudioName);
+    const audioName = `${screencastName.replace(/\.[^/.]+$/, '')}.mp3`;
+    const audioPath = join(screencastsPath, audioName);
+    const enhancedAudioName = `${screencastName.replace(/\.[^/.]+$/, '')}_enhanced.mp3`;
+    const enhancedAudioPath = join(screencastsPath, enhancedAudioName);
 
     let chunkErrors: Error[] = [];
 
     try {
-      log('info', `Checking if ${videoName} contains audio track`);
+      log('info', `Checking if ${screencastName} contains audio track`);
 
-      const probeCommand = `ffprobe -v quiet -print_format json -show_streams "${videoPath}"`;
+      const probeCommand = `ffprobe -v quiet -print_format json -show_streams "${screencastPath}"`;
       const probeOutput = execSync(probeCommand, { encoding: 'utf8' });
       const probeData = JSON.parse(probeOutput);
 
       const audioStream = probeData.streams.find((stream: any) => stream.codec_type === 'audio');
       if (!audioStream) {
-        throw new Error(`Video file ${videoName} does not contain an audio track`);
+        throw new Error(`Screencast file ${screencastName} does not contain an audio track`);
       }
 
-      log('info', `Audio track found in ${videoName}, proceeding with extraction`);
-      log('info', `Extracting audio from ${videoName} to ${audioName}`);
+      log('info', `Audio track found in ${screencastName}, proceeding with extraction`);
+      log('info', `Extracting audio from ${screencastName} to ${audioName}`);
 
-      const ffmpegCommand = `ffmpeg -i "${videoPath}" -vn -acodec mp3 -ab 192k -ar 44100 -y "${audioPath}"`;
+      const ffmpegCommand = `ffmpeg -i "${screencastPath}" -vn -acodec mp3 -ab 192k -ar 44100 -y "${audioPath}"`;
       execSync(ffmpegCommand, { stdio: 'pipe' });
 
       if (!existsSync(audioPath)) {
@@ -438,7 +441,7 @@ async function enhanceAudio(params: EnhanceAudioParams): Promise<{
           const enhancedAudioPath = await enhanceAudioWithSpeech(audioPath);
           tempFiles.push(enhancedAudioPath);
         } catch (error) {
-          log('error', `Failed to enhance audio for ${videoName}: ${error}`);
+          log('error', `Failed to enhance audio for ${screencastName}: ${error}`);
           chunkErrors.push(error as Error);
         }
       } else {
@@ -449,8 +452,8 @@ async function enhanceAudio(params: EnhanceAudioParams): Promise<{
 
         for (let startTime = 0; startTime < totalDuration; startTime += chunkDuration) {
           const endTime = Math.min(startTime + chunkDuration, totalDuration);
-          const chunkName = `${videoName.replace(/\.[^/.]+$/, '')}_chunk_${chunkIndex}.mp3`;
-          const chunkPath = join(videosPath, chunkName);
+          const chunkName = `${screencastName.replace(/\.[^/.]+$/, '')}_chunk_${chunkIndex}.mp3`;
+          const chunkPath = join(screencastsPath, chunkName);
 
           log('info', `Creating chunk ${chunkIndex}: ${startTime}s to ${endTime}s`);
 
@@ -487,8 +490,8 @@ async function enhanceAudio(params: EnhanceAudioParams): Promise<{
         }
 
         // Create concat file for ffmpeg
-        const concatFileName = `${videoName.replace(/\.[^/.]+$/, '')}_concat.txt`;
-        const concatFilePath = join(videosPath, concatFileName);
+        const concatFileName = `${screencastName.replace(/\.[^/.]+$/, '')}_concat.txt`;
+        const concatFilePath = join(screencastsPath, concatFileName);
         const concatContent = enhancedChunks.map(chunk => `file '${chunk}'`).join('\n');
         
         writeFileSync(concatFilePath, concatContent, 'utf8');
@@ -506,33 +509,33 @@ async function enhanceAudio(params: EnhanceAudioParams): Promise<{
 
       log('info', `Successfully enhanced audio: ${enhancedAudioPath}`);
 
-      const enhancedVideoName = `${videoName.replace(/\.[^/.]+$/, '')}_enhanced_audio${videoName.match(/\.[^/.]+$/)?.[0] || '.mp4'}`;
-      const enhancedVideoPath = join(videosPath, enhancedVideoName);
+      const enhancedScreencastName = `${screencastName.replace(/\.[^/.]+$/, '')}_enhanced_audio${screencastName.match(/\.[^/.]+$/)?.[0] || '.mp4'}`;
+      const enhancedScreencastPath = join(screencastsPath, enhancedScreencastName);
 
-      log('info', `Creating enhanced video ${enhancedVideoName} with enhanced audio`);
+      log('info', `Creating enhanced screencast ${enhancedScreencastName} with enhanced audio`);
 
-      const combineCommand = `ffmpeg -i "${videoPath}" -i "${enhancedAudioPath}" -c:v copy -c:a aac -map 0:v:0 -map 1:a:0 -shortest -y "${enhancedVideoPath}"`;
+      const combineCommand = `ffmpeg -i "${screencastPath}" -i "${enhancedAudioPath}" -c:v copy -c:a aac -map 0:v:0 -map 1:a:0 -shortest -y "${enhancedScreencastPath}"`;
       execSync(combineCommand, { stdio: 'pipe' });
 
-      if (!existsSync(enhancedVideoPath)) {
-        throw new Error('Enhanced video file was not created successfully');
+      if (!existsSync(enhancedScreencastPath)) {
+        throw new Error('Enhanced screencast file was not created successfully');
       }
 
       results.push({
-        videoName: enhancedVideoName,
+        screencastName: enhancedScreencastName,
         success: true,
         errors: [],
       });
 
-      log('info', `Successfully created enhanced video: ${enhancedVideoPath}`);
+      log('info', `Successfully created enhanced screencast: ${enhancedScreencastPath}`);
 
       // Add enhanced audio to temp files for cleanup
       tempFiles.push(enhancedAudioPath);
     } catch (error) {
-      log('error', `Failed to enhance audio for ${videoName}: ${error}`);
+      log('error', `Failed to enhance audio for ${screencastName}: ${error}`);
 
       results.push({
-        videoName: videoName,
+        screencastName: screencastName,
         success: false,
         errors: [error as Error].concat(chunkErrors).map(error => error.message),
       });
@@ -555,43 +558,43 @@ async function enhanceAudio(params: EnhanceAudioParams): Promise<{
   let failedResults = results.filter((result) => !result.success);
 
   if (failedResults.length > 0) {
-    log('error', `${failedResults.length} videos failed to be enhanced. See the errors for details.`);
+    log('error', `${failedResults.length} screencasts failed to be enhanced. See the errors for details.`);
   } else {
-    log('info', `Successfully created enhanced video files for all videos`);
+    log('info', `Successfully created enhanced screencast files for all screencasts`);
   }
 
   return results;
 }
 
 export function registerContentGeneratorTools(server: McpServer): void {
-  registerTool<AnalyzeVideosParams>(
+  registerTool<AnalyzeScreencastsParams>(
     server,
-    'analyze_videos',
-    `Analyzes videos using Gemini API via the web API integration. IMPORTANT: You MUST provide the videoNames and force parameters. Example: analyze_videos({ videoNames: ['video1.mp4', 'video2.mp4'], force: false })`,
-    AnalyzeVideosSchema.shape,
+    'analyze_screencasts',
+    `Analyzes screencasts using Gemini API via the web API integration. IMPORTANT: You MUST provide the screencastNames and force parameters. Example: analyze_screencasts({ screencastNames: ['screencast1.mp4', 'screencast2.mp4'], force: false })`,
+    AnalyzeScreencastsSchema.shape,
     async (params) => {
       try {
-        const videoAnalyses = await analyzeVideos(params);
+        const screencastAnalyses = await analyzeScreencasts(params);
 
         const nextSteps = [
-          'Review the generated descriptions for each video',
+          'Review the generated descriptions for each screencast',
           'Use the descriptions for content creation or documentation',
         ];
 
-        if (videoAnalyses.filter((analysis) => analysis.existing_analysis).length > 0) {
+        if (screencastAnalyses.filter((analysis) => analysis.existing_analysis).length > 0) {
           nextSteps.push(
-            'Some videos already have analyses, ask user if they want to force the analysis again',
+            'Some screencasts already have analyses, ask user if they want to force the analysis again',
           );
         }
 
         const response = {
           success: true,
-          message: 'Successfully analyzed videos via web API',
-          analyses: videoAnalyses,
+          message: 'Successfully analyzed screencasts via web API',
+          analyses: screencastAnalyses,
           existing_analyses:
-            videoAnalyses.filter((analysis) => analysis.existing_analysis).length > 0
-              ? 'Some videos already have analyses, use the force parameter to force the analysis again'
-              : 'All specified videos have new analyses',
+            screencastAnalyses.filter((analysis) => analysis.existing_analysis).length > 0
+              ? 'Some screencasts already have analyses, use the force parameter to force the analysis again'
+              : 'All specified screencasts have new analyses',
           integration: 'web-api',
           nextSteps: nextSteps,
         };
@@ -607,7 +610,7 @@ export function registerContentGeneratorTools(server: McpServer): void {
       } catch (error) {
         log(
           'error',
-          `Failed to analyze videos via web API: ${error instanceof Error ? error.message : String(error)}`,
+          `Failed to analyze screencasts via web API: ${error instanceof Error ? error.message : String(error)}`,
         );
 
         return {
@@ -633,7 +636,7 @@ export function registerContentGeneratorTools(server: McpServer): void {
   registerTool<GenerateGifParams>(
     server,
     'generate_gif',
-    `Generates a GIF from a video. IMPORTANT: You MUST provide the videoName, startTime, and endTime parameters. Example: generate_gif({ videoName: 'NAME_OF_VIDEO_FILE', startTime: '00:00:00', endTime: '00:00:00' })`,
+    `Generates a GIF from a screencast. IMPORTANT: You MUST provide the screencastName, startTime, and endTime parameters. Example: generate_gif({ screencastName: 'NAME_OF_SCREENCAST_FILE', startTime: '00:00:00', endTime: '00:00:00' })`,
     GenerateGifSchema.shape,
     async (params) => {
       try {
@@ -682,16 +685,16 @@ export function registerContentGeneratorTools(server: McpServer): void {
   registerTool<EnhanceAudioParams>(
     server,
     'enhance_audio',
-    `Extracts audio from videos using ffmpeg and saves as MP3 files in the same directory. Automatically enhances audio using the web API which integrates with ElevenLabs speech-to-speech conversion with voice ID 29vD33N1CtxCmqQRPOHJ. Requires WEB_API_TOKEN and optionally WEB_API_URL environment variables. IMPORTANT: You MUST provide the videoNames parameters. Example: enhance_audio({ videoNames: ['video1.mp4', 'video2.mp4'] })`,
+    `Extracts audio from screencasts using ffmpeg and saves as MP3 files in the same directory. Automatically enhances audio using the web API which integrates with ElevenLabs speech-to-speech conversion with voice ID 29vD33N1CtxCmqQRPOHJ. Requires WEB_API_TOKEN and optionally WEB_API_URL environment variables. IMPORTANT: You MUST provide the screencastNames parameters. Example: enhance_audio({ screencastNames: ['screencast1.mp4', 'screencast2.mp4'] })`,
     EnhanceAudioSchema.shape,
     async (params) => {
       try {
         const result = await enhanceAudio(params);
 
         const nextSteps = [
-          'Review the enhanced video files with improved speech quality',
-          'Use the enhanced videos for content creation or analysis',
-          'Compare the enhanced videos with the original versions',
+          'Review the enhanced screencast files with improved speech quality',
+          'Use the enhanced screencasts for content creation or analysis',
+          'Compare the enhanced screencasts with the original versions',
         ];
 
         const response = {
@@ -711,7 +714,7 @@ export function registerContentGeneratorTools(server: McpServer): void {
       } catch (error) {
         log(
           'error',
-          `Failed to create enhanced videos: ${error instanceof Error ? error.message : String(error)}`,
+          `Failed to create enhanced screencasts: ${error instanceof Error ? error.message : String(error)}`,
         );
 
         return {

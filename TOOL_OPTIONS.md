@@ -1,10 +1,10 @@
-# BolideAIMCP Tool Options
+# BolideAI MCP Tool Options
 
-This document explains how to configure tool registration in BolideAIMCP to optimise for different workflows and reduce the number of tools presented to LLM clients.
+This document explains how to configure tool registration in BolideAI MCP to optimise for different workflows and reduce the number of tools presented to LLM clients.
 
 ## Overview
 
-BolideAIMCP supports selective tool registration based on environment variables. This allows you to:
+BolideA IMCP supports selective tool registration based on environment variables. This allows you to:
 
 1. **Opt-in to individual tools** - Enable only specific tools you need
 2. **Enable tool groups** - Enable logical groups of tools for specific workflows
@@ -17,7 +17,7 @@ BolideAIMCP supports selective tool registration based on environment variables.
 
 ## Available Tool Groups and Environment Variables
 
-BolideAIMCP provides workflow-based tool groups that organise tools logically based on common developer workflows.
+BolideAI MCP provides workflow-based tool groups that organise tools logically based on common developer workflows.
 
 ### Workflow-based Groups
 
@@ -42,7 +42,7 @@ To enable specific tools rather than entire groups, use the following environmen
 - **BOLIDEAI_MCP_TOOL_SCAFFOLD_PROJECT=true** - Create bolide.ai project directories.
 
 ### Content Generation Tools
-- **BOLIDEAI_MCP_TOOL_CONTENT_GENERATORS=true** - Analyze videos, generate GIFs, and enhance audio using AI.
+- **BOLIDEAI_MCP_TOOL_CONTENT_GENERATORS=true** - Analyze screencasts, generate GIFs, and enhance audio using AI.
 
 ### Research Tools
 - **BOLIDEAI_MCP_TOOL_USE_PERPLEXITY=true** - Perform research and information gathering using Perplexity AI.
@@ -55,19 +55,19 @@ To enable specific tools rather than entire groups, use the following environmen
 - **BOLIDEAI_MCP_TOOL_INSTALL_BREW_AND_FFMPEG=true** - Install Homebrew package manager and FFmpeg for video processing dependencies.
 
 ### Diagnostics
-- **BOLIDEAI_MCP_DEBUG=true** - Enable diagnostic tool for BolideAIMCP server.
+- **BOLIDEAI_MCP_DEBUG=true** - Enable diagnostic tool for BolideAI MCP server.
 
 ## Available Tools
 
-BolideAIMCP currently provides **10 tools** across different categories:
+BolideAI MCP currently provides **10 tools** across different categories:
 
 ### Project Scaffolding Tools  
 - `scaffold_bolide_ai_project` - Create a bolide.ai project directory with organized directory structure
 
 ### Content Generation Tools
-- `analyze_videos` - Analyze videos using Gemini API via web API integration
-- `generate_gif` - Generate GIFs from video segments using ffmpeg
-- `enhance_audio` - Extract and enhance audio from videos using ElevenLabs speech-to-speech conversion
+- `analyze_screencasts` - Analyze screencasts using Gemini API via web API integration
+- `generate_gif` - Generate GIFs from screencast segments using ffmpeg
+- `enhance_audio` - Extract and enhance audio from screencasts using ElevenLabs speech-to-speech conversion
 
 ### Research Tools
 - `use_perplexity` - Perform research and information gathering using Perplexity AI
@@ -151,8 +151,8 @@ For generating social media content from captured artifacts:
 ```
 
 This provides tools for:
-1. Analyzing video content using Gemini AI via web API
-2. Generating GIFs from video segments
+1. Analyzing screencast content using Gemini AI via web API
+2. Generating GIFs from screencast segments
 3. Enhancing audio quality using ElevenLabs
 
 ### Complete Marketing Workflow
@@ -243,7 +243,7 @@ With debug mode enabled, you can use the diagnostic tool to troubleshoot issues 
 
 ### Individual Tools
 - `BOLIDEAI_MCP_TOOL_SCAFFOLD_PROJECT` - Project scaffolding
-- `BOLIDEAI_MCP_TOOL_CONTENT_GENERATORS` - Content generation tools (analyze videos, generate GIFs, enhance audio)
+- `BOLIDEAI_MCP_TOOL_CONTENT_GENERATORS` - Content generation tools (analyze screencasts, generate GIFs, enhance audio)
 - `BOLIDEAI_MCP_TOOL_USE_PERPLEXITY` - Perplexity AI research tool
 - `BOLIDEAI_MCP_TOOL_USE_OPENAI_DEEP_RESEARCH` - OpenAI deep research tool
 - `BOLIDEAI_MCP_TOOL_CHECK_COMPANION_APP_STATUS` - Status check utility

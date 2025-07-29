@@ -199,7 +199,7 @@ export async function runDiagnosticTool(): Promise<ToolResponse> {
 
   // Format the diagnostic information as a nicely formatted text response
   const formattedOutput = [
-    `# BolideAIMCP Diagnostic Report`,
+    `# BolideAI MCP Diagnostic Report`,
     `\nGenerated: ${diagnosticInfo.timestamp}`,
     `Server Version: ${diagnosticInfo.serverVersion}`,
 

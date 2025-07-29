@@ -17,7 +17,7 @@ Sentry.init({
   sendDefaultPii: true,
 
   // Set release version to match application version
-  release: `BolideAIMCP@${version}`,
+  release: `@bolide-ai/mcp@${version}`,
 
   // Set environment based on NODE_ENV
   environment: process.env.NODE_ENV || 'development',
