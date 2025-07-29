@@ -28,19 +28,19 @@ import { ToolResponse } from '../types/common.js';
 /**
  * Base error class for XcodeBuildMCP errors
  */
-export class DataRouteMCPError extends Error {
+export class BolideAIMCPError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = 'DataRouteMCPError';
+    this.name = 'BolideAIMCPError';
     // This is necessary for proper inheritance in TypeScript
-    Object.setPrototypeOf(this, DataRouteMCPError.prototype);
+    Object.setPrototypeOf(this, BolideAIMCPError.prototype);
   }
 }
 
 /**
  * Error thrown for API-specific errors
  */
-export class APIError extends DataRouteMCPError {
+export class APIError extends BolideAIMCPError {
   constructor(
     message: string,
     public statusCode?: number,
@@ -55,7 +55,7 @@ export class APIError extends DataRouteMCPError {
 /**
  * Error thrown when validation of parameters fails
  */
-export class ValidationError extends DataRouteMCPError {
+export class ValidationError extends BolideAIMCPError {
   constructor(
     message: string,
     public paramName?: string,
@@ -69,7 +69,7 @@ export class ValidationError extends DataRouteMCPError {
 /**
  * Error thrown for system-level errors (file access, permissions, etc.)
  */
-export class SystemError extends DataRouteMCPError {
+export class SystemError extends BolideAIMCPError {
   constructor(
     message: string,
     public originalError?: Error,
@@ -83,7 +83,7 @@ export class SystemError extends DataRouteMCPError {
 /**
  * Error thrown for configuration issues
  */
-export class ConfigurationError extends DataRouteMCPError {
+export class ConfigurationError extends BolideAIMCPError {
   constructor(message: string) {
     super(message);
     this.name = 'ConfigurationError';
@@ -94,7 +94,7 @@ export class ConfigurationError extends DataRouteMCPError {
 /**
  * Error thrown for axe-specific errors
  */
-export class AxeError extends DataRouteMCPError {
+export class AxeError extends BolideAIMCPError {
   constructor(
     message: string,
     public command?: string, // The axe command that failed

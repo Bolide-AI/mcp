@@ -60,7 +60,7 @@ export function checkBinaryAvailability(binaryPath: string): {
  */
 export function getEnvironmentVariables(): Record<string, string | undefined> {
   const relevantVars = [
-    'DATAROUTEMCP_DEBUG',
+    'BOLIDEAI_MCP_DEBUG',
     'INCREMENTAL_BUILDS_ENABLED',
     'PATH',
     'DEVELOPER_DIR',
@@ -81,9 +81,9 @@ export function getEnvironmentVariables(): Record<string, string | undefined> {
   // Add all tool and group environment variables for debugging
   Object.keys(process.env).forEach((key) => {
     if (
-      key.startsWith('DATAROUTEMCP_TOOL_') ||
-      key.startsWith('DATAROUTEMCP_GROUP_') ||
-      key.startsWith('DATAROUTEMCP_')
+      key.startsWith('BOLIDEAI_MCP_TOOL_') ||
+      key.startsWith('BOLIDEAI_MCP_GROUP_') ||
+      key.startsWith('BOLIDEAI_MCP_')
     ) {
       envVars[key] = process.env[key];
     }
@@ -155,8 +155,8 @@ export function getToolGroupsInfo(): Record<string, unknown> {
  */
 function getIndividuallyEnabledTools(): string[] {
   return Object.keys(process.env)
-    .filter((key) => key.startsWith('DATAROUTEMCP_TOOL_') && process.env[key] === 'true')
-    .map((key) => key.replace('DATAROUTEMCP_TOOL_', ''));
+    .filter((key) => key.startsWith('BOLIDEAI_MCP_TOOL_') && process.env[key] === 'true')
+    .map((key) => key.replace('BOLIDEAI_MCP_TOOL_', ''));
 }
 
 /**
@@ -199,7 +199,7 @@ export async function runDiagnosticTool(): Promise<ToolResponse> {
 
   // Format the diagnostic information as a nicely formatted text response
   const formattedOutput = [
-    `# DataRouteMCP Diagnostic Report`,
+    `# BolideAIMCP Diagnostic Report`,
     `\nGenerated: ${diagnosticInfo.timestamp}`,
     `Server Version: ${diagnosticInfo.serverVersion}`,
 
@@ -225,7 +225,7 @@ export async function runDiagnosticTool(): Promise<ToolResponse> {
     ...(diagnosticInfo.toolGroups.selectiveMode
       ? Object.entries(diagnosticInfo.toolGroups.groups).map(([group, info]) => {
           // Extract the group name without the prefix for display purposes
-          const displayName = group.replace('DATAROUTEMCP_GROUP_', '');
+          const displayName = group.replace('BOLIDEAI_MCP_GROUP_', '');
           return `- ${displayName}: ${info.enabled ? '✅ Enabled' : '❌ Disabled'} (Set with ${info.envVar}=true)`;
         })
       : ['- All tool groups are enabled (selective mode is disabled).']),
@@ -234,7 +234,7 @@ export async function runDiagnosticTool(): Promise<ToolResponse> {
     ...(diagnosticInfo.toolGroups.selectiveMode
       ? diagnosticInfo.individuallyEnabledTools.length > 0
         ? diagnosticInfo.individuallyEnabledTools.map(
-            (tool) => `- ${tool}: ✅ Enabled (via DATAROUTEMCP_TOOL_${tool}=true)`,
+            (tool) => `- ${tool}: ✅ Enabled (via BOLIDEAI_MCP_TOOL_${tool}=true)`,
           )
         : ['- No tools are individually enabled via environment variables.']
       : ['- All tools are enabled (selective mode is disabled).']),
@@ -247,11 +247,11 @@ export async function runDiagnosticTool(): Promise<ToolResponse> {
 
     `\n## Troubleshooting Tips`,
     `- Ensure companion app is installed`,
-    `- To enable specific tool groups, set the appropriate environment variables (e.g., \`export DATAROUTEMCP_GROUP_DISCOVERY=true\`)`,
+    `- To enable specific tool groups, set the appropriate environment variables (e.g., \`export BOLIDEAI_MCP_GROUP_DISCOVERY=true\`)`,
     `- If you're having issues with environment variables, make sure to use the correct prefix:`,
-    `  - Use \`DATAROUTEMCP_GROUP_NAME=true\` to enable a tool group`,
-    `  - Use \`DATAROUTEMCP_TOOL_NAME=true\` to enable an individual tool`,
-    `  - Common mistake: Using \`DATAROUTEMCP_ASSETS=true\` instead of \`DATAROUTEMCP_GROUP_ASSETS=true\``,
+    `  - Use \`BOLIDEAI_MCP_GROUP_NAME=true\` to enable a tool group`,
+    `  - Use \`BOLIDEAI_MCP_TOOL_NAME=true\` to enable an individual tool`,
+    `  - Common mistake: Using \`BOLIDEAI_MCP_ASSETS=true\` instead of \`BOLIDEAI_MCP_GROUP_ASSETS=true\``,
   ].join('\n');
 
   return {
@@ -266,7 +266,7 @@ export async function runDiagnosticTool(): Promise<ToolResponse> {
 
 /**
  * Registers the diagnostic tool with the dispatcher.
- * This tool is only registered when the DATAROUTEMCP_DEBUG environment variable is set.
+ * This tool is only registered when the BOLIDEAI_MCP_DEBUG environment variable is set.
  * @param server The McpServer instance.
  */
 export function registerDiagnosticTool(server: McpServer): void {

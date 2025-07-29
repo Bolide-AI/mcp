@@ -8,7 +8,7 @@ import { APIError, ValidationError } from '../utils/errors.js';
 import { getWorkspacePath } from '../utils/workspace.js';
 import { execSync } from 'child_process';
 import { existsSync } from 'fs';
-import { DATAROUTE_API_URL, PROJECT_NAME } from '../utils/constants.js';
+import { BOLIDEAI_API_URL, PROJECT_NAME } from '../utils/constants.js';
 
 import * as fs from 'fs';
 
@@ -75,11 +75,11 @@ async function fetchRedditPosts(params: FetchRedditPostsParams): Promise<{
     timePeriod = 'day'
   } = params;
 
-  const apiUrl = process.env.DATAROUTE_API_URL || DATAROUTE_API_URL;
-  const authToken = process.env.DATAROUTE_API_TOKEN;
+  const apiUrl = process.env.BOLIDEAI_API_URL || BOLIDEAI_API_URL;
+  const authToken = process.env.BOLIDEAI_API_TOKEN;
 
   if (!authToken) {
-    throw new ValidationError('DATAROUTE_API_TOKEN environment variable is required to fetch Reddit posts');
+    throw new ValidationError('BOLIDEAI_API_TOKEN environment variable is required to fetch Reddit posts');
   }
 
   const url = new URL(`${apiUrl}/reddit/${subreddit}/posts`);
@@ -142,11 +142,11 @@ async function enhanceAudioWithSpeech(audioPath: string): Promise<string> {
   try {
     log('info', `Enhancing audio ${audioPath} via web API`);
 
-    const webApiUrl = process.env.DATAROUTE_API_URL || DATAROUTE_API_URL;
-    const authToken = process.env.DATAROUTE_API_TOKEN;
+    const webApiUrl = process.env.BOLIDEAI_API_URL || BOLIDEAI_API_URL;
+    const authToken = process.env.BOLIDEAI_API_TOKEN;
 
     if (!authToken) {
-      throw new ValidationError('DATAROUTE_API_TOKEN environment variable is required for audio enhancement');
+      throw new ValidationError('BOLIDEAI_API_TOKEN environment variable is required for audio enhancement');
     }
 
     const formData = new FormData();
@@ -166,10 +166,10 @@ async function enhanceAudioWithSpeech(audioPath: string): Promise<string> {
 
     if (!response.ok) {
       const errorText = await response.text();
-      log('error', `DATAROUTE API error: ${response.status} ${response.statusText} - ${errorText}`);
+      log('error', `BOLIDEAI API error: ${response.status} ${response.statusText} - ${errorText}`);
 
       if (response.status === 401) {
-        throw new APIError('Authentication failed. Please check your DATAROUTE API token.', 401);
+        throw new APIError('Authentication failed. Please check your BOLIDEAI API token.', 401);
       } else if (response.status === 422) {
         throw new APIError('Audio file validation failed. Please check the file format and size.', 422);
       } else if (response.status === 429) {
@@ -262,14 +262,14 @@ async function analyzeVideos(params: AnalyzeVideosParams): Promise<
     }
   }
 
-  const webApiUrl = process.env.DATAROUTE_API_URL || DATAROUTE_API_URL;
-  const authToken = process.env.DATAROUTE_API_TOKEN;
+  const webApiUrl = process.env.BOLIDEAI_API_URL || BOLIDEAI_API_URL;
+  const authToken = process.env.BOLIDEAI_API_TOKEN;
 
   try {
     log('info', `Calling web API for video analysis: ${webApiUrl}/tools/analyze-videos`);
 
     if (!authToken) {
-      throw new ValidationError('DATAROUTE_API_TOKEN environment variable is required for video analysis via web API');
+      throw new ValidationError('BOLIDEAI_API_TOKEN environment variable is required for video analysis via web API');
     }
 
     const formData = new FormData();
@@ -845,7 +845,7 @@ export function registerContentGeneratorTools(server: McpServer): void {
   registerTool<FetchRedditPostsParams>(
     server,
     'fetch_reddit_posts',
-    `Fetches Reddit posts from a specified subreddit using the local DataRoute API. Requires DATAROUTE_API_TOKEN and optionally DATAROUTE_API_URL environment variables. IMPORTANT: You MUST provide the subreddit parameter. Example: fetch_reddit_posts({ subreddit: 'programming', limit: 10, sort: 'top', timePeriod: 'day' })`,
+    `Fetches Reddit posts from a specified subreddit using the local BolideAI API. Requires BOLIDEAI_API_TOKEN and optionally BOLIDEAI_API_URL environment variables. IMPORTANT: You MUST provide the subreddit parameter. Example: fetch_reddit_posts({ subreddit: 'programming', limit: 10, sort: 'top', timePeriod: 'day' })`,
     FetchRedditPostsSchema.shape,
     async (params) => {
       try {

@@ -17,7 +17,7 @@ Sentry.init({
   sendDefaultPii: true,
 
   // Set release version to match application version
-  release: `dataroutemcp@${version}`,
+  release: `BolideAIMCP@${version}`,
 
   // Set environment based on NODE_ENV
   environment: process.env.NODE_ENV || 'development',
@@ -35,7 +35,7 @@ const tags: Record<string, string> = {
 };
 
 const envVars = getEnvironmentVariables();
-tags.env_DATAROUTEMCP_DEBUG = envVars.DATAROUTEMCP_DEBUG || 'false';
+tags.env_BOLIDEAI_MCP_DEBUG = envVars.BOLIDEAI_MCP_DEBUG || 'false';
 tags.env_XCODEMAKE_ENABLED = envVars.INCREMENTAL_BUILDS_ENABLED || 'false';
 
 const axeAvailable = checkBinaryAvailability('axe');

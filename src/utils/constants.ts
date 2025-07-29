@@ -4,4 +4,4 @@ export const COMPANION_APP_CONTENTS_PATH = `${COMPANION_APP_PATH}/Contents/MacOS
 
 export const PROJECT_NAME = 'bolide.ai';
 
-export const DATAROUTE_API_URL = 'https://bolide.ai/api';
+export const BOLIDEAI_API_URL = 'https://bolide.ai/api';

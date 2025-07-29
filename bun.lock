@@ -2,7 +2,7 @@
   "lockfileVersion": 1,
   "workspaces": {
     "": {
-      "name": "dataroutemcp",
+      "name": "@bolide-ai/mcp",
       "dependencies": {
         "@google/genai": "^1.9.0",
         "@modelcontextprotocol/sdk": "^1.15.1",

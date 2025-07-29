@@ -1,6 +1,6 @@
 # Contributing
 
-Contributions are welcome! Here's how you can help improve DataRouteMCP.
+Contributions are welcome! Here's how you can help improve BolideAIMCP.
 
 ## Local development setup
 
@@ -39,15 +39,15 @@ brew install axe
 
 ### Configure your MCP client
 
-To configure your MCP client to use your local DataRouteMCP server you can use the following configuration:
+To configure your MCP client to use your local BolideAIMCP server you can use the following configuration:
 
 ```json
 {
   "mcpServers": {
-    "DataRouteMCP": {
+    "BolideAIMCP": {
       "command": "node",
       "args": [
-        "/path_to/DataRouteMCP/build/index.js"
+        "/path_to/BolideAIMCP/build/index.js"
       ]
     }
   }
@@ -56,11 +56,11 @@ To configure your MCP client to use your local DataRouteMCP server you can use t
 
 ### Developing using VS Code
 
-VS Code is especially good for developing DataRouteMCP as it has a built-in way to view MCP client/server logs as well as the ability to configure MCP servers at a project level. It probably has the most comprehensive support for MCP development. 
+VS Code is especially good for developing BolideAIMCP as it has a built-in way to view MCP client/server logs as well as the ability to configure MCP servers at a project level. It probably has the most comprehensive support for MCP development. 
 
 To make your development workflow in VS Code more efficient:
 
-1.  **Start the MCP Server**: Open the `.vscode/mcp.json` file. You can start the `dataroutemcp-dev` server either by clicking the `Start` CodeLens that appears above the server definition, or by opening the Command Palette (`Cmd+Shift+P` or `Ctrl+Shift+P`), running `Mcp: List Servers`, selecting `dataroutemcp-dev`, and starting the server.
+1.  **Start the MCP Server**: Open the `.vscode/mcp.json` file. You can start the `BolideAI-dev` server either by clicking the `Start` CodeLens that appears above the server definition, or by opening the Command Palette (`Cmd+Shift+P` or `Ctrl+Shift+P`), running `Mcp: List Servers`, selecting `BolideAI-dev`, and starting the server.
 2.  **Launch the Debugger**: Press `F5` to attach the Node.js debugger.
 
 Once these steps are completed, you can utilize the tools from the MCP server you are developing within this repository in agent mode.
@@ -82,11 +82,11 @@ npx @modelcontextprotocol/inspector node build/index.js
 
 #### Using the diagnostic tool
 
-Running the DataRouteMCP server with the environmental variable `DATAROUTEMCP_DEBUG=true` will expose a new diagnostic tool which you can run using MCP Inspector:
+Running the BolideAIMCP server with the environmental variable `BOLIDEAI_MCP_DEBUG=true` will expose a new diagnostic tool which you can run using MCP Inspector:
 
 
 ```bash
-DATAROUTEMCP_DEBUG=true npm run inspect
+BOLIDEAI_MCP_DEBUG=true npm run inspect
 ```
 
 Alternatively, you can run the diagnostic tool directly:
@@ -103,7 +103,7 @@ node build/diagnostic-cli.js
 
 ### Working with Marketing Projects
 
-DataRouteMCP provides tools for marketing automation and content generation. The main workflow involves:
+BolideAIMCP provides tools for marketing automation and content generation. The main workflow involves:
 
 1. **Project scaffolding** - Create marketing directory structures
 2. **Artifact management** - Organize screenshots, videos, and posts
@@ -112,7 +112,7 @@ DataRouteMCP provides tools for marketing automation and content generation. The
 
 #### Marketing Project Structure
 
-When you scaffold a marketing project, DataRouteMCP creates:
+When you scaffold a marketing project, BolideAIMCP creates:
 
 ```
 marketing/

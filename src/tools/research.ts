@@ -16,7 +16,7 @@ import { ToolResponse } from '../types/common.js';
 import { log } from '../utils/logger.js';
 import { ValidationError } from '../utils/errors.js';
 import { registerTool, createTextContent } from './common.js';
-import { DATAROUTE_API_URL } from '../utils/constants.js';
+import { BOLIDEAI_API_URL } from '../utils/constants.js';
 
 const UsePerplexitySchema = z.object({
     query: z.string().describe('The search query or question to research'),
@@ -41,11 +41,11 @@ async function usePerplexity(params: UsePerplexityParams): Promise<ToolResponse>
     log('info', `Performing (${search_mode}) search with Perplexity via web API on query: "${query}"`);
 
     try {
-        const webApiUrl = process.env.DATAROUTE_API_URL || DATAROUTE_API_URL;
-        const authToken = process.env.DATAROUTE_API_TOKEN;
+        const webApiUrl = process.env.BOLIDEAI_API_URL || BOLIDEAI_API_URL;
+        const authToken = process.env.BOLIDEAI_API_TOKEN;
 
         if (!authToken) {
-            throw new ValidationError('DATAROUTE_API_TOKEN environment variable is required for Perplexity search via web API');
+            throw new ValidationError('BOLIDEAI_API_TOKEN environment variable is required for Perplexity search via web API');
         }
 
         const response = await fetch(`${webApiUrl}/tools/perplexity-search`, {
@@ -66,7 +66,7 @@ async function usePerplexity(params: UsePerplexityParams): Promise<ToolResponse>
             log('error', `Web API error: ${response.status} ${response.statusText} - ${errorText}`);
 
             if (response.status === 401) {
-                throw new ValidationError('Authentication failed. Please check your DATAROUTE_API_TOKEN.');
+                throw new ValidationError('Authentication failed. Please check your BOLIDEAI_API_TOKEN.');
             } else if (response.status === 422) {
                 throw new ValidationError('Request validation failed. Please check the query and search_mode parameters.');
             } else if (response.status === 429) {
@@ -147,11 +147,11 @@ async function useOpenAIDeepResearch(params: UseOpenAIDeepResearchParams): Promi
     log('info', `Performing deep research with OpenAI o4-mini-deep-research via web API on query: "${query}"`);
 
     try {
-        const webApiUrl = process.env.DATAROUTE_API_URL || DATAROUTE_API_URL;
-        const authToken = process.env.DATAROUTE_API_TOKEN;
+        const webApiUrl = process.env.BOLIDEAI_API_URL || BOLIDEAI_API_URL;
+        const authToken = process.env.BOLIDEAI_API_TOKEN;
 
         if (!authToken) {
-            throw new ValidationError('DATAROUTE_API_TOKEN environment variable is required for OpenAI deep research via web API');
+            throw new ValidationError('BOLIDEAI_API_TOKEN environment variable is required for OpenAI deep research via web API');
         }
 
         const response = await fetch(`${webApiUrl}/tools/openai-deep-research`, {
@@ -171,7 +171,7 @@ async function useOpenAIDeepResearch(params: UseOpenAIDeepResearchParams): Promi
             log('error', `Web API error: ${response.status} ${response.statusText} - ${errorText}`);
 
             if (response.status === 401) {
-                throw new ValidationError('Authentication failed. Please check your DATAROUTE_API_TOKEN.');
+                throw new ValidationError('Authentication failed. Please check your BOLIDEAI_API_TOKEN.');
             } else if (response.status === 422) {
                 throw new ValidationError('Request validation failed. Please check the query parameter.');
             } else if (response.status === 429) {
@@ -254,7 +254,7 @@ export function registerResearchTools(server: McpServer): void {
     registerTool(
         server,
         'use_openai_deep_research',
-        'Perform deep research using OpenAI o4-mini-deep-research model via web API. First enriches the query with detailed research instructions using GPT-4.1, then conducts comprehensive research. Requires DATAROUTE_API_TOKEN for authentication. IMPORTANT: You MUST provide the query parameter. Example: use_openai_deep_research({ query: "Economic impact of renewable energy adoption" })',
+        'Perform deep research using OpenAI o4-mini-deep-research model via web API. First enriches the query with detailed research instructions using GPT-4.1, then conducts comprehensive research. Requires BOLIDEAI_API_TOKEN for authentication. IMPORTANT: You MUST provide the query parameter. Example: use_openai_deep_research({ query: "Economic impact of renewable energy adoption" })',
         UseOpenAIDeepResearchSchema.shape,
         useOpenAIDeepResearch,
     );

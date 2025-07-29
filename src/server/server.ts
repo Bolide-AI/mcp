@@ -25,7 +25,7 @@ export function createServer(): McpServer {
   // Create server instance
   const server = new McpServer(
     {
-      name: 'dataroutemcp',
+      name: 'BolideAIMCP',
       version,
     },
     {
@@ -51,5 +51,5 @@ export function createServer(): McpServer {
 export async function startServer(server: McpServer): Promise<void> {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  log('info', 'DataRouteMCP Server running on stdio');
+  log('info', 'BolideAIMCP Server running on stdio');
 }

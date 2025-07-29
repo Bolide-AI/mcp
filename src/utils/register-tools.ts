@@ -36,57 +36,57 @@ const toolRegistrations = [
   {
     register: registerCheckCompanionAppStatusTool,
     groups: [ToolGroup.LAUNCH],
-    envVar: 'DATAROUTEMCP_TOOL_CHECK_COMPANION_APP_STATUS',
+    envVar: 'BOLIDEAI_MCP_TOOL_CHECK_COMPANION_APP_STATUS',
   },
   {
     register: registerLaunchCompanionAppTool,
     groups: [ToolGroup.LAUNCH],
-    envVar: 'DATAROUTEMCP_TOOL_LAUNCH_COMPANION_APP',
+    envVar: 'BOLIDEAI_MCP_TOOL_LAUNCH_COMPANION_APP',
   },
   {
     register: registerStopCompanionAppTool,
     groups: [ToolGroup.LAUNCH],
-    envVar: 'DATAROUTEMCP_TOOL_STOP_COMPANION_APP',
+    envVar: 'BOLIDEAI_MCP_TOOL_STOP_COMPANION_APP',
   },
   {
     register: registerInstallBrewAndFfmpegTool,
     groups: [ToolGroup.LAUNCH],
-    envVar: 'DATAROUTEMCP_TOOL_INSTALL_BREW_AND_FFMPEG',
+    envVar: 'BOLIDEAI_MCP_TOOL_INSTALL_BREW_AND_FFMPEG',
   },
 
   // Scaffold tool
   {
     register: registerScaffoldTools,
     groups: [ToolGroup.SCAFFOLDING],
-    envVar: 'DATAROUTEMCP_TOOL_SCAFFOLD_PROJECT',
+    envVar: 'BOLIDEAI_MCP_TOOL_SCAFFOLD_PROJECT',
   },
 
   // Artifact tools
   {
     register: registerArtifactTools,
     groups: [ToolGroup.ARTIFACTS],
-    envVar: 'DATAROUTEMCP_TOOL_CREATE_ARTIFACT_DIRECTORY',
+    envVar: 'BOLIDEAI_MCP_TOOL_CREATE_ARTIFACT_DIRECTORY',
   },
 
   // Content generator tools
   {
     register: registerContentGeneratorTools,
     groups: [ToolGroup.CONTENT_GENERATORS],
-    envVar: 'DATAROUTEMCP_TOOL_CONTENT_GENERATORS',
+    envVar: 'BOLIDEAI_MCP_TOOL_CONTENT_GENERATORS',
   },
 
   // Asset generator tools
   {
     register: registerAssetGeneratorTools,
     groups: [ToolGroup.ASSET_GENERATORS],
-    envVar: 'DATAROUTEMCP_TOOL_CREATE_POST_ASSET',
+    envVar: 'BOLIDEAI_MCP_TOOL_CREATE_POST_ASSET',
   },
 
   // Research tools
   {
     register: registerResearchTools,
     groups: [ToolGroup.RESEARCH],
-    envVar: 'DATAROUTEMCP_TOOL_USE_PERPLEXITY',
+    envVar: 'BOLIDEAI_MCP_TOOL_USE_PERPLEXITY',
   },
 ];
 
@@ -94,7 +94,7 @@ const toolRegistrations = [
 const diagnosticTool = {
   register: registerDiagnosticTool,
   groups: [ToolGroup.DIAGNOSTICS],
-  envVar: 'DATAROUTEMCP_DEBUG',
+  envVar: 'BOLIDEAI_MCP_DEBUG',
 };
 
 export function registerTools(server: McpServer): void {
@@ -104,7 +104,7 @@ export function registerTools(server: McpServer): void {
   }
 
   // Register diagnostic tool - conditionally based on debug env var
-  if (process.env.DATAROUTEMCP_DEBUG) {
+  if (process.env.BOLIDEAI_MCP_DEBUG) {
     registerIfEnabled(server, diagnosticTool);
   }
 }

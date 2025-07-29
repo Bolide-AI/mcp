@@ -5,9 +5,9 @@ startCommand:
   configSchema:
     # JSON Schema defining the configuration options for the MCP.
     type: object
-    description: Configuration for DataRouteMCP (no options needed)
+    description: Configuration for BolideAIMCP (no options needed)
   commandFunction:
     # A JS function that produces the CLI command based on the given config to start the MCP on stdio.
     |-
-    (config) => ({ command: 'dataroutemcp', args: [], env: {} })
+    (config) => ({ command: 'bolide-ai-mcp', args: [], env: {} })
   exampleConfig: {}

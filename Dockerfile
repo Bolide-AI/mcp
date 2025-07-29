@@ -34,5 +34,5 @@ COPY --from=build /usr/src/app/build ./build
 RUN npm link
 
 # Default command
-ENTRYPOINT ["dataroutemcp"]
+ENTRYPOINT ["bolide-ai-mcp"]
 CMD []

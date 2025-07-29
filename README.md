@@ -44,7 +44,7 @@ Configure your MCP client with the following:
       "command": "npx",
       "args": ["-y", "@bolide-ai/mcp@latest"],
       "env": {
-        "BOLIDEAIMCP_API_KEY": "your-api-key",
+        "BOLIDEAI_MCP_API_KEY": "your-api-key",
       }
     }
   }
@@ -108,7 +108,7 @@ npm install && npm run build
 
 ```typescript
 // Create a project
-scaffold_marketing_project()
+scaffold_bolide_ai_project()
 
 // Perform research
 use_openai_deep_research({ 
@@ -125,12 +125,12 @@ analyze_videos({
 
 ## Environment Variables
 
-- **`BOLIDEAI_API_TOKEN`** - Required
+- **`BOLIDEAI_API_TOKEN`** - Required for research tools and Reddit data fetching
 - **`BOLIDEAI_API_URL`** - Optional, defaults to https://bolide.ai/api
 
 ### Tool Configuration
 
-- **`BOLIDEAIMCP_DEBUG=true`** - Enable diagnostic tools and detailed logging
+- **`BOLIDEAI_MCP_DEBUG=true`** - Enable diagnostic tools and detailed logging
 - **Tool Groups** - Enable specific tool categories (see [Tool Options](TOOL_OPTIONS.md))
 - **Individual Tools** - Enable specific tools only (see [Tool Options](TOOL_OPTIONS.md))
 
@@ -139,12 +139,13 @@ analyze_videos({
 BolideAI MCP provides **15 tools** across 7 categories:
 
 ### 🚀 Project Scaffolding
-- `scaffold_marketing_project` - Create marketing project directory structure
+- `scaffold_bolide_ai_project` - Create bolide.ai project directory structure
 
 ### 📱 Utility Tools  
 - `check_companion_app_status` - Check companion app running status
 - `launch_companion_app` - Launch Companion App for marketing capture
 - `stop_companion_app` - Stop running companion app instances
+- `install_brew_and_ffmpeg` - Install Homebrew package manager and FFmpeg
 
 ### 🎯 Artifact Management
 - `create_artifact_directory` - Create organized artifact directories
@@ -155,7 +156,7 @@ BolideAI MCP provides **15 tools** across 7 categories:
 - `create_research_asset` - Create research asset files
 
 ### 🤖 Content Generation
-- `analyze_videos` - Analyze video content using AI
+- `analyze_videos` - Analyze video content using Gemini AI
 - `generate_gif` - Convert video segments to GIFs
 - `enhance_audio` - Extract and enhance audio from videos using ElevenLabs
 - `fetch_reddit_posts` - Fetch Reddit posts from specified subreddits
@@ -201,7 +202,7 @@ The deep research tool:
 
 1. **Set up project structure**:
    ```typescript
-   scaffold_marketing_project()
+   scaffold_bolide_ai_project()
    ```
 
 2. **Create artifact directory**:
@@ -296,23 +297,22 @@ Enable only the tools you need to optimize performance:
 ```json
 {
   "env": {
-    "BOLIDEAIMCP_GROUP_RESEARCH": "true",
-    "BOLIDEAIMCP_GROUP_CONTENT_GENERATORS": "true",
-    "GOOGLE_API_KEY": "your-api-key",
-    "OPENAI_API_KEY": "your-api-key"
+    "BOLIDEAI_MCP_GROUP_RESEARCH": "true",
+    "BOLIDEAI_MCP_GROUP_CONTENT_GENERATORS": "true",
+    "BOLIDEAI_API_TOKEN": "your-api-key"
   }
 }
 ```
 
 ### Available Tool Groups
 
-- `BOLIDEAIMCP_GROUP_LAUNCH` - Launch and utility tools
-- `BOLIDEAIMCP_GROUP_SCAFFOLDING` - Project scaffolding tools
-- `BOLIDEAIMCP_GROUP_ARTIFACTS` - Artifact management tools
-- `BOLIDEAIMCP_GROUP_ASSET_GENERATORS` - Asset management tools
-- `BOLIDEAIMCP_GROUP_CONTENT_GENERATORS` - Content generation tools
-- `BOLIDEAIMCP_GROUP_RESEARCH` - Research and information gathering tools
-- `BOLIDEAIMCP_GROUP_DIAGNOSTICS` - Diagnostic tools
+- `BOLIDEAI_MCP_GROUP_LAUNCH` - Launch and utility tools
+- `BOLIDEAI_MCP_GROUP_SCAFFOLDING` - Project scaffolding tools
+- `BOLIDEAI_MCP_GROUP_ARTIFACTS` - Artifact management tools
+- `BOLIDEAI_MCP_GROUP_ASSET_GENERATORS` - Asset management tools
+- `BOLIDEAI_MCP_GROUP_CONTENT_GENERATORS` - Content generation tools
+- `BOLIDEAI_MCP_GROUP_RESEARCH` - Research and information gathering tools
+- `BOLIDEAI_MCP_GROUP_DIAGNOSTICS` - Diagnostic tools
 
 ## Documentation
 
@@ -335,7 +335,7 @@ Enable only the tools you need to optimize performance:
 ```json
 {
   "env": {
-    "BOLIDEAIMCP_DEBUG": "true"
+    "BOLIDEAI_MCP_DEBUG": "true"
   }
 }
 ```
