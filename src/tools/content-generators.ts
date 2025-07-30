@@ -20,7 +20,9 @@ const AnalyzeScreencastsSchema = z.object({
   customPrompt: z
     .string()
     .optional()
-    .describe('Optional custom prompt for video analysis. If not provided, uses the default comprehensive analysis prompt.'),
+    .describe(
+      'Optional custom prompt for video analysis. If not provided, uses the default comprehensive analysis prompt.',
+    ),
 });
 
 const GenerateGifSchema = z.object({
@@ -30,7 +32,9 @@ const GenerateGifSchema = z.object({
 });
 
 const EnhanceAudioSchema = z.object({
-  screencastNames: z.array(z.string()).describe('Names of the screencast files to extract audio from'),
+  screencastNames: z
+    .array(z.string())
+    .describe('Names of the screencast files to extract audio from'),
 });
 
 type AnalyzeScreencastsParams = z.infer<typeof AnalyzeScreencastsSchema>;
@@ -47,20 +51,26 @@ async function enhanceAudioWithSpeech(audioPath: string): Promise<string> {
     const authToken = process.env.BOLIDEAI_API_TOKEN;
 
     if (!authToken) {
-      throw new ValidationError('BOLIDEAI_API_TOKEN environment variable is required for audio enhancement');
+      throw new ValidationError(
+        'BOLIDEAI_API_TOKEN environment variable is required for audio enhancement',
+      );
     }
 
     const formData = new FormData();
-    const audioFile = new File([fs.readFileSync(audioPath)], audioPath.split('/').pop() || 'audio.mp3', {
-      type: 'audio/mpeg'
-    });
+    const audioFile = new File(
+      [fs.readFileSync(audioPath)],
+      audioPath.split('/').pop() || 'audio.mp3',
+      {
+        type: 'audio/mpeg',
+      },
+    );
     formData.append('audio_file', audioFile);
 
     const response = await fetch(`${webApiUrl}/tools/enhance-audio`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${authToken}`,
-        'Accept': 'application/json',
+        Authorization: `Bearer ${authToken}`,
+        Accept: 'application/json',
       },
       body: formData,
     });
@@ -72,7 +82,10 @@ async function enhanceAudioWithSpeech(audioPath: string): Promise<string> {
       if (response.status === 401) {
         throw new APIError('Authentication failed. Please check your BOLIDEAI API token.', 401);
       } else if (response.status === 422) {
-        throw new APIError('Audio file validation failed. Please check the file format and size.', 422);
+        throw new APIError(
+          'Audio file validation failed. Please check the file format and size.',
+          422,
+        );
       } else if (response.status === 429) {
         throw new APIError('Rate limit exceeded. Please try again later.', 429);
       } else {
@@ -108,7 +121,9 @@ async function enhanceAudioWithSpeech(audioPath: string): Promise<string> {
       throw error;
     }
 
-    throw new Error(`Failed to enhance audio: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `Failed to enhance audio: ${error instanceof Error ? error.message : String(error)}`,
+    );
   }
 }
 
@@ -129,7 +144,7 @@ async function analyzeScreencasts(params: AnalyzeScreencastsParams): Promise<
   let { screencastNames, force, customPrompt } = params;
 
   log('info', `Analyzing screencasts: ${screencastNames.join(', ')}`);
-  
+
   if (customPrompt) {
     log('info', `Using custom prompt for analysis: ${customPrompt}`);
   }
@@ -137,7 +152,7 @@ async function analyzeScreencasts(params: AnalyzeScreencastsParams): Promise<
   const projectPath = getProjectPath();
   const screencastsPath = join(projectPath, 'screencasts');
 
-  let results = [];
+  const results = [];
 
   if (!force) {
     for (const screencastName of screencastNames) {
@@ -173,7 +188,9 @@ async function analyzeScreencasts(params: AnalyzeScreencastsParams): Promise<
     log('info', `Calling web API for screencast analysis: ${webApiUrl}/tools/analyze-videos`);
 
     if (!authToken) {
-      throw new ValidationError('BOLIDEAI_API_TOKEN environment variable is required for screencast analysis via web API');
+      throw new ValidationError(
+        'BOLIDEAI_API_TOKEN environment variable is required for screencast analysis via web API',
+      );
     }
 
     const formData = new FormData();
@@ -186,7 +203,7 @@ async function analyzeScreencasts(params: AnalyzeScreencastsParams): Promise<
       }
 
       const screencastFile = new File([readFileSync(screencastPath)], screencastName, {
-        type: 'video/mp4'
+        type: 'video/mp4',
       });
       formData.append('video_files[]', screencastFile);
     }
@@ -202,8 +219,8 @@ async function analyzeScreencasts(params: AnalyzeScreencastsParams): Promise<
     const response = await fetch(`${webApiUrl}/tools/analyze-videos`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${authToken}`,
-        'Accept': 'application/json',
+        Authorization: `Bearer ${authToken}`,
+        Accept: 'application/json',
       },
       body: formData,
     });
@@ -215,11 +232,17 @@ async function analyzeScreencasts(params: AnalyzeScreencastsParams): Promise<
       if (response.status === 401) {
         throw new APIError('Authentication failed. Please check your auth token.', 401);
       } else if (response.status === 422) {
-        throw new APIError('Screencast file validation failed. Please check the file format and size.', 422);
+        throw new APIError(
+          'Screencast file validation failed. Please check the file format and size.',
+          422,
+        );
       } else if (response.status === 429) {
         throw new APIError('Rate limit exceeded. Please try again later.', 429);
       } else {
-        throw new APIError(`Failed to analyze screencasts via web API: ${errorText}`, response.status);
+        throw new APIError(
+          `Failed to analyze screencasts via web API: ${errorText}`,
+          response.status,
+        );
       }
     }
 
@@ -240,15 +263,15 @@ async function analyzeScreencasts(params: AnalyzeScreencastsParams): Promise<
     for (let i = 0; i < data.analyses.length; i++) {
       const analysis = data.analyses[i];
       const screencastName = analysis.screencastName || analysis.videoName;
-      
+
       let jsonFileName = screencastName.replace(/\.[^/.]+$/, '.json');
-      
+
       if (analysis.fileSuffix) {
         const baseName = screencastName.replace(/\.[^/.]+$/, '');
         jsonFileName = `${baseName}_${analysis.fileSuffix.replace(/[^a-zA-Z0-9-]/g, '-').toLowerCase()}.json`;
         log('info', `Using custom file suffix: ${analysis.fileSuffix} for ${screencastName}`);
       }
-      
+
       const jsonFilePath = join(screencastsPath, jsonFileName);
 
       try {
@@ -261,7 +284,7 @@ async function analyzeScreencasts(params: AnalyzeScreencastsParams): Promise<
 
         delete updatedAnalysis.videoName;
         delete updatedAnalysis.fileSuffix;
-        
+
         writeFileSync(jsonFilePath, JSON.stringify(updatedAnalysis, null, 2), 'utf8');
 
         analysisResults.push({
@@ -285,7 +308,10 @@ async function analyzeScreencasts(params: AnalyzeScreencastsParams): Promise<
 
     results.push(...analysisResults);
 
-    log('info', `Successfully analyzed all ${screencastNames.length} screencasts via web API and saved JSON files`);
+    log(
+      'info',
+      `Successfully analyzed all ${screencastNames.length} screencasts via web API and saved JSON files`,
+    );
 
     return results;
   } catch (error) {
@@ -304,10 +330,7 @@ async function analyzeScreencasts(params: AnalyzeScreencastsParams): Promise<
 async function generateGif(params: GenerateGifParams): Promise<string> {
   const { screencastName, startTime, endTime } = params;
 
-  log(
-    'info',
-    `Generating GIF from screencast ${screencastName} from ${startTime} to ${endTime}`,
-  );
+  log('info', `Generating GIF from screencast ${screencastName} from ${startTime} to ${endTime}`);
 
   const projectPath = getProjectPath();
   const screencastsPath = join(projectPath, 'screencasts');
@@ -389,11 +412,13 @@ async function generateGif(params: GenerateGifParams): Promise<string> {
   }
 }
 
-async function enhanceAudio(params: EnhanceAudioParams): Promise<{
-  screencastName: string;
-  success: boolean;
-  errors: string[];
-}[]> {
+async function enhanceAudio(params: EnhanceAudioParams): Promise<
+  {
+    screencastName: string;
+    success: boolean;
+    errors: string[];
+  }[]
+> {
   const { screencastNames } = params;
 
   log('info', `Extracting and enhancing audio from screencasts: ${screencastNames.join(', ')}`);
@@ -422,7 +447,7 @@ async function enhanceAudio(params: EnhanceAudioParams): Promise<{
     const enhancedAudioName = `${screencastName.replace(/\.[^/.]+$/, '')}_enhanced.mp3`;
     const enhancedAudioPath = join(screencastsPath, enhancedAudioName);
 
-    let chunkErrors: Error[] = [];
+    const chunkErrors: Error[] = [];
 
     try {
       log('info', `Checking if ${screencastName} contains audio track`);
@@ -448,7 +473,6 @@ async function enhanceAudio(params: EnhanceAudioParams): Promise<{
 
       tempFiles.push(audioPath);
       log('info', `Successfully extracted audio: ${audioPath}`);
-
 
       // Get audio duration
       const durationCommand = `ffprobe -v quiet -show_entries format=duration -of csv=p=0 "${audioPath}"`;
@@ -507,7 +531,9 @@ async function enhanceAudio(params: EnhanceAudioParams): Promise<{
 
             chunkErrors.push(error as Error);
 
-            throw new Error(`Failed to enhance chunk ${chunkIndex}: ${error instanceof Error ? error.message : String(error)}`);
+            throw new Error(
+              `Failed to enhance chunk ${chunkIndex}: ${error instanceof Error ? error.message : String(error)}`,
+            );
           }
 
           chunkIndex++;
@@ -520,8 +546,8 @@ async function enhanceAudio(params: EnhanceAudioParams): Promise<{
         // Create concat file for ffmpeg
         const concatFileName = `${screencastName.replace(/\.[^/.]+$/, '')}_concat.txt`;
         const concatFilePath = join(screencastsPath, concatFileName);
-        const concatContent = enhancedChunks.map(chunk => `file '${chunk}'`).join('\n');
-        
+        const concatContent = enhancedChunks.map((chunk) => `file '${chunk}'`).join('\n');
+
         writeFileSync(concatFilePath, concatContent, 'utf8');
         tempFiles.push(concatFilePath);
 
@@ -565,7 +591,7 @@ async function enhanceAudio(params: EnhanceAudioParams): Promise<{
       results.push({
         screencastName: screencastName,
         success: false,
-        errors: [error as Error].concat(chunkErrors).map(error => error.message),
+        errors: [error as Error].concat(chunkErrors).map((error) => error.message),
       });
     }
   }
@@ -583,10 +609,13 @@ async function enhanceAudio(params: EnhanceAudioParams): Promise<{
     }
   }
 
-  let failedResults = results.filter((result) => !result.success);
+  const failedResults = results.filter((result) => !result.success);
 
   if (failedResults.length > 0) {
-    log('error', `${failedResults.length} screencasts failed to be enhanced. See the errors for details.`);
+    log(
+      'error',
+      `${failedResults.length} screencasts failed to be enhanced. See the errors for details.`,
+    );
   } else {
     log('info', `Successfully created enhanced screencast files for all screencasts`);
   }

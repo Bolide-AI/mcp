@@ -182,9 +182,7 @@ export function registerScaffoldTools(server: McpServer): void {
               },
             },
           },
-          nextSteps: [
-            `Navigate to ${projectPath} to start organizing your project materials`
-          ],
+          nextSteps: [`Navigate to ${projectPath} to start organizing your project materials`],
         };
 
         return {

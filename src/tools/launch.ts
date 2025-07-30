@@ -47,7 +47,7 @@ export function registerCheckCompanionAppStatusTool(server: McpServer): void {
           try {
             const result = await execPromise(
               `osascript -e 'tell application "System Events" to get name of every window of application process "${COMPANION_APP_NAME}"'`,
-              { encoding: 'utf8' }
+              { encoding: 'utf8' },
             );
             const windowNames = result.stdout.trim();
 
@@ -67,7 +67,7 @@ export function registerCheckCompanionAppStatusTool(server: McpServer): void {
           if (match) {
             const fullPath = match[1];
             const pathParts = fullPath.split('/');
-            const projectIndex = pathParts.findIndex(part => part === PROJECT_NAME);
+            const projectIndex = pathParts.findIndex((part) => part === PROJECT_NAME);
             if (projectIndex > 0) {
               return pathParts.slice(0, projectIndex + 1).join('/');
             }
@@ -99,7 +99,7 @@ export function registerCheckCompanionAppStatusTool(server: McpServer): void {
 
         if (runningProjectPath) {
           const isSameProject = runningProjectPath === projectPath;
-          
+
           if (isSameProject) {
             return {
               content: [

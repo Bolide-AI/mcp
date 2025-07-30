@@ -24,6 +24,6 @@ export const getWorkspacePath = () => {
 
 export const getProjectPath = (): string => {
   const workspacePath = getWorkspacePath();
-  
+
   return `${workspacePath}/${PROJECT_NAME}`;
 };

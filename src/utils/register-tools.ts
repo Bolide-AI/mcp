@@ -18,6 +18,9 @@ import { registerContentGeneratorTools } from '../tools/content-generators.js';
 // Import research tools
 import { registerResearchTools } from '../tools/research.js';
 
+// Import notion tools
+import { registerNotionTools } from '../tools/notion.js';
+
 // Import MCP server
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 
@@ -67,6 +70,13 @@ const toolRegistrations = [
     register: registerResearchTools,
     groups: [ToolGroup.RESEARCH],
     envVar: 'BOLIDEAI_MCP_TOOL_USE_PERPLEXITY',
+  },
+
+  // Notion tools
+  {
+    register: registerNotionTools,
+    groups: [ToolGroup.NOTION],
+    envVar: 'BOLIDEAI_MCP_TOOL_NOTION',
   },
 ];
 

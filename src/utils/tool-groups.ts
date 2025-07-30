@@ -25,6 +25,9 @@ export enum ToolGroup {
 
   // Research tools
   RESEARCH = 'BOLIDEAI_MCP_GROUP_RESEARCH',
+
+  // Notion integration tools
+  NOTION = 'BOLIDEAI_MCP_GROUP_NOTION',
 }
 
 // Map tool registration functions to their respective groups and individual env var names

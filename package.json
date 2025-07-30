@@ -41,6 +41,7 @@
     "url": "https://github.com/Bolide-AI/mcp/issues"
   },
   "dependencies": {
+    "@composio/core": "^0.1.39",
     "@google/genai": "^1.9.0",
     "@modelcontextprotocol/sdk": "^1.15.1",
     "@sentry/cli": "^2.47.1",

@@ -31,6 +31,8 @@ These groups organise tools based on common developer workflows, making it easie
   - _e.g., Generate social media posts using AI from captured screenshots and videos._
 - **BOLIDEAI_MCP_GROUP_RESEARCH=true** - Research and information gathering tools
   - _e.g., Perform research using Perplexity AI for information gathering and question answering._
+- **BOLIDEAI_MCP_GROUP_NOTION=true** - Notion integration tools
+  - _e.g., Add content to Notion pages, fetch page and database information._
 - **BOLIDEAI_MCP_GROUP_DIAGNOSTICS=true** - Logging and diagnostics tools
   - _e.g., System diagnostics, environment validation._
 
@@ -47,6 +49,9 @@ To enable specific tools rather than entire groups, use the following environmen
 ### Research Tools
 - **BOLIDEAI_MCP_TOOL_USE_PERPLEXITY=true** - Perform research and information gathering using Perplexity AI.
 - **BOLIDEAI_MCP_TOOL_USE_OPENAI_DEEP_RESEARCH=true** - Perform deep research using OpenAI o4-mini-deep-research model.
+
+### Notion Integration Tools
+- **BOLIDEAI_MCP_TOOL_NOTION=true** - Add content to Notion pages and fetch page/database information.
 
 ### Utility Tools
 - **BOLIDEAI_MCP_TOOL_CHECK_COMPANION_APP_STATUS=true** - Check whether the companion app is currently running or not.

@@ -42,6 +42,15 @@ Tools for performing research and information gathering.
 | `use_perplexity` | Perform search and information gathering using Perplexity AI via web API. IMPORTANT: You MUST provide the query and search_mode parameters as well as display the citations in the response, if provided. Example: use_perplexity({ query: "What is the capital of France?", search_mode: "web" }) |
 | `use_openai_deep_research` | Perform deep research using OpenAI o4-mini-deep-research model via web API. First enriches the query with detailed research instructions using GPT-4.1, then conducts comprehensive research. Requires BOLIDEAI_API_TOKEN for authentication. IMPORTANT: You MUST provide the query parameter. Example: use_openai_deep_research({ query: "Economic impact of renewable energy adoption" }) |
 
+### Notion Integration Tools
+
+Tools for integrating with Notion workspaces.
+
+| Tool Name | Description |
+|-----------|-------------|
+| `notionAddPageContent` | Appends a single content block to a notion page or a parent block (must be page, toggle, to-do, bulleted/numbered list, callout, or quote); invoke repeatedly to add multiple blocks. |
+| `notionFetchData` | Fetches notion items (pages and/or databases) from the notion workspace, always call this action to get page id or database id in the simplest way |
+
 ### Diagnostic Tools
 
 Tools for system diagnostics and environment validation.
