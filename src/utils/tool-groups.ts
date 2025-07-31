@@ -28,6 +28,9 @@ export enum ToolGroup {
 
   // Notion integration tools
   NOTION = 'BOLIDEAI_MCP_GROUP_NOTION',
+
+  // Slack integration tools
+  SLACK = 'BOLIDEAI_MCP_GROUP_SLACK',
 }
 
 // Map tool registration functions to their respective groups and individual env var names

@@ -21,6 +21,9 @@ import { registerResearchTools } from '../tools/research.js';
 // Import notion tools
 import { registerNotionTools } from '../tools/notion.js';
 
+// Import slack tools
+import { registerSlackTools } from '../tools/slack.js';
+
 // Import MCP server
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 
@@ -77,6 +80,13 @@ const toolRegistrations = [
     register: registerNotionTools,
     groups: [ToolGroup.NOTION],
     envVar: 'BOLIDEAI_MCP_TOOL_NOTION',
+  },
+
+  // Slack tools
+  {
+    register: registerSlackTools,
+    groups: [ToolGroup.SLACK],
+    envVar: 'BOLIDEAI_MCP_TOOL_SLACK',
   },
 ];
 
