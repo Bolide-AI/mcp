@@ -101,6 +101,7 @@ export class ComposioService {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
           'Authorization': `Bearer ${authToken}`
         },
         body: JSON.stringify(body),
