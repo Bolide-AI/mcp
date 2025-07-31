@@ -31,6 +31,9 @@ export enum ToolGroup {
 
   // Slack integration tools
   SLACK = 'BOLIDEAI_MCP_GROUP_SLACK',
+
+  // Linear integration tools
+  LINEAR = 'BOLIDEAI_MCP_GROUP_LINEAR',
 }
 
 // Map tool registration functions to their respective groups and individual env var names

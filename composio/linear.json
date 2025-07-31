@@ -1,0 +1,2781 @@
+{
+    "items": [
+        {
+            "slug": "LINEAR_REMOVE_ISSUE_LABEL",
+            "name": "Remove label from Linear issue",
+            "description": "Removes a specified label from an existing linear issue using their ids; successful even if the label isn't on the issue.",
+            "available_versions": [
+                "0_1",
+                "latest",
+                "latest:base"
+            ],
+            "version": "0_1",
+            "toolkit": {
+                "slug": "linear",
+                "name": "linear",
+                "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+            },
+            "input_parameters": {
+                "description": "Defines the request structure for removing a label from a Linear issue.",
+                "properties": {
+                    "issue_id": {
+                        "description": "Identifier of the Linear issue from which to remove the label.",
+                        "examples": [
+                            "ISS-1",
+                            "PROJECTX-123"
+                        ],
+                        "title": "Issue Id",
+                        "type": "string"
+                    },
+                    "label_id": {
+                        "description": "Identifier of the label to remove. The operation is successful without change if this label isn't on the issue.",
+                        "examples": [
+                            "LAB-1",
+                            "BUGFIX-456"
+                        ],
+                        "title": "Label Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "issue_id",
+                    "label_id"
+                ],
+                "title": "RemoveIssueLabelRequest",
+                "type": "object"
+            },
+            "output_parameters": {
+                "properties": {
+                    "data": {
+                        "description": "Data from the action execution",
+                        "properties": {
+                            "issue": {
+                                "description": "A dictionary representing the updated Linear issue, including its current list of labels after the operation.",
+                                "title": "Issue",
+                                "type": "object"
+                            },
+                            "success": {
+                                "description": "True if the API call completed without errors; does not imply the label was present and removed.",
+                                "title": "Success",
+                                "type": "boolean"
+                            }
+                        },
+                        "required": [
+                            "success",
+                            "issue"
+                        ],
+                        "title": "Data",
+                        "type": "object"
+                    },
+                    "error": {
+                        "default": null,
+                        "description": "Error if any occurred during the execution of the action",
+                        "nullable": true,
+                        "title": "Error",
+                        "type": "string"
+                    },
+                    "successful": {
+                        "description": "Whether or not the action execution was successful or not",
+                        "title": "Successful",
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "data",
+                    "successful"
+                ],
+                "title": "RemoveIssueLabelResponseWrapper",
+                "type": "object"
+            },
+            "scopes": [],
+            "tags": [
+                "destructiveHint",
+                "important",
+                "openWorldHint"
+            ],
+            "no_auth": false,
+            "deprecated": {
+                "displayName": "Remove label from Linear issue",
+                "version": "0_1",
+                "available_versions": [
+                    "0_1",
+                    "latest",
+                    "latest:base"
+                ],
+                "is_deprecated": false,
+                "toolkit": {
+                    "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+                }
+            }
+        },
+        {
+            "slug": "LINEAR_UPDATE_ISSUE",
+            "name": "Update issue",
+            "description": "Updates an existing linear issue using its `issue id`; requires at least one other attribute for modification, and all provided entity ids (for state, assignee, labels, etc.) must be valid.",
+            "available_versions": [
+                "0_1",
+                "latest",
+                "latest:base"
+            ],
+            "version": "0_1",
+            "toolkit": {
+                "slug": "linear",
+                "name": "linear",
+                "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+            },
+            "input_parameters": {
+                "properties": {
+                    "assignee_id": {
+                        "default": null,
+                        "description": "Identifier of the user to assign to the issue.",
+                        "examples": [
+                            "b86e2b0f-6b1a-4db8-9731-41ef97f5ba8e"
+                        ],
+                        "nullable": true,
+                        "title": "Assignee Id",
+                        "type": "string"
+                    },
+                    "description": {
+                        "default": null,
+                        "description": "New Markdown description for the issue.",
+                        "examples": [
+                            "The payment module fails when users attempt to use a new discount code 'SAVE20'."
+                        ],
+                        "nullable": true,
+                        "title": "Description",
+                        "type": "string"
+                    },
+                    "due_date": {
+                        "default": null,
+                        "description": "New due date in 'YYYY,MM,DD,hh,mm,ss' format (e.g., '2024,10,27,12,58,00').",
+                        "examples": [
+                            "2024,12,31,23,59,59"
+                        ],
+                        "nullable": true,
+                        "title": "Due Date",
+                        "type": "string"
+                    },
+                    "estimate": {
+                        "default": null,
+                        "description": "New time estimate in minutes.",
+                        "examples": [
+                            "30",
+                            "60",
+                            "120"
+                        ],
+                        "nullable": true,
+                        "title": "Estimate",
+                        "type": "integer"
+                    },
+                    "issue_id": {
+                        "description": "Identifier of the issue to update.",
+                        "examples": [
+                            "d282c513-3265-4513-9099-abc0123def45"
+                        ],
+                        "title": "Issue Id",
+                        "type": "string"
+                    },
+                    "label_ids": {
+                        "default": null,
+                        "description": "List of label identifiers to set; replaces all existing labels. An empty list removes all labels.",
+                        "examples": [
+                            [
+                                "c1f6e2b0-1a2b-3c4d-5e6f-7a8b9c0d1e2f",
+                                "d4e8f0a0-2b3c-4d5e-6f7a-8b9c0d1e2f3a"
+                            ],
+                            [
+                                "a3b5c7d9-e1f2-a3b4-c5d6-e7f8a9b0c1d2"
+                            ]
+                        ],
+                        "items": {
+                            "type": "string"
+                        },
+                        "nullable": true,
+                        "title": "Label Ids",
+                        "type": "array"
+                    },
+                    "parent_id": {
+                        "default": null,
+                        "description": "Identifier of an existing issue to set as parent.",
+                        "examples": [
+                            "7f8e9d0c-1b2a-3c4d-5e6f-7a8b9c0d1e2f"
+                        ],
+                        "nullable": true,
+                        "title": "Parent Id",
+                        "type": "string"
+                    },
+                    "priority": {
+                        "default": null,
+                        "description": "Priority: 0 (No), 1 (Urgent), 2 (High), 3 (Normal), 4 (Low).",
+                        "examples": [
+                            "0",
+                            "1",
+                            "2",
+                            "3",
+                            "4"
+                        ],
+                        "maximum": 4,
+                        "minimum": 0,
+                        "nullable": true,
+                        "title": "Priority",
+                        "type": "integer"
+                    },
+                    "project_id": {
+                        "default": null,
+                        "description": "Identifier of the project to associate with the issue.",
+                        "examples": [
+                            "1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d"
+                        ],
+                        "nullable": true,
+                        "title": "Project Id",
+                        "type": "string"
+                    },
+                    "state_id": {
+                        "default": null,
+                        "description": "Identifier of the new state (e.g., To Do, In Progress, Done).",
+                        "examples": [
+                            "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+                        ],
+                        "nullable": true,
+                        "title": "State Id",
+                        "type": "string"
+                    },
+                    "team_id": {
+                        "default": null,
+                        "description": "Identifier of the team to associate with the issue.",
+                        "examples": [
+                            "e9f0a1b2-c3d4-e5f6-a7b8-c9d0e1f2a3b4"
+                        ],
+                        "nullable": true,
+                        "title": "Team Id",
+                        "type": "string"
+                    },
+                    "title": {
+                        "default": null,
+                        "description": "New title for the issue.",
+                        "examples": [
+                            "Fix critical bug in payment module"
+                        ],
+                        "nullable": true,
+                        "title": "Title",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "issue_id"
+                ],
+                "title": "UpdateIssueRequest",
+                "type": "object"
+            },
+            "output_parameters": {
+                "properties": {
+                    "data": {
+                        "description": "Data from the action execution",
+                        "properties": {
+                            "issue": {
+                                "description": "Dictionary of the updated issue's attributes.",
+                                "title": "Issue",
+                                "type": "object"
+                            },
+                            "success": {
+                                "description": "Indicates if the update was successful.",
+                                "title": "Success",
+                                "type": "boolean"
+                            }
+                        },
+                        "required": [
+                            "success",
+                            "issue"
+                        ],
+                        "title": "Data",
+                        "type": "object"
+                    },
+                    "error": {
+                        "default": null,
+                        "description": "Error if any occurred during the execution of the action",
+                        "nullable": true,
+                        "title": "Error",
+                        "type": "string"
+                    },
+                    "successful": {
+                        "description": "Whether or not the action execution was successful or not",
+                        "title": "Successful",
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "data",
+                    "successful"
+                ],
+                "title": "UpdateIssueResponseWrapper",
+                "type": "object"
+            },
+            "scopes": [],
+            "tags": [
+                "important",
+                "openWorldHint"
+            ],
+            "no_auth": false,
+            "deprecated": {
+                "displayName": "Update issue",
+                "version": "0_1",
+                "available_versions": [
+                    "0_1",
+                    "latest",
+                    "latest:base"
+                ],
+                "is_deprecated": false,
+                "toolkit": {
+                    "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+                }
+            }
+        },
+        {
+            "slug": "LINEAR_CREATE_LINEAR_ATTACHMENT",
+            "name": "Create linear attachment",
+            "description": "Creates a new attachment and associates it with a specific, existing linear issue.",
+            "available_versions": [
+                "0_1",
+                "latest",
+                "latest:base"
+            ],
+            "version": "0_1",
+            "toolkit": {
+                "slug": "linear",
+                "name": "linear",
+                "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+            },
+            "input_parameters": {
+                "properties": {
+                    "issue_id": {
+                        "description": "Identifier of the existing Linear issue to which the attachment will be added.",
+                        "examples": [
+                            "ENG-123",
+                            "PROJ-456"
+                        ],
+                        "title": "Issue Id",
+                        "type": "string"
+                    },
+                    "subtitle": {
+                        "description": "Optional subtitle or short description for the attachment.",
+                        "examples": [
+                            "Final version for review",
+                            "Key takeaways and action items"
+                        ],
+                        "title": "Subtitle",
+                        "type": "string"
+                    },
+                    "title": {
+                        "description": "Title for the attachment.",
+                        "examples": [
+                            "Design Mockup v2",
+                            "User Interview Notes"
+                        ],
+                        "title": "Title",
+                        "type": "string"
+                    },
+                    "url": {
+                        "description": "URL of the attachment's content (e.g., file, webpage, online resource).",
+                        "examples": [
+                            "https://example.com/path/to/file.pdf",
+                            "https://docs.google.com/document/d/your_doc_id"
+                        ],
+                        "title": "Url",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "issue_id",
+                    "title",
+                    "subtitle",
+                    "url"
+                ],
+                "title": "CreateAttachmentRequest",
+                "type": "object"
+            },
+            "output_parameters": {
+                "properties": {
+                    "data": {
+                        "description": "Data from the action execution",
+                        "properties": {
+                            "id": {
+                                "description": "Identifier of the newly created attachment.",
+                                "title": "Id",
+                                "type": "string"
+                            },
+                            "issue_id": {
+                                "description": "Identifier of the Linear issue the attachment is associated with.",
+                                "title": "Issue Id",
+                                "type": "string"
+                            },
+                            "subtitle": {
+                                "description": "Subtitle of the created attachment.",
+                                "title": "Subtitle",
+                                "type": "string"
+                            },
+                            "title": {
+                                "description": "Title of the created attachment.",
+                                "title": "Title",
+                                "type": "string"
+                            },
+                            "url": {
+                                "description": "URL of the created attachment.",
+                                "title": "Url",
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "id",
+                            "title",
+                            "subtitle",
+                            "url",
+                            "issue_id"
+                        ],
+                        "title": "Data",
+                        "type": "object"
+                    },
+                    "error": {
+                        "default": null,
+                        "description": "Error if any occurred during the execution of the action",
+                        "nullable": true,
+                        "title": "Error",
+                        "type": "string"
+                    },
+                    "successful": {
+                        "description": "Whether or not the action execution was successful or not",
+                        "title": "Successful",
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "data",
+                    "successful"
+                ],
+                "title": "CreateAttachmentResponseWrapper",
+                "type": "object"
+            },
+            "scopes": [],
+            "tags": [
+                "openWorldHint"
+            ],
+            "no_auth": false,
+            "deprecated": {
+                "displayName": "Create linear attachment",
+                "version": "0_1",
+                "available_versions": [
+                    "0_1",
+                    "latest",
+                    "latest:base"
+                ],
+                "is_deprecated": false,
+                "toolkit": {
+                    "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+                }
+            }
+        },
+        {
+            "slug": "LINEAR_CREATE_LINEAR_COMMENT",
+            "name": "Create a comment",
+            "description": "Creates a new comment on a specified linear issue.",
+            "available_versions": [
+                "0_1",
+                "latest",
+                "latest:base"
+            ],
+            "version": "0_1",
+            "toolkit": {
+                "slug": "linear",
+                "name": "linear",
+                "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+            },
+            "input_parameters": {
+                "properties": {
+                    "body": {
+                        "description": "Non-empty comment content, in plain text or Markdown.",
+                        "examples": [
+                            "This is a comment.",
+                            "## Heading\nThis is a **bold** comment with markdown."
+                        ],
+                        "title": "Body",
+                        "type": "string"
+                    },
+                    "issue_id": {
+                        "description": "Identifier of the existing Linear issue for the comment.",
+                        "examples": [
+                            "ENG-123",
+                            "PROJ-456"
+                        ],
+                        "title": "Issue Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "issue_id",
+                    "body"
+                ],
+                "title": "CreateCommentRequest",
+                "type": "object"
+            },
+            "output_parameters": {
+                "properties": {
+                    "data": {
+                        "description": "Data from the action execution",
+                        "properties": {
+                            "body": {
+                                "description": "Content of the created comment, possibly Markdown.",
+                                "title": "Body",
+                                "type": "string"
+                            },
+                            "created_at": {
+                                "description": "ISO 8601 timestamp of comment creation.",
+                                "title": "Created At",
+                                "type": "string"
+                            },
+                            "id": {
+                                "description": "Unique identifier of the newly created comment.",
+                                "title": "Id",
+                                "type": "string"
+                            },
+                            "user_id": {
+                                "description": "Unique identifier of the comment's creator.",
+                                "title": "User Id",
+                                "type": "string"
+                            },
+                            "user_name": {
+                                "description": "Display name of the comment's creator.",
+                                "title": "User Name",
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "id",
+                            "body",
+                            "created_at",
+                            "user_id",
+                            "user_name"
+                        ],
+                        "title": "Data",
+                        "type": "object"
+                    },
+                    "error": {
+                        "default": null,
+                        "description": "Error if any occurred during the execution of the action",
+                        "nullable": true,
+                        "title": "Error",
+                        "type": "string"
+                    },
+                    "successful": {
+                        "description": "Whether or not the action execution was successful or not",
+                        "title": "Successful",
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "data",
+                    "successful"
+                ],
+                "title": "CreateCommentResponseWrapper",
+                "type": "object"
+            },
+            "scopes": [
+                "write"
+            ],
+            "tags": [
+                "openWorldHint"
+            ],
+            "no_auth": false,
+            "deprecated": {
+                "displayName": "Create a comment",
+                "version": "0_1",
+                "available_versions": [
+                    "0_1",
+                    "latest",
+                    "latest:base"
+                ],
+                "is_deprecated": false,
+                "toolkit": {
+                    "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+                }
+            }
+        },
+        {
+            "slug": "LINEAR_CREATE_LINEAR_ISSUE",
+            "name": "Create linear issue",
+            "description": "Creates a new issue in a specified linear project and team, requiring a title and description, and allowing for optional properties like assignee, state, priority, cycle, and due date.",
+            "available_versions": [
+                "0_1",
+                "latest",
+                "latest:base"
+            ],
+            "version": "0_1",
+            "toolkit": {
+                "slug": "linear",
+                "name": "linear",
+                "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+            },
+            "input_parameters": {
+                "properties": {
+                    "assignee_id": {
+                        "default": null,
+                        "description": "Identifier of the user to assign to this issue.",
+                        "examples": [
+                            "U_USER456-7890-1234-5678-90abcdef0123"
+                        ],
+                        "title": "Assignee Id",
+                        "type": "string"
+                    },
+                    "cycle_id": {
+                        "default": null,
+                        "description": "Identifier of the cycle (sprint) to assign this issue to. Cycles are time-bound periods used to organize and prioritize work. Only applicable if the team has cycles feature enabled.",
+                        "examples": [
+                            "C_CYCLE456-7890-1234-5678-90abcdef0123"
+                        ],
+                        "title": "Cycle Id",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "A detailed description of the issue, which can include markdown formatting.",
+                        "examples": [
+                            "The login button is unresponsive. This issue started after the v2.3 deployment. Steps to reproduce:\n1. Navigate to the homepage.\n2. Click the login button.\n\nExpected: User is redirected to the login page.\nActual: No action occurs."
+                        ],
+                        "title": "Description",
+                        "type": "string"
+                    },
+                    "due_date": {
+                        "default": null,
+                        "description": "The target completion date for the issue, formatted as 'YYYY,MM,DD,hh,mm,ss'. For example: '2024,10,27,12,58,00'.",
+                        "examples": [
+                            "2024,12,31,23,59,59"
+                        ],
+                        "title": "Due Date",
+                        "type": "string"
+                    },
+                    "estimate": {
+                        "default": 0,
+                        "description": "The estimated complexity or effort for the issue, represented as a numerical point value (e.g., 1, 2, 3, 5, 8). The specific scale used (e.g., Fibonacci, Linear, T-shirt sizes mapped to numbers) is defined by the team's settings. This field only applies if the estimates feature is enabled for the team. A value of 0 typically means no estimate has been set.",
+                        "examples": [
+                            "0",
+                            "1",
+                            "2",
+                            "3",
+                            "5",
+                            "8"
+                        ],
+                        "title": "Estimate",
+                        "type": "integer"
+                    },
+                    "label_ids": {
+                        "default": [],
+                        "description": "A list of identifiers for labels to be added to this issue.",
+                        "examples": [
+                            "LBL-101",
+                            "LBL-202"
+                        ],
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "Label Ids",
+                        "type": "array"
+                    },
+                    "parent_id": {
+                        "default": null,
+                        "description": "Identifier of an existing issue to set as the parent of this new issue, creating a sub-issue relationship.",
+                        "examples": [
+                            "I_PARENTISSUE-123"
+                        ],
+                        "title": "Parent Id",
+                        "type": "string"
+                    },
+                    "priority": {
+                        "default": 0,
+                        "description": "Priority of the issue. 0 indicates no priority, 1 is Urgent, 2 is High, 3 is Normal, and 4 is Low.",
+                        "examples": [
+                            "0",
+                            "1",
+                            "2",
+                            "3",
+                            "4"
+                        ],
+                        "title": "Priority",
+                        "type": "integer"
+                    },
+                    "project_id": {
+                        "description": "Identifier of the project to which this issue will be associated.",
+                        "examples": [
+                            "9a7f1e3c-4d5b-6a7f-8e9d-0a1b2c3d4e5f"
+                        ],
+                        "title": "Project Id",
+                        "type": "string"
+                    },
+                    "state_id": {
+                        "default": null,
+                        "description": "Identifier of the workflow state to assign to the issue (e.g., backlog, to do, in progress, done).",
+                        "examples": [
+                            "S_STATE789-0123-4567-89ab-cdef01234567"
+                        ],
+                        "title": "State Id",
+                        "type": "string"
+                    },
+                    "team_id": {
+                        "description": "Identifier of the team responsible for this issue.",
+                        "examples": [
+                            "T_TEAM123-4567-890a-bcde-f1234567890a"
+                        ],
+                        "title": "Team Id",
+                        "type": "string"
+                    },
+                    "title": {
+                        "description": "The title of the new issue.",
+                        "examples": [
+                            "Fix login button bug on homepage"
+                        ],
+                        "title": "Title",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "project_id",
+                    "team_id",
+                    "title",
+                    "description"
+                ],
+                "title": "CreateIssueRequest",
+                "type": "object"
+            },
+            "output_parameters": {
+                "properties": {
+                    "data": {
+                        "description": "Data from the action execution",
+                        "properties": {
+                            "id": {
+                                "description": "The unique identifier of the newly created issue.",
+                                "title": "Id",
+                                "type": "string"
+                            },
+                            "issue_description": {
+                                "description": "The description provided for the newly created issue.",
+                                "title": "Issue Description",
+                                "type": "string"
+                            },
+                            "issue_title": {
+                                "description": "The title of the newly created issue.",
+                                "title": "Issue Title",
+                                "type": "string"
+                            },
+                            "ticket_url": {
+                                "description": "The direct URL to access the newly created issue in the Linear application.",
+                                "title": "Ticket Url",
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "id",
+                            "issue_title",
+                            "issue_description",
+                            "ticket_url"
+                        ],
+                        "title": "Data",
+                        "type": "object"
+                    },
+                    "error": {
+                        "default": null,
+                        "description": "Error if any occurred during the execution of the action",
+                        "nullable": true,
+                        "title": "Error",
+                        "type": "string"
+                    },
+                    "successful": {
+                        "description": "Whether or not the action execution was successful or not",
+                        "title": "Successful",
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "data",
+                    "successful"
+                ],
+                "title": "CreateIssueResponseWrapper",
+                "type": "object"
+            },
+            "scopes": [
+                "write"
+            ],
+            "tags": [
+                "openWorldHint"
+            ],
+            "no_auth": false,
+            "deprecated": {
+                "displayName": "Create linear issue",
+                "version": "0_1",
+                "available_versions": [
+                    "0_1",
+                    "latest",
+                    "latest:base"
+                ],
+                "is_deprecated": false,
+                "toolkit": {
+                    "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+                }
+            }
+        },
+        {
+            "slug": "LINEAR_CREATE_LINEAR_ISSUE_DETAILS",
+            "name": "Get create issue default params",
+            "description": "Fetches a linear team's default issue estimate and state, useful for pre-filling new issue forms.",
+            "available_versions": [
+                "0_1",
+                "latest",
+                "latest:base"
+            ],
+            "version": "0_1",
+            "toolkit": {
+                "slug": "linear",
+                "name": "linear",
+                "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+            },
+            "input_parameters": {
+                "properties": {
+                    "team_id": {
+                        "description": "Identifier of the Linear team.",
+                        "examples": [
+                            "d4b8dfcc-399f-4b67-9684-1f2f7dd79a4b"
+                        ],
+                        "title": "Team Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "team_id"
+                ],
+                "title": "CreateLinearIssueDetailsRequest",
+                "type": "object"
+            },
+            "output_parameters": {
+                "properties": {
+                    "data": {
+                        "description": "Data from the action execution",
+                        "properties": {
+                            "team": {
+                                "description": "Default parameters for new issues in the team, including 'defaultIssueEstimate' (e.g., 0 for complexity/points) and 'defaultIssueState' (object with 'id' and 'name' of the default workflow state, like 'Todo').",
+                                "title": "Team",
+                                "type": "object"
+                            }
+                        },
+                        "required": [
+                            "team"
+                        ],
+                        "title": "Data",
+                        "type": "object"
+                    },
+                    "error": {
+                        "default": null,
+                        "description": "Error if any occurred during the execution of the action",
+                        "nullable": true,
+                        "title": "Error",
+                        "type": "string"
+                    },
+                    "successful": {
+                        "description": "Whether or not the action execution was successful or not",
+                        "title": "Successful",
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "data",
+                    "successful"
+                ],
+                "title": "CreateLinearIssueDetailsResponseWrapper",
+                "type": "object"
+            },
+            "scopes": [
+                "issues:create"
+            ],
+            "tags": [
+                "readOnlyHint",
+                "openWorldHint"
+            ],
+            "no_auth": false,
+            "deprecated": {
+                "displayName": "Get create issue default params",
+                "version": "0_1",
+                "available_versions": [
+                    "0_1",
+                    "latest",
+                    "latest:base"
+                ],
+                "is_deprecated": false,
+                "toolkit": {
+                    "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+                }
+            }
+        },
+        {
+            "slug": "LINEAR_CREATE_LINEAR_LABEL",
+            "name": "Create a label",
+            "description": "Creates a new label in linear for a specified team, used to categorize and organize issues.",
+            "available_versions": [
+                "0_1",
+                "latest",
+                "latest:base"
+            ],
+            "version": "0_1",
+            "toolkit": {
+                "slug": "linear",
+                "name": "linear",
+                "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+            },
+            "input_parameters": {
+                "properties": {
+                    "color": {
+                        "description": "Hexadecimal color code (e.g., '#FF0000') for the label's appearance in the UI.",
+                        "examples": [
+                            "#FF0000",
+                            "#32CD32",
+                            "#0077FF"
+                        ],
+                        "title": "Color",
+                        "type": "string"
+                    },
+                    "description": {
+                        "default": null,
+                        "description": "Optional detailed description for the label, providing context on its use.",
+                        "examples": [
+                            "Issues related to critical software bugs.",
+                            "Tasks for developing new features."
+                        ],
+                        "nullable": true,
+                        "title": "Description",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "Name of the new label, displayed in the Linear UI.",
+                        "examples": [
+                            "Bug",
+                            "Feature Request",
+                            "Documentation"
+                        ],
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "team_id": {
+                        "description": "Identifier of the team for which this label will be created.",
+                        "examples": [
+                            "<team_uuid>"
+                        ],
+                        "title": "Team Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "team_id",
+                    "name",
+                    "color"
+                ],
+                "title": "CreateLinearLabelRequest",
+                "type": "object"
+            },
+            "output_parameters": {
+                "properties": {
+                    "data": {
+                        "description": "Data from the action execution",
+                        "properties": {
+                            "color": {
+                                "description": "Hexadecimal color code assigned to the label.",
+                                "title": "Color",
+                                "type": "string"
+                            },
+                            "created_at": {
+                                "description": "ISO 8601 timestamp of when the label was created.",
+                                "title": "Created At",
+                                "type": "string"
+                            },
+                            "description": {
+                                "default": null,
+                                "description": "Description provided for the label, if any.",
+                                "nullable": true,
+                                "title": "Description",
+                                "type": "string"
+                            },
+                            "id": {
+                                "description": "Identifier of the newly created label.",
+                                "title": "Id",
+                                "type": "string"
+                            },
+                            "name": {
+                                "description": "Name of the created label.",
+                                "title": "Name",
+                                "type": "string"
+                            },
+                            "team_id": {
+                                "description": "Identifier of the team in which the label was created.",
+                                "title": "Team Id",
+                                "type": "string"
+                            },
+                            "updated_at": {
+                                "description": "ISO 8601 timestamp of when the label was last updated.",
+                                "title": "Updated At",
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "id",
+                            "name",
+                            "color",
+                            "team_id",
+                            "created_at",
+                            "updated_at"
+                        ],
+                        "title": "Data",
+                        "type": "object"
+                    },
+                    "error": {
+                        "default": null,
+                        "description": "Error if any occurred during the execution of the action",
+                        "nullable": true,
+                        "title": "Error",
+                        "type": "string"
+                    },
+                    "successful": {
+                        "description": "Whether or not the action execution was successful or not",
+                        "title": "Successful",
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "data",
+                    "successful"
+                ],
+                "title": "CreateLinearLabelResponseWrapper",
+                "type": "object"
+            },
+            "scopes": [],
+            "tags": [
+                "openWorldHint"
+            ],
+            "no_auth": false,
+            "deprecated": {
+                "displayName": "Create a label",
+                "version": "0_1",
+                "available_versions": [
+                    "0_1",
+                    "latest",
+                    "latest:base"
+                ],
+                "is_deprecated": false,
+                "toolkit": {
+                    "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+                }
+            }
+        },
+        {
+            "slug": "LINEAR_DELETE_LINEAR_ISSUE",
+            "name": "Delete issue",
+            "description": "Archives an existing linear issue by its id, which is linear's standard way of deleting issues; the operation is idempotent.",
+            "available_versions": [
+                "0_1",
+                "latest",
+                "latest:base"
+            ],
+            "version": "0_1",
+            "toolkit": {
+                "slug": "linear",
+                "name": "linear",
+                "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+            },
+            "input_parameters": {
+                "properties": {
+                    "issue_id": {
+                        "description": "Identifier of the Linear issue to be archived. This can be the issue's UUID or its human-readable shorthand ID (e.g., 'TEAM-123').",
+                        "examples": [
+                            "PROJ-123",
+                            "123e4567-e89b-12d3-a456-426614174000"
+                        ],
+                        "title": "Issue Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "issue_id"
+                ],
+                "title": "DeleteIssueRequest",
+                "type": "object"
+            },
+            "output_parameters": {
+                "properties": {
+                    "data": {
+                        "description": "Data from the action execution",
+                        "properties": {
+                            "success": {
+                                "description": "A boolean flag indicating `true` if the issue was successfully archived, or `false` otherwise.",
+                                "title": "Success",
+                                "type": "boolean"
+                            }
+                        },
+                        "required": [
+                            "success"
+                        ],
+                        "title": "Data",
+                        "type": "object"
+                    },
+                    "error": {
+                        "default": null,
+                        "description": "Error if any occurred during the execution of the action",
+                        "nullable": true,
+                        "title": "Error",
+                        "type": "string"
+                    },
+                    "successful": {
+                        "description": "Whether or not the action execution was successful or not",
+                        "title": "Successful",
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "data",
+                    "successful"
+                ],
+                "title": "DeleteIssueResponseWrapper",
+                "type": "object"
+            },
+            "scopes": [
+                "write"
+            ],
+            "tags": [
+                "destructiveHint",
+                "openWorldHint"
+            ],
+            "no_auth": false,
+            "deprecated": {
+                "displayName": "Delete issue",
+                "version": "0_1",
+                "available_versions": [
+                    "0_1",
+                    "latest",
+                    "latest:base"
+                ],
+                "is_deprecated": false,
+                "toolkit": {
+                    "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+                }
+            }
+        },
+        {
+            "slug": "LINEAR_GET_ATTACHMENTS",
+            "name": "Download issue attachments",
+            "description": "Downloads a specific attachment from a linear issue; the `file name` must include the correct file extension.",
+            "available_versions": [
+                "0_1",
+                "latest",
+                "latest:base"
+            ],
+            "version": "0_1",
+            "toolkit": {
+                "slug": "linear",
+                "name": "linear",
+                "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+            },
+            "input_parameters": {
+                "properties": {
+                    "attachment_id": {
+                        "description": "The unique identifier of the specific attachment to download.",
+                        "examples": [
+                            "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+                            "f0e1d2c3-b4a5-6789-0123-456789abcdef"
+                        ],
+                        "title": "Attachment Id",
+                        "type": "string"
+                    },
+                    "file_name": {
+                        "description": "The desired name for the downloaded file, including its extension.",
+                        "examples": [
+                            "specification_document.pdf",
+                            "user_flow_diagram.png",
+                            "meeting_notes.txt"
+                        ],
+                        "title": "File Name",
+                        "type": "string"
+                    },
+                    "issue_id": {
+                        "description": "The unique identifier of the Linear issue from which the attachment will be downloaded.",
+                        "examples": [
+                            "LIN-123",
+                            "PROJ-456"
+                        ],
+                        "title": "Issue Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "issue_id",
+                    "attachment_id",
+                    "file_name"
+                ],
+                "title": "GetAttachmentsRequest",
+                "type": "object"
+            },
+            "output_parameters": {
+                "properties": {
+                    "data": {
+                        "description": "Data from the action execution",
+                        "properties": {
+                            "file": {
+                                "description": "The downloaded attachment file, represented as a FileDownloadable object, which can be used to retrieve the file content.",
+                                "file_downloadable": true,
+                                "properties": {
+                                    "mimetype": {
+                                        "description": "Mime type of the file.",
+                                        "title": "Mimetype",
+                                        "type": "string"
+                                    },
+                                    "name": {
+                                        "description": "Name of the file",
+                                        "title": "Name",
+                                        "type": "string"
+                                    },
+                                    "s3url": {
+                                        "description": "URL of the file.",
+                                        "title": "S3Url",
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "name",
+                                    "mimetype",
+                                    "s3url"
+                                ],
+                                "title": "File",
+                                "type": "object"
+                            }
+                        },
+                        "required": [
+                            "file"
+                        ],
+                        "title": "Data",
+                        "type": "object"
+                    },
+                    "error": {
+                        "default": null,
+                        "description": "Error if any occurred during the execution of the action",
+                        "nullable": true,
+                        "title": "Error",
+                        "type": "string"
+                    },
+                    "successful": {
+                        "description": "Whether or not the action execution was successful or not",
+                        "title": "Successful",
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "data",
+                    "successful"
+                ],
+                "title": "GetAttachmentsResponseWrapper",
+                "type": "object"
+            },
+            "scopes": [
+                "read"
+            ],
+            "tags": [
+                "readOnlyHint",
+                "openWorldHint"
+            ],
+            "no_auth": false,
+            "deprecated": {
+                "displayName": "Download issue attachments",
+                "version": "0_1",
+                "available_versions": [
+                    "0_1",
+                    "latest",
+                    "latest:base"
+                ],
+                "is_deprecated": false,
+                "toolkit": {
+                    "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+                }
+            }
+        },
+        {
+            "slug": "LINEAR_GET_CYCLES_BY_TEAM_ID",
+            "name": "Get cycles by team ID",
+            "description": "Retrieves all cycles for a specified linear team id; cycles are time-boxed work periods (like sprints) and the team id must correspond to an existing team.",
+            "available_versions": [
+                "0_1",
+                "latest",
+                "latest:base"
+            ],
+            "version": "0_1",
+            "toolkit": {
+                "slug": "linear",
+                "name": "linear",
+                "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+            },
+            "input_parameters": {
+                "properties": {
+                    "team_id": {
+                        "description": "The team's unique identifier.",
+                        "examples": [
+                            "d282d590-8462-4390-8ef9-98f5ac2190b0"
+                        ],
+                        "title": "Team Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "team_id"
+                ],
+                "title": "GetCyclesByTeamIdRequest",
+                "type": "object"
+            },
+            "output_parameters": {
+                "properties": {
+                    "data": {
+                        "description": "Data from the action execution",
+                        "properties": {
+                            "cycles": {
+                                "description": "List of cycles retrieved for the team.",
+                                "items": {
+                                    "properties": {
+                                        "createdAt": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ],
+                                            "default": null,
+                                            "description": "Cycle creation timestamp (ISO 8601).",
+                                            "title": "Createdat"
+                                        },
+                                        "endsAt": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ],
+                                            "default": null,
+                                            "description": "Cycle scheduled end timestamp (ISO 8601).",
+                                            "title": "Endsat"
+                                        },
+                                        "id": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ],
+                                            "default": null,
+                                            "description": "The cycle's unique identifier.",
+                                            "title": "Id"
+                                        },
+                                        "issueCountHistory": {
+                                            "anyOf": [
+                                                {
+                                                    "items": {
+                                                        "type": "integer"
+                                                    },
+                                                    "type": "array"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ],
+                                            "default": null,
+                                            "description": "Historical issue counts in the cycle.",
+                                            "title": "Issuecounthistory"
+                                        },
+                                        "name": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ],
+                                            "default": null,
+                                            "description": "Name of the cycle.",
+                                            "title": "Name"
+                                        },
+                                        "progress": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "number"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ],
+                                            "default": null,
+                                            "description": "Overall progress of the cycle (decimal value, 0.0 to 1.0).",
+                                            "title": "Progress"
+                                        },
+                                        "progressHistory": {
+                                            "anyOf": [
+                                                {
+                                                    "items": {
+                                                        "type": "number"
+                                                    },
+                                                    "type": "array"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ],
+                                            "default": null,
+                                            "description": "Historical progress values of the cycle.",
+                                            "title": "Progresshistory"
+                                        }
+                                    },
+                                    "title": "GetCyclesByTeamIdResponseSingleItem",
+                                    "type": "object"
+                                },
+                                "title": "Cycles",
+                                "type": "array"
+                            },
+                            "items": {
+                                "items": {
+                                    "properties": {
+                                        "createdAt": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ],
+                                            "default": null,
+                                            "description": "Cycle creation timestamp (ISO 8601).",
+                                            "title": "Createdat"
+                                        },
+                                        "endsAt": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ],
+                                            "default": null,
+                                            "description": "Cycle scheduled end timestamp (ISO 8601).",
+                                            "title": "Endsat"
+                                        },
+                                        "id": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ],
+                                            "default": null,
+                                            "description": "The cycle's unique identifier.",
+                                            "title": "Id"
+                                        },
+                                        "issueCountHistory": {
+                                            "anyOf": [
+                                                {
+                                                    "items": {
+                                                        "type": "integer"
+                                                    },
+                                                    "type": "array"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ],
+                                            "default": null,
+                                            "description": "Historical issue counts in the cycle.",
+                                            "title": "Issuecounthistory"
+                                        },
+                                        "name": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ],
+                                            "default": null,
+                                            "description": "Name of the cycle.",
+                                            "title": "Name"
+                                        },
+                                        "progress": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "number"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ],
+                                            "default": null,
+                                            "description": "Overall progress of the cycle (decimal value, 0.0 to 1.0).",
+                                            "title": "Progress"
+                                        },
+                                        "progressHistory": {
+                                            "anyOf": [
+                                                {
+                                                    "items": {
+                                                        "type": "number"
+                                                    },
+                                                    "type": "array"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ],
+                                            "default": null,
+                                            "description": "Historical progress values of the cycle.",
+                                            "title": "Progresshistory"
+                                        }
+                                    },
+                                    "title": "GetCyclesByTeamIdResponseSingleItem",
+                                    "type": "object"
+                                },
+                                "title": "Items",
+                                "type": "array"
+                            }
+                        },
+                        "required": [
+                            "cycles"
+                        ],
+                        "title": "Data",
+                        "type": "object"
+                    },
+                    "error": {
+                        "default": null,
+                        "description": "Error if any occurred during the execution of the action",
+                        "nullable": true,
+                        "title": "Error",
+                        "type": "string"
+                    },
+                    "successful": {
+                        "description": "Whether or not the action execution was successful or not",
+                        "title": "Successful",
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "data",
+                    "successful"
+                ],
+                "title": "GetCyclesByTeamIdResponseWrapper",
+                "type": "object"
+            },
+            "scopes": [
+                "read",
+                "write"
+            ],
+            "tags": [
+                "openWorldHint",
+                "readOnlyHint"
+            ],
+            "no_auth": false,
+            "deprecated": {
+                "displayName": "Get cycles by team ID",
+                "version": "0_1",
+                "available_versions": [
+                    "0_1",
+                    "latest",
+                    "latest:base"
+                ],
+                "is_deprecated": false,
+                "toolkit": {
+                    "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+                }
+            }
+        },
+        {
+            "slug": "LINEAR_GET_LINEAR_ISSUE",
+            "name": "Get Linear issue",
+            "description": "Retrieves an existing linear issue's comprehensive details, including title, description, attachments, and comments.",
+            "available_versions": [
+                "0_1",
+                "latest",
+                "latest:base"
+            ],
+            "version": "0_1",
+            "toolkit": {
+                "slug": "linear",
+                "name": "linear",
+                "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+            },
+            "input_parameters": {
+                "properties": {
+                    "issue_id": {
+                        "description": "The unique identifier of the Linear issue.",
+                        "examples": [
+                            "LIN-123",
+                            "ENG-456"
+                        ],
+                        "title": "Issue Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "issue_id"
+                ],
+                "title": "GetLinearIssueRequest",
+                "type": "object"
+            },
+            "output_parameters": {
+                "properties": {
+                    "data": {
+                        "description": "Data from the action execution",
+                        "properties": {
+                            "issue": {
+                                "description": "Comprehensive details of the specified Linear issue, including its title, description, attachments (each with URL, title, ID, source), and comments (each with body, ID, URL, parent ID).",
+                                "title": "Issue",
+                                "type": "object"
+                            }
+                        },
+                        "required": [
+                            "issue"
+                        ],
+                        "title": "Data",
+                        "type": "object"
+                    },
+                    "error": {
+                        "default": null,
+                        "description": "Error if any occurred during the execution of the action",
+                        "nullable": true,
+                        "title": "Error",
+                        "type": "string"
+                    },
+                    "successful": {
+                        "description": "Whether or not the action execution was successful or not",
+                        "title": "Successful",
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "data",
+                    "successful"
+                ],
+                "title": "GetLinearIssueResponseWrapper",
+                "type": "object"
+            },
+            "scopes": [
+                "read",
+                "write"
+            ],
+            "tags": [
+                "openWorldHint",
+                "readOnlyHint"
+            ],
+            "no_auth": false,
+            "deprecated": {
+                "displayName": "Get Linear issue",
+                "version": "0_1",
+                "available_versions": [
+                    "0_1",
+                    "latest",
+                    "latest:base"
+                ],
+                "is_deprecated": false,
+                "toolkit": {
+                    "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+                }
+            }
+        },
+        {
+            "slug": "LINEAR_LIST_LINEAR_CYCLES",
+            "name": "Get all cycles",
+            "description": "Retrieves all cycles (time-boxed iterations for work) from the linear account; no filters are applied.",
+            "available_versions": [
+                "0_1",
+                "latest",
+                "latest:base"
+            ],
+            "version": "0_1",
+            "toolkit": {
+                "slug": "linear",
+                "name": "linear",
+                "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+            },
+            "input_parameters": {
+                "properties": {},
+                "title": "ListLinearCyclesRequest",
+                "type": "object"
+            },
+            "output_parameters": {
+                "properties": {
+                    "data": {
+                        "description": "Data from the action execution",
+                        "properties": {
+                            "cycles": {
+                                "description": "List of cycle objects, each with detailed information about a cycle.",
+                                "items": {
+                                    "properties": {
+                                        "createdAt": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ],
+                                            "default": null,
+                                            "description": "Timestamp (ISO 8601) when the cycle was created.",
+                                            "title": "Createdat"
+                                        },
+                                        "description": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ],
+                                            "default": null,
+                                            "description": "Description or notes for the cycle.",
+                                            "title": "Description"
+                                        },
+                                        "endsAt": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ],
+                                            "default": null,
+                                            "description": "Scheduled end timestamp (ISO 8601) for the cycle.",
+                                            "title": "Endsat"
+                                        },
+                                        "id": {
+                                            "description": "Unique identifier for the cycle.",
+                                            "title": "Id",
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ],
+                                            "default": null,
+                                            "description": "Name of the cycle.",
+                                            "title": "Name"
+                                        },
+                                        "number": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "number"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ],
+                                            "default": null,
+                                            "description": "Number of the cycle, often sequential within a team (float value).",
+                                            "title": "Number"
+                                        },
+                                        "progress": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "number"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ],
+                                            "default": null,
+                                            "description": "Cycle progress (float from 0.0 for 0% to 1.0 for 100%), representing completed work.",
+                                            "title": "Progress"
+                                        },
+                                        "team": {
+                                            "anyOf": [
+                                                {
+                                                    "properties": {
+                                                        "id": {
+                                                            "anyOf": [
+                                                                {
+                                                                    "type": "string"
+                                                                },
+                                                                {
+                                                                    "type": "null"
+                                                                }
+                                                            ],
+                                                            "default": null,
+                                                            "description": "Unique identifier of the team, if the cycle is associated with one.",
+                                                            "title": "Id"
+                                                        },
+                                                        "name": {
+                                                            "anyOf": [
+                                                                {
+                                                                    "type": "string"
+                                                                },
+                                                                {
+                                                                    "type": "null"
+                                                                }
+                                                            ],
+                                                            "default": null,
+                                                            "description": "Name of the team; always `None` as this action only retrieves the team ID, not its name.",
+                                                            "title": "Name"
+                                                        }
+                                                    },
+                                                    "title": "Team",
+                                                    "type": "object"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ],
+                                            "default": null,
+                                            "description": "Associated team details. Only the team `id` is provided; the team `name` will be `None`."
+                                        }
+                                    },
+                                    "required": [
+                                        "id"
+                                    ],
+                                    "title": "ListLinearCyclesResponseSingleItem",
+                                    "type": "object"
+                                },
+                                "title": "Cycles",
+                                "type": "array"
+                            }
+                        },
+                        "required": [
+                            "cycles"
+                        ],
+                        "title": "Data",
+                        "type": "object"
+                    },
+                    "error": {
+                        "default": null,
+                        "description": "Error if any occurred during the execution of the action",
+                        "nullable": true,
+                        "title": "Error",
+                        "type": "string"
+                    },
+                    "successful": {
+                        "description": "Whether or not the action execution was successful or not",
+                        "title": "Successful",
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "data",
+                    "successful"
+                ],
+                "title": "ListLinearCyclesResponseWrapper",
+                "type": "object"
+            },
+            "scopes": [
+                "read"
+            ],
+            "tags": [
+                "readOnlyHint",
+                "openWorldHint"
+            ],
+            "no_auth": false,
+            "deprecated": {
+                "displayName": "Get all cycles",
+                "version": "0_1",
+                "available_versions": [
+                    "0_1",
+                    "latest",
+                    "latest:base"
+                ],
+                "is_deprecated": false,
+                "toolkit": {
+                    "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+                }
+            }
+        },
+        {
+            "slug": "LINEAR_LIST_LINEAR_ISSUES",
+            "name": "List Linear issues",
+            "description": "Lists non-archived linear issues; if project id is not specified, issues from all accessible projects are returned. can also filter by assignee id to get issues assigned to a specific user.",
+            "available_versions": [
+                "0_1",
+                "latest",
+                "latest:base"
+            ],
+            "version": "0_1",
+            "toolkit": {
+                "slug": "linear",
+                "name": "linear",
+                "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+            },
+            "input_parameters": {
+                "properties": {
+                    "after": {
+                        "default": null,
+                        "description": "Cursor for pagination. Use the `endCursor` from the previous response's `page_info` to fetch the next set of issues.",
+                        "examples": [
+                            "MTY4NzE5NjgwMDAwMA=="
+                        ],
+                        "nullable": true,
+                        "title": "After",
+                        "type": "string"
+                    },
+                    "assignee_id": {
+                        "default": null,
+                        "description": "ID of the user to filter issues by assignee. If provided, only issues assigned to this user will be returned.",
+                        "examples": [
+                            "user-uuid-456"
+                        ],
+                        "nullable": true,
+                        "title": "Assignee Id",
+                        "type": "string"
+                    },
+                    "first": {
+                        "default": 10,
+                        "description": "Number of issues to return.",
+                        "examples": [
+                            20
+                        ],
+                        "maximum": 250,
+                        "minimum": 1,
+                        "title": "First",
+                        "type": "integer"
+                    },
+                    "project_id": {
+                        "default": null,
+                        "description": "ID of the project to filter issues by. If provided, only issues belonging to this project will be returned.",
+                        "examples": [
+                            "project-uuid-123"
+                        ],
+                        "nullable": true,
+                        "title": "Project Id",
+                        "type": "string"
+                    }
+                },
+                "title": "ListLinearIssuesRequest",
+                "type": "object"
+            },
+            "output_parameters": {
+                "properties": {
+                    "data": {
+                        "description": "Data from the action execution",
+                        "properties": {
+                            "issues": {
+                                "default": [],
+                                "description": "Details for each issue, such as id, title, description, state, priority, assignee, and labels. If `project_id` was not specified in the request, each issue also includes project details.",
+                                "items": {
+                                    "type": "object"
+                                },
+                                "title": "Issues",
+                                "type": "array"
+                            },
+                            "page_info": {
+                                "default": {},
+                                "description": "Pagination information, including `endCursor` and `hasNextPage`.",
+                                "title": "Page Info",
+                                "type": "object"
+                            }
+                        },
+                        "title": "Data",
+                        "type": "object"
+                    },
+                    "error": {
+                        "default": null,
+                        "description": "Error if any occurred during the execution of the action",
+                        "nullable": true,
+                        "title": "Error",
+                        "type": "string"
+                    },
+                    "successful": {
+                        "description": "Whether or not the action execution was successful or not",
+                        "title": "Successful",
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "data",
+                    "successful"
+                ],
+                "title": "ListLinearIssuesResponseWrapper",
+                "type": "object"
+            },
+            "scopes": [
+                "read"
+            ],
+            "tags": [
+                "readOnlyHint",
+                "openWorldHint"
+            ],
+            "no_auth": false,
+            "deprecated": {
+                "displayName": "List Linear issues",
+                "version": "0_1",
+                "available_versions": [
+                    "0_1",
+                    "latest",
+                    "latest:base"
+                ],
+                "is_deprecated": false,
+                "toolkit": {
+                    "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+                }
+            }
+        },
+        {
+            "slug": "LINEAR_LIST_LINEAR_LABELS",
+            "name": "Get labels by team",
+            "description": "Retrieves all labels associated with a given team id in linear; the team id must refer to an existing team.",
+            "available_versions": [
+                "0_1",
+                "latest",
+                "latest:base"
+            ],
+            "version": "0_1",
+            "toolkit": {
+                "slug": "linear",
+                "name": "linear",
+                "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+            },
+            "input_parameters": {
+                "properties": {
+                    "team_id": {
+                        "description": "The unique identifier of the team for which to retrieve labels. This ID scopes the search to a specific team within Linear.",
+                        "examples": [
+                            "abcdef01-2345-6789-abcd-ef0123456789"
+                        ],
+                        "title": "Team Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "team_id"
+                ],
+                "title": "ListLinearLabelsRequest",
+                "type": "object"
+            },
+            "output_parameters": {
+                "properties": {
+                    "data": {
+                        "description": "Data from the action execution",
+                        "properties": {
+                            "items": {
+                                "items": {
+                                    "properties": {
+                                        "color": {
+                                            "description": "The color of the label, represented as a hex color code (e.g., '#RRGGBB').",
+                                            "title": "Color",
+                                            "type": "string"
+                                        },
+                                        "description": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ],
+                                            "default": null,
+                                            "description": "An optional, user-defined description providing more details about the label's purpose or usage.",
+                                            "title": "Description"
+                                        },
+                                        "id": {
+                                            "description": "The unique identifier for the label.",
+                                            "title": "Id",
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "description": "The display name of the label.",
+                                            "title": "Name",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "id",
+                                        "name",
+                                        "color"
+                                    ],
+                                    "title": "ListLinearLabelsResponseSingleItem",
+                                    "type": "object"
+                                },
+                                "title": "Items",
+                                "type": "array"
+                            },
+                            "labels": {
+                                "description": "A list of label objects, each containing details such as ID, name, color, and description.",
+                                "items": {
+                                    "properties": {
+                                        "color": {
+                                            "description": "The color of the label, represented as a hex color code (e.g., '#RRGGBB').",
+                                            "title": "Color",
+                                            "type": "string"
+                                        },
+                                        "description": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ],
+                                            "default": null,
+                                            "description": "An optional, user-defined description providing more details about the label's purpose or usage.",
+                                            "title": "Description"
+                                        },
+                                        "id": {
+                                            "description": "The unique identifier for the label.",
+                                            "title": "Id",
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "description": "The display name of the label.",
+                                            "title": "Name",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "id",
+                                        "name",
+                                        "color"
+                                    ],
+                                    "title": "ListLinearLabelsResponseSingleItem",
+                                    "type": "object"
+                                },
+                                "title": "Labels",
+                                "type": "array"
+                            }
+                        },
+                        "required": [
+                            "labels"
+                        ],
+                        "title": "Data",
+                        "type": "object"
+                    },
+                    "error": {
+                        "default": null,
+                        "description": "Error if any occurred during the execution of the action",
+                        "nullable": true,
+                        "title": "Error",
+                        "type": "string"
+                    },
+                    "successful": {
+                        "description": "Whether or not the action execution was successful or not",
+                        "title": "Successful",
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "data",
+                    "successful"
+                ],
+                "title": "ListLinearLabelsResponseWrapper",
+                "type": "object"
+            },
+            "scopes": [
+                "read"
+            ],
+            "tags": [
+                "readOnlyHint",
+                "openWorldHint"
+            ],
+            "no_auth": false,
+            "deprecated": {
+                "displayName": "Get labels by team",
+                "version": "0_1",
+                "available_versions": [
+                    "0_1",
+                    "latest",
+                    "latest:base"
+                ],
+                "is_deprecated": false,
+                "toolkit": {
+                    "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+                }
+            }
+        },
+        {
+            "slug": "LINEAR_LIST_LINEAR_PROJECTS",
+            "name": "List linear projects",
+            "description": "Retrieves all projects from the linear account.",
+            "available_versions": [
+                "0_1",
+                "latest",
+                "latest:base"
+            ],
+            "version": "0_1",
+            "toolkit": {
+                "slug": "linear",
+                "name": "linear",
+                "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+            },
+            "input_parameters": {
+                "properties": {},
+                "title": "ListLinearProjectsRequest",
+                "type": "object"
+            },
+            "output_parameters": {
+                "properties": {
+                    "data": {
+                        "description": "Data from the action execution",
+                        "properties": {
+                            "items": {
+                                "items": {
+                                    "properties": {
+                                        "id": {
+                                            "description": "The unique identifier for the project.",
+                                            "title": "Id",
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "description": "The human-readable name of the project.",
+                                            "title": "Name",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "id",
+                                        "name"
+                                    ],
+                                    "title": "ListLinearProjectsResponseSingleItem",
+                                    "type": "object"
+                                },
+                                "title": "Items",
+                                "type": "array"
+                            },
+                            "projects": {
+                                "description": "The retrieved projects; empty if no projects are found.",
+                                "items": {},
+                                "title": "Projects",
+                                "type": "array"
+                            }
+                        },
+                        "required": [
+                            "projects"
+                        ],
+                        "title": "Data",
+                        "type": "object"
+                    },
+                    "error": {
+                        "default": null,
+                        "description": "Error if any occurred during the execution of the action",
+                        "nullable": true,
+                        "title": "Error",
+                        "type": "string"
+                    },
+                    "successful": {
+                        "description": "Whether or not the action execution was successful or not",
+                        "title": "Successful",
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "data",
+                    "successful"
+                ],
+                "title": "ListLinearProjectsResponseWrapper",
+                "type": "object"
+            },
+            "scopes": [
+                "read"
+            ],
+            "tags": [
+                "readOnlyHint",
+                "openWorldHint"
+            ],
+            "no_auth": false,
+            "deprecated": {
+                "displayName": "List linear projects",
+                "version": "0_1",
+                "available_versions": [
+                    "0_1",
+                    "latest",
+                    "latest:base"
+                ],
+                "is_deprecated": false,
+                "toolkit": {
+                    "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+                }
+            }
+        },
+        {
+            "slug": "LINEAR_LIST_LINEAR_STATES",
+            "name": "List Linear states",
+            "description": "Retrieves all workflow states for a specified team in linear, representing the stages an issue progresses through in that team's workflow.",
+            "available_versions": [
+                "0_1",
+                "latest",
+                "latest:base"
+            ],
+            "version": "0_1",
+            "toolkit": {
+                "slug": "linear",
+                "name": "linear",
+                "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+            },
+            "input_parameters": {
+                "properties": {
+                    "team_id": {
+                        "description": "Unique identifier of the team.",
+                        "examples": [
+                            "d2f7g1e7-9h8i-4j5k-1l2m-n3o4p5q6r7s8",
+                            "another-team-uuid"
+                        ],
+                        "title": "Team Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "team_id"
+                ],
+                "title": "ListLinearStatesRequest",
+                "type": "object"
+            },
+            "output_parameters": {
+                "properties": {
+                    "data": {
+                        "description": "Data from the action execution",
+                        "properties": {
+                            "items": {
+                                "items": {
+                                    "properties": {
+                                        "id": {
+                                            "description": "Unique identifier of the workflow state.",
+                                            "title": "Id",
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "description": "Name of the workflow state (e.g., 'Todo', 'In Progress', 'Done').",
+                                            "title": "Name",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "id",
+                                        "name"
+                                    ],
+                                    "title": "ListLinearStatesResponseSingleItem",
+                                    "type": "object"
+                                },
+                                "title": "Items",
+                                "type": "array"
+                            },
+                            "states": {
+                                "description": "Workflow states retrieved for the team.",
+                                "items": {
+                                    "properties": {
+                                        "id": {
+                                            "description": "Unique identifier of the workflow state.",
+                                            "title": "Id",
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "description": "Name of the workflow state (e.g., 'Todo', 'In Progress', 'Done').",
+                                            "title": "Name",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "id",
+                                        "name"
+                                    ],
+                                    "title": "ListLinearStatesResponseSingleItem",
+                                    "type": "object"
+                                },
+                                "title": "States",
+                                "type": "array"
+                            }
+                        },
+                        "required": [
+                            "states"
+                        ],
+                        "title": "Data",
+                        "type": "object"
+                    },
+                    "error": {
+                        "default": null,
+                        "description": "Error if any occurred during the execution of the action",
+                        "nullable": true,
+                        "title": "Error",
+                        "type": "string"
+                    },
+                    "successful": {
+                        "description": "Whether or not the action execution was successful or not",
+                        "title": "Successful",
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "data",
+                    "successful"
+                ],
+                "title": "ListLinearStatesResponseWrapper",
+                "type": "object"
+            },
+            "scopes": [
+                "read"
+            ],
+            "tags": [
+                "readOnlyHint",
+                "openWorldHint"
+            ],
+            "no_auth": false,
+            "deprecated": {
+                "displayName": "List Linear states",
+                "version": "0_1",
+                "available_versions": [
+                    "0_1",
+                    "latest",
+                    "latest:base"
+                ],
+                "is_deprecated": false,
+                "toolkit": {
+                    "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+                }
+            }
+        },
+        {
+            "slug": "LINEAR_LIST_LINEAR_TEAMS",
+            "name": "Get teams by project",
+            "description": "Retrieves all teams, including their members, and filters each team's associated projects by the provided 'project id'.",
+            "available_versions": [
+                "0_1",
+                "latest",
+                "latest:base"
+            ],
+            "version": "0_1",
+            "toolkit": {
+                "slug": "linear",
+                "name": "linear",
+                "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+            },
+            "input_parameters": {
+                "properties": {
+                    "project_id": {
+                        "description": "The unique identifier of a project. This ID is used to filter the list of projects associated with each retrieved team. If a team is not associated with this project ID, its 'projects' list in the response will be empty.",
+                        "examples": [
+                            "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+                        ],
+                        "title": "Project Id",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "project_id"
+                ],
+                "title": "ListLinearTeamsRequest",
+                "type": "object"
+            },
+            "output_parameters": {
+                "properties": {
+                    "data": {
+                        "description": "Data from the action execution",
+                        "properties": {
+                            "items": {
+                                "items": {
+                                    "properties": {
+                                        "id": {
+                                            "description": "The unique identifier of the team.",
+                                            "title": "Id",
+                                            "type": "string"
+                                        },
+                                        "members": {
+                                            "description": "List of members belonging to this team. Each object in the list typically contains the member's `id`, `name`, and `email`.",
+                                            "items": {},
+                                            "title": "Members",
+                                            "type": "array"
+                                        },
+                                        "name": {
+                                            "description": "The name of the team.",
+                                            "title": "Name",
+                                            "type": "string"
+                                        },
+                                        "projects": {
+                                            "description": "Projects associated with this team, filtered by the request's `project_id`; each object contains the project `id`.",
+                                            "items": {},
+                                            "title": "Projects",
+                                            "type": "array"
+                                        }
+                                    },
+                                    "required": [
+                                        "id",
+                                        "name",
+                                        "projects",
+                                        "members"
+                                    ],
+                                    "title": "ListLinearTeamsResponseSingleItem",
+                                    "type": "object"
+                                },
+                                "title": "Items",
+                                "type": "array"
+                            },
+                            "teams": {
+                                "description": "All teams, each including details, members, and associated projects filtered by the request's `project_id`.",
+                                "items": {},
+                                "title": "Teams",
+                                "type": "array"
+                            }
+                        },
+                        "required": [
+                            "teams"
+                        ],
+                        "title": "Data",
+                        "type": "object"
+                    },
+                    "error": {
+                        "default": null,
+                        "description": "Error if any occurred during the execution of the action",
+                        "nullable": true,
+                        "title": "Error",
+                        "type": "string"
+                    },
+                    "successful": {
+                        "description": "Whether or not the action execution was successful or not",
+                        "title": "Successful",
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "data",
+                    "successful"
+                ],
+                "title": "ListLinearTeamsResponseWrapper",
+                "type": "object"
+            },
+            "scopes": [
+                "read"
+            ],
+            "tags": [
+                "readOnlyHint",
+                "openWorldHint"
+            ],
+            "no_auth": false,
+            "deprecated": {
+                "displayName": "Get teams by project",
+                "version": "0_1",
+                "available_versions": [
+                    "0_1",
+                    "latest",
+                    "latest:base"
+                ],
+                "is_deprecated": false,
+                "toolkit": {
+                    "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+                }
+            }
+        },
+        {
+            "slug": "LINEAR_LIST_LINEAR_USERS",
+            "name": "List Linear users",
+            "description": "Lists all users in the linear workspace with their ids, names, emails, and active status.",
+            "available_versions": [
+                "0_1",
+                "latest",
+                "latest:base"
+            ],
+            "version": "0_1",
+            "toolkit": {
+                "slug": "linear",
+                "name": "linear",
+                "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+            },
+            "input_parameters": {
+                "properties": {
+                    "after": {
+                        "default": null,
+                        "description": "Cursor for pagination. Use the `endCursor` from the previous response's `page_info` to fetch the next set of users.",
+                        "examples": [
+                            "MTY4NzE5NjgwMDAwMA=="
+                        ],
+                        "nullable": true,
+                        "title": "After",
+                        "type": "string"
+                    },
+                    "first": {
+                        "default": 50,
+                        "description": "Number of users to return.",
+                        "examples": [
+                            20
+                        ],
+                        "maximum": 250,
+                        "minimum": 1,
+                        "title": "First",
+                        "type": "integer"
+                    }
+                },
+                "title": "ListLinearUsersRequest",
+                "type": "object"
+            },
+            "output_parameters": {
+                "properties": {
+                    "data": {
+                        "description": "Data from the action execution",
+                        "properties": {
+                            "page_info": {
+                                "default": {},
+                                "description": "Pagination information, including `endCursor` and `hasNextPage`.",
+                                "title": "Page Info",
+                                "type": "object"
+                            },
+                            "users": {
+                                "default": [],
+                                "description": "List of users with their details including id, name, email, and active status.",
+                                "items": {
+                                    "type": "object"
+                                },
+                                "title": "Users",
+                                "type": "array"
+                            }
+                        },
+                        "title": "Data",
+                        "type": "object"
+                    },
+                    "error": {
+                        "default": null,
+                        "description": "Error if any occurred during the execution of the action",
+                        "nullable": true,
+                        "title": "Error",
+                        "type": "string"
+                    },
+                    "successful": {
+                        "description": "Whether or not the action execution was successful or not",
+                        "title": "Successful",
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "data",
+                    "successful"
+                ],
+                "title": "ListLinearUsersResponseWrapper",
+                "type": "object"
+            },
+            "scopes": [
+                "read"
+            ],
+            "tags": [
+                "readOnlyHint",
+                "openWorldHint"
+            ],
+            "no_auth": false,
+            "deprecated": {
+                "displayName": "List Linear users",
+                "version": "0_1",
+                "available_versions": [
+                    "0_1",
+                    "latest",
+                    "latest:base"
+                ],
+                "is_deprecated": false,
+                "toolkit": {
+                    "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+                }
+            }
+        },
+        {
+            "slug": "LINEAR_RUN_QUERY_OR_MUTATION",
+            "name": "Run Query or Mutation",
+            "description": "Executes a user-provided graphql query or mutation against the linear api, intended for advanced data operations or those not covered by other specific actions.",
+            "available_versions": [
+                "0_1",
+                "latest",
+                "latest:base"
+            ],
+            "version": "0_1",
+            "toolkit": {
+                "slug": "linear",
+                "name": "linear",
+                "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+            },
+            "input_parameters": {
+                "properties": {
+                    "query_or_mutation": {
+                        "description": "A valid GraphQL query or mutation string.",
+                        "examples": [
+                            "query { issues { nodes { id title } } }",
+                            "mutation CreateIssue($title: String!, $teamId: String!) { issueCreate(input: { title: $title, teamId: $teamId }) { success issue { id title } } }"
+                        ],
+                        "title": "Query Or Mutation",
+                        "type": "string"
+                    },
+                    "variables": {
+                        "description": "Variables for the GraphQL operation, where keys match variable names in the query/mutation (without '$'). Use {} if no variables are needed.",
+                        "examples": [
+                            "{\"title\": \"New Bug Report\", \"teamId\": \"TEAM-ID-123\"}",
+                            "{}"
+                        ],
+                        "title": "Variables",
+                        "type": "object"
+                    }
+                },
+                "required": [
+                    "query_or_mutation",
+                    "variables"
+                ],
+                "title": "RunQueryOrMutationRequest",
+                "type": "object"
+            },
+            "output_parameters": {
+                "properties": {
+                    "data": {
+                        "description": "The 'data' field from the GraphQL JSON response, containing the results of the executed query or mutation. If the operation fails at the GraphQL level (e.g., validation error), this field might be absent or accompanied by an 'errors' field in the raw response, which would be handled by an exception.",
+                        "title": "Data",
+                        "type": "object"
+                    },
+                    "error": {
+                        "default": null,
+                        "description": "Error if any occurred during the execution of the action",
+                        "nullable": true,
+                        "title": "Error",
+                        "type": "string"
+                    },
+                    "successful": {
+                        "description": "Whether or not the action execution was successful or not",
+                        "title": "Successful",
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "data",
+                    "successful"
+                ],
+                "title": "RunQueryOrMutationResponseWrapper",
+                "type": "object"
+            },
+            "scopes": [
+                "read"
+            ],
+            "tags": [
+                "destructiveHint",
+                "openWorldHint"
+            ],
+            "no_auth": false,
+            "deprecated": {
+                "displayName": "Run Query or Mutation",
+                "version": "0_1",
+                "available_versions": [
+                    "0_1",
+                    "latest",
+                    "latest:base"
+                ],
+                "is_deprecated": false,
+                "toolkit": {
+                    "logo": "https://cdn.jsdelivr.net/gh/ComposioHQ/open-logos@master/linear.png"
+                }
+            }
+        }
+    ],
+    "next_cursor": null,
+    "total_pages": 1,
+    "current_page": 1,
+    "total_items": 19
+}

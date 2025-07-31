@@ -33,6 +33,10 @@ These groups organise tools based on common developer workflows, making it easie
   - _e.g., Perform research using Perplexity AI for information gathering and question answering._
 - **BOLIDEAI_MCP_GROUP_NOTION=true** - Notion integration tools
   - _e.g., Add content to Notion pages, fetch page and database information._
+- **BOLIDEAI_MCP_GROUP_SLACK=true** - Slack integration tools
+  - _e.g., Send messages, search conversations, list channels, update messages._
+- **BOLIDEAI_MCP_GROUP_LINEAR=true** - Linear project management tools
+  - _e.g., Create and manage issues, track projects, organize teams and workflows._
 - **BOLIDEAI_MCP_GROUP_DIAGNOSTICS=true** - Logging and diagnostics tools
   - _e.g., System diagnostics, environment validation._
 
@@ -53,6 +57,12 @@ To enable specific tools rather than entire groups, use the following environmen
 ### Notion Integration Tools
 - **BOLIDEAI_MCP_TOOL_NOTION=true** - Add content to Notion pages and fetch page/database information.
 
+### Slack Integration Tools
+- **BOLIDEAI_MCP_TOOL_SLACK=true** - Send messages, search conversations, list channels, and update Slack messages.
+
+### Linear Integration Tools
+- **BOLIDEAI_MCP_TOOL_LINEAR=true** - Create and manage Linear issues, track projects, and organize team workflows.
+
 ### Utility Tools
 - **BOLIDEAI_MCP_TOOL_CHECK_COMPANION_APP_STATUS=true** - Check whether the companion app is currently running or not.
 - **BOLIDEAI_MCP_TOOL_LAUNCH_COMPANION_APP=true** - Launch companion app for capturing screenshots and videos for marketing projects.
@@ -64,7 +74,7 @@ To enable specific tools rather than entire groups, use the following environmen
 
 ## Available Tools
 
-BolideAI MCP currently provides **10 tools** across different categories:
+BolideAI MCP currently provides **20+ tools** across different categories:
 
 ### Project Scaffolding Tools  
 - `scaffold_bolide_ai_project` - Create a bolide.ai project directory with organized directory structure
@@ -77,6 +87,29 @@ BolideAI MCP currently provides **10 tools** across different categories:
 ### Research Tools
 - `use_perplexity` - Perform research and information gathering using Perplexity AI
 - `use_openai_deep_research` - Perform deep research using OpenAI o4-mini-deep-research model
+
+### Notion Integration Tools
+- `notion_add_page_content` - Add content blocks to Notion pages or parent blocks
+- `notion_fetch_data` - Fetch pages and databases from Notion workspace
+
+### Slack Integration Tools
+- `slack_fetch_conversation_history` - Fetch chronological message history from Slack conversations
+- `slack_list_all_slack_team_channels` - List all channels, DMs, and group messages in workspace
+- `slack_search_for_messages_with_query` - Search messages across workspace with query modifiers
+- `slack_sends_a_message_to_a_slack_channel` - Send messages to channels, DMs, or groups
+- `slack_updates_a_slack_message` - Update existing messages by channel ID and timestamp
+
+### Linear Integration Tools
+- `linear_create_issue` - Create new Linear issues with comprehensive options
+- `linear_update_issue` - Update existing Linear issues (title, description, state, assignee, etc.)
+- `linear_create_comment` - Add comments to Linear issues
+- `linear_list_issues` - List Linear issues with filtering and pagination
+- `linear_list_cycles` - Get all cycles/sprints from Linear
+- `linear_get_cycles_by_team_id` - Get team-specific cycles
+- `linear_list_states` - Get workflow states for teams
+- `linear_list_teams` - Get teams with project filtering
+- `linear_list_projects` - List all Linear projects
+- `linear_list_users` - List workspace users with pagination
 
 ### Utility Tools
 - `check_companion_app_status` - Checks whether the companion app is currently running or not

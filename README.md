@@ -11,6 +11,7 @@ BolideAI MCP is a comprehensive ModelContextProtocol (MCP) server that provides 
 - 📱 **Marketing Automation** - Capture screenshots and videos using companion app
 - 🤖 **AI-Powered Content Generation** - Generate social media posts using Gemini AI
 - 🔍 **Research Tools** - Comprehensive research using Perplexity AI and OpenAI
+- 📋 **Linear Integration** - Comprehensive Linear project management and issue tracking
 - 🛠️ **Diagnostic Tools** - System validation and troubleshooting
 
 ## Getting Started
@@ -132,7 +133,7 @@ analyze_screencasts({
 
 ## Available Tools
 
-BolideAI MCP provides **10 tools** across 5 categories:
+BolideAI MCP provides **20+ tools** across 6 categories:
 
 ### 🚀 Project Scaffolding
 - `scaffold_bolide_ai_project` - Create bolide.ai project directory structure
@@ -151,6 +152,18 @@ BolideAI MCP provides **10 tools** across 5 categories:
 ### 🔍 Research Tools
 - `use_perplexity` - Research using Perplexity AI
 - `use_openai_deep_research` - Deep research using OpenAI o4-mini-deep-research
+
+### 📋 Linear Integration
+- `linear_create_issue` - Create new Linear issues with comprehensive options
+- `linear_update_issue` - Update existing Linear issues (title, description, state, assignee, etc.)
+- `linear_create_comment` - Add comments to Linear issues
+- `linear_list_issues` - List Linear issues with filtering and pagination
+- `linear_list_cycles` - Get all cycles/sprints from Linear
+- `linear_get_cycles_by_team_id` - Get team-specific cycles
+- `linear_list_states` - Get workflow states for teams
+- `linear_list_teams` - Get teams with project filtering
+- `linear_list_projects` - List all Linear projects
+- `linear_list_users` - List workspace users with pagination
 
 ### 🛠️ Diagnostic Tools
 - `diagnostic` - System environment validation (debug mode only)
@@ -182,6 +195,80 @@ The deep research tool:
 1. **Enriches** your query using GPT-4.1 with detailed research instructions
 2. **Researches** using o4-mini-deep-research with web search and code interpreter
 3. **Returns** both enriched instructions and comprehensive findings
+
+## Linear Project Management
+
+BolideAI MCP provides comprehensive Linear integration for project management and issue tracking. Connect to your Linear workspace through Composio authentication.
+
+### Issue Management
+
+Create and manage Linear issues with full parameter support:
+
+```typescript
+// Create a new issue
+linear_create_issue({
+  project_id: "your-project-id",
+  team_id: "your-team-id", 
+  title: "Fix login bug on homepage",
+  description: "Users report login button unresponsive after v2.3 deployment",
+  assignee_id: "user-id",
+  priority: 1, // Urgent
+  label_ids: ["bug-label-id", "frontend-label-id"]
+})
+
+// Update an existing issue
+linear_update_issue({
+  issue_id: "issue-id",
+  state_id: "in-progress-state-id",
+  assignee_id: "new-assignee-id"
+})
+
+// Add a comment
+linear_create_comment({
+  issue_id: "issue-id",
+  body: "## Update\n\nFixed the authentication flow. Ready for testing."
+})
+```
+
+### Project Organization
+
+List and organize your Linear workspace:
+
+```typescript
+// Get all projects
+linear_list_projects()
+
+// Get teams for a project
+linear_list_teams({ project_id: "project-id" })
+
+// Get workflow states for a team
+linear_list_states({ team_id: "team-id" })
+
+// Get cycles/sprints
+linear_list_cycles()
+linear_get_cycles_by_team_id({ team_id: "team-id" })
+```
+
+### Issue Tracking
+
+List and filter issues across your workspace:
+
+```typescript
+// List recent issues
+linear_list_issues({ first: 20 })
+
+// Filter by project
+linear_list_issues({ 
+  project_id: "project-id",
+  first: 50 
+})
+
+// Filter by assignee
+linear_list_issues({ 
+  assignee_id: "user-id",
+  first: 25 
+})
+```
 
 ## Common Workflows
 
