@@ -51,6 +51,35 @@ Tools for integrating with Notion workspaces.
 | `notionAddPageContent` | Appends a single content block to a notion page or a parent block (must be page, toggle, to-do, bulleted/numbered list, callout, or quote); invoke repeatedly to add multiple blocks. |
 | `notionFetchData` | Fetches notion items (pages and/or databases) from the notion workspace, always call this action to get page id or database id in the simplest way |
 
+### Slack Integration Tools
+
+Tools for integrating with Slack workspaces.
+
+| Tool Name | Description |
+|-----------|-------------|
+| `slack_fetch_conversation_history` | Fetches a chronological list of messages and events from a specified slack conversation, accessible by the authenticated user/bot, with options for pagination and time range filtering. |
+| `slack_list_all_slack_team_channels` | Retrieves public channels, private channels, multi-person direct messages (mpims), and direct messages (ims) from a slack workspace, with options to filter by type and exclude archived channels. |
+| `slack_search_for_messages_with_query` | Searches messages in a slack workspace using a query with optional modifiers (e.g., `in:`, `from:`, `has:`, `before:`) across accessible channels, dms, and private groups. |
+| `slack_sends_a_message_to_a_slack_channel` | Posts a message to a slack channel, direct message, or private group; requires content via `text`, `blocks`, or `attachments`. |
+| `slack_updates_a_slack_message` | Updates a slack message, identified by `channel` id and `ts` timestamp, by modifying its `text`, `attachments`, or `blocks`; provide at least one content field, noting `attachments`/`blocks` are replaced if included (`[]` clears them). |
+
+### Linear Integration Tools
+
+Tools for integrating with Linear workspaces for project management and issue tracking.
+
+| Tool Name | Description |
+|-----------|-------------|
+| `linear_create_issue` | Creates a new issue in a specified Linear project and team, requiring a title and description, and allowing for optional properties like assignee, state, priority, cycle, and due date. |
+| `linear_update_issue` | Updates an existing Linear issue using its issue ID; requires at least one other attribute for modification, and all provided entity IDs (for state, assignee, labels, etc.) must be valid. |
+| `linear_create_comment` | Creates a new comment on a specified Linear issue with plain text or Markdown content. |
+| `linear_list_issues` | Lists non-archived Linear issues; if project ID is not specified, issues from all accessible projects are returned. Can also filter by assignee ID to get issues assigned to a specific user. |
+| `linear_list_cycles` | Retrieves all cycles (time-boxed iterations for work) from the Linear account; no filters are applied. |
+| `linear_get_cycles_by_team_id` | Retrieves all cycles for a specified Linear team ID; cycles are time-boxed work periods (like sprints) and the team ID must correspond to an existing team. |
+| `linear_list_states` | Retrieves all workflow states for a specified team in Linear, representing the stages an issue progresses through in that team's workflow. |
+| `linear_list_teams` | Retrieves all teams, including their members, and filters each team's associated projects by the provided project ID. |
+| `linear_list_projects` | Retrieves all projects from the Linear account. |
+| `linear_list_users` | Lists all users in the Linear workspace with their IDs, names, emails, and active status. |
+
 ### Diagnostic Tools
 
 Tools for system diagnostics and environment validation.
@@ -81,6 +110,21 @@ Tools for system diagnostics and environment validation.
    use_openai_deep_research({ query: "complex research topic" })
    ```
 
+4. **Slack Communication**:
+   ```
+   slack_list_all_slack_team_channels({ types: "public_channel,private_channel" })
+   slack_sends_a_message_to_a_slack_channel({ channel: "#general", text: "Hello team!" })
+   slack_search_for_messages_with_query({ query: "in:#development from:@john" })
+   ```
+
+5. **Linear Project Management**:
+   ```
+   linear_list_projects()
+   linear_list_teams({ project_id: "project-id" })
+   linear_create_issue({ project_id: "project-id", team_id: "team-id", title: "Bug fix", description: "Description" })
+   linear_list_issues({ project_id: "project-id", first: 20 })
+   ```
+
 ### Parameter Requirements
 
 Many tools require specific parameters:
@@ -88,6 +132,8 @@ Many tools require specific parameters:
 - **Content generation tools**: `screencastNames` required for analysis tools; specific parameters for each tool
 - **Launch tools**: No parameters required
 - **Research tools**: `query` required; `search_mode` for Perplexity
+- **Slack tools**: `channel` required for messaging/history; `query` required for search; various optional parameters for filtering and formatting
+- **Linear tools**: `project_id` and `team_id` required for issue creation; `issue_id` required for updates/comments; various optional parameters for filtering and pagination
 
 ### Environment Variables
 
@@ -102,6 +148,8 @@ Available tool groups:
 - `BOLIDEAI_MCP_GROUP_SCAFFOLDING=true` - Project scaffolding and creation tools
 - `BOLIDEAI_MCP_GROUP_CONTENT_GENERATORS=true` - Content generation tools
 - `BOLIDEAI_MCP_GROUP_RESEARCH=true` - Research and information gathering tools
+- `BOLIDEAI_MCP_GROUP_SLACK=true` - Slack integration tools
+- `BOLIDEAI_MCP_GROUP_LINEAR=true` - Linear project management tools
 - `BOLIDEAI_MCP_GROUP_DIAGNOSTICS=true` - Logging and diagnostics tools
 
 ## Notes
@@ -113,7 +161,9 @@ Available tool groups:
 - Content generation and research tools require `BOLIDEAI_API_TOKEN` environment variable
 - GIF generation tool requires `ffmpeg` to be installed on the system
 - Content generation tools work with screencast files directly
+- Slack tools require proper Composio authentication and Slack workspace access
+- Linear tools require proper Composio authentication and Linear workspace access
 
 ## Total Tool Count
 
-This MCP server currently provides **10 tools** across 5 categories for project scaffolding, content generation, research, marketing capture, and system diagnostics.
+This MCP server currently provides **38 tools** across 8 categories for project scaffolding, content generation, research, marketing capture, Slack integration, Linear project management, Notion integration, and system diagnostics.

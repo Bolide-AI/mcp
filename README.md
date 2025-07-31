@@ -12,6 +12,8 @@ BolideAI MCP is a comprehensive ModelContextProtocol (MCP) server that provides 
 - 🤖 **AI-Powered Content Generation** - Generate social media posts using Gemini AI
 - 🔍 **Research Tools** - Comprehensive research using Perplexity AI and OpenAI
 - 📋 **Linear Integration** - Comprehensive Linear project management and issue tracking
+- 💬 **Slack Integration** - Complete Slack workspace communication and management
+- 📝 **Notion Integration** - Content management and knowledge base operations
 - 🛠️ **Diagnostic Tools** - System validation and troubleshooting
 
 ## Getting Started
@@ -133,7 +135,7 @@ analyze_screencasts({
 
 ## Available Tools
 
-BolideAI MCP provides **20+ tools** across 6 categories:
+BolideAI MCP provides **38 tools** across 8 categories:
 
 ### 🚀 Project Scaffolding
 - `scaffold_bolide_ai_project` - Create bolide.ai project directory structure
@@ -152,6 +154,17 @@ BolideAI MCP provides **20+ tools** across 6 categories:
 ### 🔍 Research Tools
 - `use_perplexity` - Research using Perplexity AI
 - `use_openai_deep_research` - Deep research using OpenAI o4-mini-deep-research
+
+### 💬 Slack Integration
+- `slack_fetch_conversation_history` - Fetch chronological message history from Slack conversations
+- `slack_list_all_slack_team_channels` - List all channels, DMs, and group messages in workspace
+- `slack_search_for_messages_with_query` - Search messages across workspace with query modifiers
+- `slack_sends_a_message_to_a_slack_channel` - Send messages to channels, DMs, or groups
+- `slack_updates_a_slack_message` - Update existing messages by channel ID and timestamp
+
+### 📝 Notion Integration
+- `notion_add_page_content` - Add content blocks to Notion pages with rich formatting
+- `notion_fetch_data` - Fetch pages and databases from Notion workspace
 
 ### 📋 Linear Integration
 - `linear_create_issue` - Create new Linear issues with comprehensive options
@@ -270,6 +283,135 @@ linear_list_issues({
 })
 ```
 
+## Slack Integration
+
+BolideAI MCP provides comprehensive Slack integration for workspace communication and management. Connect to your Slack workspace through Composio authentication.
+
+### Channel and Workspace Management
+
+List and explore your Slack workspace:
+
+```typescript
+// List all channels (public, private, DMs, group messages)
+slack_list_all_slack_team_channels({ 
+  types: "public_channel,private_channel,mpim,im",
+  limit: 50 
+})
+
+// Filter channels by name
+slack_list_all_slack_team_channels({ 
+  channel_name: "development",
+  types: "public_channel,private_channel" 
+})
+
+// Exclude archived channels
+slack_list_all_slack_team_channels({ 
+  exclude_archived: true,
+  limit: 100 
+})
+```
+
+### Message Management
+
+Send and update messages with rich formatting:
+
+```typescript
+// Send a simple text message
+slack_sends_a_message_to_a_slack_channel({
+  channel: "#general",
+  text: "Hello team! 👋"
+})
+
+// Send message with Slack markdown formatting
+slack_sends_a_message_to_a_slack_channel({
+  channel: "#development", 
+  text: "*Important:* Please review the new deployment process\n• Step 1: Run tests\n• Step 2: Deploy to staging\n• Step 3: Get approval"
+})
+
+// Send threaded reply
+slack_sends_a_message_to_a_slack_channel({
+  channel: "#general",
+  text: "This is a reply to the discussion",
+  thread_ts: "1234567890.123456"
+})
+
+// Update an existing message
+slack_updates_a_slack_message({
+  channel: "#general",
+  ts: "1234567890.123456", 
+  text: "Updated message content with *bold* text"
+})
+```
+
+### Message Search and History
+
+Search and retrieve conversation history:
+
+```typescript
+// Search for messages across workspace
+slack_search_for_messages_with_query({
+  query: "deployment failed",
+  count: 20,
+  sort: "timestamp"
+})
+
+// Search with modifiers
+slack_search_for_messages_with_query({
+  query: "in:#development from:@john has:link",
+  count: 10
+})
+
+// Search by date range
+slack_search_for_messages_with_query({
+  query: "bug report before:2024-01-15",
+  count: 25
+})
+
+// Fetch conversation history
+slack_fetch_conversation_history({
+  channel: "C1234567890", // Channel ID
+  limit: 100
+})
+
+// Fetch history with time range
+slack_fetch_conversation_history({
+  channel: "C1234567890",
+  oldest: "1640995200.000000", // Unix timestamp
+  latest: "1641081600.000000",
+  limit: 50
+})
+```
+
+### Advanced Messaging Features
+
+Utilize advanced Slack features:
+
+```typescript
+// Send message with custom bot appearance
+slack_sends_a_message_to_a_slack_channel({
+  channel: "#announcements",
+  text: "System maintenance completed successfully",
+  username: "System Bot",
+  icon_emoji: ":robot_face:"
+})
+
+// Send message with link unfurling
+slack_sends_a_message_to_a_slack_channel({
+  channel: "#sharing",
+  text: "Check out this article: https://example.com/article",
+  unfurl_links: true,
+  unfurl_media: true
+})
+
+// Send message and broadcast to channel (for threaded replies)
+slack_sends_a_message_to_a_slack_channel({
+  channel: "#general",
+  text: "Important update for everyone",
+  thread_ts: "1234567890.123456",
+  reply_broadcast: true
+})
+```
+
 ## Common Workflows
 
 ### Complete Marketing Content Creation
@@ -335,6 +477,9 @@ Enable only the tools you need to optimize performance:
 - `BOLIDEAI_MCP_GROUP_SCAFFOLDING` - Project scaffolding tools
 - `BOLIDEAI_MCP_GROUP_CONTENT_GENERATORS` - Content generation tools
 - `BOLIDEAI_MCP_GROUP_RESEARCH` - Research and information gathering tools
+- `BOLIDEAI_MCP_GROUP_SLACK` - Slack integration tools
+- `BOLIDEAI_MCP_GROUP_LINEAR` - Linear project management tools
+- `BOLIDEAI_MCP_GROUP_NOTION` - Notion integration tools
 - `BOLIDEAI_MCP_GROUP_DIAGNOSTICS` - Diagnostic tools
 
 ## Documentation
@@ -390,4 +535,4 @@ MIT © [Data Route LLC](https://bolide.ai)
 
 ---
 
-**BolideAI MCP** - Streamline your marketing automation and research workflows with AI-powered tools. 
+**BolideAI MCP** - Streamline your marketing automation and research workflows with AI-powered tools.

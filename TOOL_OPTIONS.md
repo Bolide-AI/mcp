@@ -61,7 +61,7 @@ To enable specific tools rather than entire groups, use the following environmen
 - **BOLIDEAI_MCP_TOOL_SLACK=true** - Send messages, search conversations, list channels, and update Slack messages.
 
 ### Linear Integration Tools
-- **BOLIDEAI_MCP_TOOL_LINEAR=true** - Create and manage Linear issues, track projects, and organize team workflows.
+- **BOLIDEAI_MCP_TOOL_LINEAR=true** - Create and manage Linear issues, track projects, organize teams and workflows, manage cycles, and collaborate on project management tasks.
 
 ### Utility Tools
 - **BOLIDEAI_MCP_TOOL_CHECK_COMPANION_APP_STATUS=true** - Check whether the companion app is currently running or not.
@@ -74,7 +74,7 @@ To enable specific tools rather than entire groups, use the following environmen
 
 ## Available Tools
 
-BolideAI MCP currently provides **20+ tools** across different categories:
+BolideAI MCP currently provides **38 tools** across different categories:
 
 ### Project Scaffolding Tools  
 - `scaffold_bolide_ai_project` - Create a bolide.ai project directory with organized directory structure
@@ -93,23 +93,23 @@ BolideAI MCP currently provides **20+ tools** across different categories:
 - `notion_fetch_data` - Fetch pages and databases from Notion workspace
 
 ### Slack Integration Tools
-- `slack_fetch_conversation_history` - Fetch chronological message history from Slack conversations
-- `slack_list_all_slack_team_channels` - List all channels, DMs, and group messages in workspace
-- `slack_search_for_messages_with_query` - Search messages across workspace with query modifiers
-- `slack_sends_a_message_to_a_slack_channel` - Send messages to channels, DMs, or groups
-- `slack_updates_a_slack_message` - Update existing messages by channel ID and timestamp
+- `slack_fetch_conversation_history` - Fetch chronological message history from Slack conversations with pagination and time filtering
+- `slack_list_all_slack_team_channels` - List all channels, DMs, and group messages in workspace with filtering options
+- `slack_search_for_messages_with_query` - Search messages across workspace with query modifiers and sorting
+- `slack_sends_a_message_to_a_slack_channel` - Send messages to channels, DMs, or groups with rich formatting support
+- `slack_updates_a_slack_message` - Update existing messages by channel ID and timestamp with content replacement
 
 ### Linear Integration Tools
-- `linear_create_issue` - Create new Linear issues with comprehensive options
-- `linear_update_issue` - Update existing Linear issues (title, description, state, assignee, etc.)
-- `linear_create_comment` - Add comments to Linear issues
-- `linear_list_issues` - List Linear issues with filtering and pagination
-- `linear_list_cycles` - Get all cycles/sprints from Linear
-- `linear_get_cycles_by_team_id` - Get team-specific cycles
-- `linear_list_states` - Get workflow states for teams
-- `linear_list_teams` - Get teams with project filtering
-- `linear_list_projects` - List all Linear projects
-- `linear_list_users` - List workspace users with pagination
+- `linear_create_issue` - Create new Linear issues with comprehensive options for project management
+- `linear_update_issue` - Update existing Linear issues (title, description, state, assignee, priority, etc.)
+- `linear_create_comment` - Add comments to Linear issues with Markdown support
+- `linear_list_issues` - List Linear issues with filtering by project, assignee, and pagination
+- `linear_list_cycles` - Get all cycles/sprints from Linear workspace
+- `linear_get_cycles_by_team_id` - Get team-specific cycles for sprint management
+- `linear_list_states` - Get workflow states for teams to understand issue progression
+- `linear_list_teams` - Get teams with project filtering for organization
+- `linear_list_projects` - List all Linear projects in the workspace
+- `linear_list_users` - List workspace users with pagination for team management
 
 ### Utility Tools
 - `check_companion_app_status` - Checks whether the companion app is currently running or not
@@ -277,6 +277,9 @@ With debug mode enabled, you can use the diagnostic tool to troubleshoot issues 
 - `BOLIDEAI_MCP_GROUP_SCAFFOLDING` - Project scaffolding tools
 - `BOLIDEAI_MCP_GROUP_CONTENT_GENERATORS` - Content generation tools
 - `BOLIDEAI_MCP_GROUP_RESEARCH` - Research tools
+- `BOLIDEAI_MCP_GROUP_NOTION` - Notion integration tools
+- `BOLIDEAI_MCP_GROUP_SLACK` - Slack integration tools
+- `BOLIDEAI_MCP_GROUP_LINEAR` - Linear project management tools
 - `BOLIDEAI_MCP_GROUP_DIAGNOSTICS` - Diagnostic tools
 
 ### Individual Tools
@@ -284,6 +287,9 @@ With debug mode enabled, you can use the diagnostic tool to troubleshoot issues 
 - `BOLIDEAI_MCP_TOOL_CONTENT_GENERATORS` - Content generation tools (analyze screencasts, generate GIFs, enhance audio)
 - `BOLIDEAI_MCP_TOOL_USE_PERPLEXITY` - Perplexity AI research tool
 - `BOLIDEAI_MCP_TOOL_USE_OPENAI_DEEP_RESEARCH` - OpenAI deep research tool
+- `BOLIDEAI_MCP_TOOL_NOTION` - Notion integration tools
+- `BOLIDEAI_MCP_TOOL_SLACK` - Slack integration tools  
+- `BOLIDEAI_MCP_TOOL_LINEAR` - Linear project management tools
 - `BOLIDEAI_MCP_TOOL_CHECK_COMPANION_APP_STATUS` - Status check utility
 - `BOLIDEAI_MCP_TOOL_LAUNCH_COMPANION_APP` - Launch utility
 - `BOLIDEAI_MCP_TOOL_STOP_COMPANION_APP` - Stop utility

@@ -40,7 +40,7 @@ const SlackSendsAMessageToASlackChannelSchema = z.object({
   mrkdwn: z.boolean().optional().describe('Disable Slack\'s markdown for `text` field if `false`. Default `true` (allows *bold*, _italic_, etc.).'),
   parse: z.string().optional().describe('Message text parsing behavior. Default `none` (no special parsing). `full` parses as user-typed (links @mentions, #channels). See Slack API docs for details.'),
   reply_broadcast: z.boolean().optional().describe('If `true` for a threaded reply, also posts to main channel. Defaults to `false`.'),
-  text: z.string().optional().describe('Message text content. If not provided, `blocks` or `attachments` must be provided.'),
+  text: z.string().optional().describe('Primary textual content. Recommended fallback if using `blocks` or `attachments`. Supports mrkdwn unless `mrkdwn` is `false`.'),
   thread_ts: z.string().optional().describe('Timestamp of parent message to create a thread reply.'),
   unfurl_links: z.boolean().optional().describe('Enable automatic link unfurling.'),
   unfurl_media: z.boolean().optional().describe('Enable automatic media unfurling.'),
@@ -49,7 +49,7 @@ const SlackSendsAMessageToASlackChannelSchema = z.object({
 
 const SlackUpdatesASlackMessageSchema = z.object({
   channel: z.string().describe('The ID of the channel containing the message to be updated.'),
-  ts: z.string().describe('Timestamp of the message to update (string, Unix time with microseconds, e.g., \'1234567890.123456\').'),
+  ts: z.string().describe('Timestamp of the message to update (string, Unix time with microseconds, e.g., `\'1234567890.123456\'`).'),
   as_user: z.string().optional().describe('Set to `\'true\'` to update as the authenticated user (bots are considered such). Defaults to app/bot identity.'),
   attachments: z.string().optional().describe('URL-encoded JSON array of attachments. Replaces existing attachments if field is provided; use `[]` (empty array string) to clear. Omit field to leave attachments untouched. Required if `text` and `blocks` are absent. See Slack API for format.'),
   blocks: z.string().optional().describe('URL-encoded JSON array of layout blocks. Replaces existing blocks if field is provided; use `[]` (empty array string) to clear. Omit field to leave blocks untouched. Required if `text` and `attachments` are absent. See Slack API for format.'),
