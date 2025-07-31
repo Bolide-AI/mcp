@@ -1,6 +1,6 @@
-# BolideAI MCP Tools Reference
+# Bolide AI MCP Tools Reference
 
-This document provides a comprehensive list of all tools available in BolideAI MCP, organized by functionality.
+This document provides a comprehensive list of all tools available in Bolide AI MCP, organized by functionality.
 
 ## Tool Categories
 
@@ -31,7 +31,7 @@ Tools for generating social media content using AI.
 |-----------|-------------|
 | `analyze_screencasts` | Analyzes screencasts using Gemini API via the web API integration. IMPORTANT: You MUST provide the screencastNames and force parameters. Optionally provide customPrompt for specialized analysis. When customPrompt is used, Gemini returns a short file suffix that gets appended to the JSON filename. Example: analyze_screencasts({ screencastNames: ['bug_demo.mp4'], force: false, customPrompt: 'Focus on UI errors and bugs' }) creates `bug_demo_ui-errors.json` |
 | `generate_gif` | Generates a GIF from a screencast. IMPORTANT: You MUST provide the screencastName, startTime, and endTime parameters. Example: generate_gif({ screencastName: 'NAME_OF_SCREENCAST_FILE', startTime: '00:00:00', endTime: '00:00:00' }) |
-| `enhance_audio` | Extracts audio from screencasts using ffmpeg and saves as MP3 files in the same directory. Automatically enhances audio using the web API which integrates with ElevenLabs speech-to-speech conversion with voice ID 29vD33N1CtxCmqQRPOHJ. Requires BOLIDEAI_API_TOKEN and optionally BOLIDEAI_API_URL environment variables. IMPORTANT: You MUST provide the screencastNames parameter. Example: enhance_audio({ screencastNames: ['screencast1.mp4', 'screencast2.mp4'] }) |
+| `enhance_audio` | Extracts audio from screencasts using ffmpeg and saves as MP3 files in the same directory. Automatically enhances audio using the web API which integrates with ElevenLabs speech-to-speech conversion with voice ID 29vD33N1CtxCmqQRPOHJ. Requires BOLIDE_AI_API_TOKEN and optionally BOLIDE_AI_API_URL environment variables. IMPORTANT: You MUST provide the screencastNames parameter. Example: enhance_audio({ screencastNames: ['screencast1.mp4', 'screencast2.mp4'] }) |
 
 ### Research Tools
 
@@ -40,7 +40,7 @@ Tools for performing research and information gathering.
 | Tool Name | Description |
 |-----------|-------------|
 | `use_perplexity` | Perform search and information gathering using Perplexity AI via web API. IMPORTANT: You MUST provide the query and search_mode parameters as well as display the citations in the response, if provided. Example: use_perplexity({ query: "What is the capital of France?", search_mode: "web" }) |
-| `use_openai_deep_research` | Perform deep research using OpenAI o4-mini-deep-research model via web API. First enriches the query with detailed research instructions using GPT-4.1, then conducts comprehensive research. Requires BOLIDEAI_API_TOKEN for authentication. IMPORTANT: You MUST provide the query parameter. Example: use_openai_deep_research({ query: "Economic impact of renewable energy adoption" }) |
+| `use_openai_deep_research` | Perform deep research using OpenAI o4-mini-deep-research model via web API. First enriches the query with detailed research instructions using GPT-4.1, then conducts comprehensive research. Requires BOLIDE_AI_API_TOKEN for authentication. IMPORTANT: You MUST provide the query parameter. Example: use_openai_deep_research({ query: "Economic impact of renewable energy adoption" }) |
 
 ### Notion Integration Tools
 
@@ -86,7 +86,7 @@ Tools for system diagnostics and environment validation.
 
 | Tool Name | Description |
 |-----------|-------------|
-| `diagnostic` | Provides comprehensive information about the MCP server environment, available dependencies, and configuration status. Only available when BOLIDEAI_MCP_DEBUG environment variable is set. |
+| `diagnostic` | Provides comprehensive information about the MCP server environment, available dependencies, and configuration status. Only available when BOLIDE_AI_MCP_DEBUG environment variable is set. |
 
 ## Tool Usage Patterns
 
@@ -138,27 +138,27 @@ Many tools require specific parameters:
 ### Environment Variables
 
 Tools can be selectively enabled using environment variables:
-- Individual tools: `BOLIDEAI_MCP_TOOL_<TOOL_NAME>=true`
-- Tool groups: `BOLIDEAI_MCP_GROUP_<GROUP_NAME>=true`
-- Debug mode: `BOLIDEAI_MCP_DEBUG=true`
-- API access: `BOLIDEAI_API_TOKEN=your-api-token` (required for research and content generation tools)
+- Individual tools: `BOLIDE_AI_MCP_TOOL_<TOOL_NAME>=true`
+- Tool groups: `BOLIDE_AI_MCP_GROUP_<GROUP_NAME>=true`
+- Debug mode: `BOLIDE_AI_MCP_DEBUG=true`
+- API access: `BOLIDE_AI_API_TOKEN=your-api-token` (required for research and content generation tools)
 
 Available tool groups:
-- `BOLIDEAI_MCP_GROUP_LAUNCH=true` - Launch and utility tools
-- `BOLIDEAI_MCP_GROUP_SCAFFOLDING=true` - Project scaffolding and creation tools
-- `BOLIDEAI_MCP_GROUP_CONTENT_GENERATORS=true` - Content generation tools
-- `BOLIDEAI_MCP_GROUP_RESEARCH=true` - Research and information gathering tools
-- `BOLIDEAI_MCP_GROUP_SLACK=true` - Slack integration tools
-- `BOLIDEAI_MCP_GROUP_LINEAR=true` - Linear project management tools
-- `BOLIDEAI_MCP_GROUP_DIAGNOSTICS=true` - Logging and diagnostics tools
+- `BOLIDE_AI_MCP_GROUP_LAUNCH=true` - Launch and utility tools
+- `BOLIDE_AI_MCP_GROUP_SCAFFOLDING=true` - Project scaffolding and creation tools
+- `BOLIDE_AI_MCP_GROUP_CONTENT_GENERATORS=true` - Content generation tools
+- `BOLIDE_AI_MCP_GROUP_RESEARCH=true` - Research and information gathering tools
+- `BOLIDE_AI_MCP_GROUP_SLACK=true` - Slack integration tools
+- `BOLIDE_AI_MCP_GROUP_LINEAR=true` - Linear project management tools
+- `BOLIDE_AI_MCP_GROUP_DIAGNOSTICS=true` - Logging and diagnostics tools
 
 ## Notes
 
 - All tools use Zod schema validation for parameters
 - Error handling is standardized across all tools
 - Tools requiring write operations are marked with `isWriteTool: true`
-- Debug tool requires `BOLIDEAI_MCP_DEBUG=true` environment variable
-- Content generation and research tools require `BOLIDEAI_API_TOKEN` environment variable
+- Debug tool requires `BOLIDE_AI_MCP_DEBUG=true` environment variable
+- Content generation and research tools require `BOLIDE_AI_API_TOKEN` environment variable
 - GIF generation tool requires `ffmpeg` to be installed on the system
 - Content generation tools work with screencast files directly
 - Slack tools require proper Composio authentication and Slack workspace access

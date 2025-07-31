@@ -8,7 +8,7 @@ import { APIError, ValidationError } from '../utils/errors.js';
 import { getProjectPath } from '../utils/workspace.js';
 import { execSync } from 'child_process';
 import { existsSync } from 'fs';
-import { BOLIDEAI_API_URL } from '../utils/constants.js';
+import { BOLIDE_AI_API_URL } from '../utils/constants.js';
 
 import * as fs from 'fs';
 
@@ -47,12 +47,12 @@ async function enhanceAudioWithSpeech(audioPath: string): Promise<string> {
   try {
     log('info', `Enhancing audio ${audioPath} via web API`);
 
-    const webApiUrl = process.env.BOLIDEAI_API_URL || BOLIDEAI_API_URL;
-    const authToken = process.env.BOLIDEAI_API_TOKEN;
+    const webApiUrl = process.env.BOLIDE_AI_API_URL || BOLIDE_AI_API_URL;
+    const authToken = process.env.BOLIDE_AI_API_TOKEN;
 
     if (!authToken) {
       throw new ValidationError(
-        'BOLIDEAI_API_TOKEN environment variable is required for audio enhancement',
+        'BOLIDE_AI_API_TOKEN environment variable is required for audio enhancement',
       );
     }
 
@@ -77,10 +77,10 @@ async function enhanceAudioWithSpeech(audioPath: string): Promise<string> {
 
     if (!response.ok) {
       const errorText = await response.text();
-      log('error', `BOLIDEAI API error: ${response.status} ${response.statusText} - ${errorText}`);
+      log('error', `Bolide AI API error: ${response.status} ${response.statusText} - ${errorText}`);
 
       if (response.status === 401) {
-        throw new APIError('Authentication failed. Please check your BOLIDEAI API token.', 401);
+        throw new APIError('Authentication failed. Please check your Bolide AI API token.', 401);
       } else if (response.status === 422) {
         throw new APIError(
           'Audio file validation failed. Please check the file format and size.',
@@ -181,15 +181,15 @@ async function analyzeScreencasts(params: AnalyzeScreencastsParams): Promise<
     }
   }
 
-  const webApiUrl = process.env.BOLIDEAI_API_URL || BOLIDEAI_API_URL;
-  const authToken = process.env.BOLIDEAI_API_TOKEN;
+  const webApiUrl = process.env.BOLIDE_AI_API_URL || BOLIDE_AI_API_URL;
+  const authToken = process.env.BOLIDE_AI_API_TOKEN;
 
   try {
     log('info', `Calling web API for screencast analysis: ${webApiUrl}/tools/analyze-videos`);
 
     if (!authToken) {
       throw new ValidationError(
-        'BOLIDEAI_API_TOKEN environment variable is required for screencast analysis via web API',
+        'BOLIDE_AI_API_TOKEN environment variable is required for screencast analysis via web API',
       );
     }
 

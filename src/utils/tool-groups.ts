@@ -12,28 +12,28 @@ import { log } from './logger.js';
 export enum ToolGroup {
   // Workflow-based groups
   // Launch and utility tools
-  LAUNCH = 'BOLIDEAI_MCP_GROUP_LAUNCH',
+  LAUNCH = 'BOLIDE_AI_MCP_GROUP_LAUNCH',
 
   // Project scaffolding and creation tools
-  SCAFFOLDING = 'BOLIDEAI_MCP_GROUP_SCAFFOLDING',
+  SCAFFOLDING = 'BOLIDE_AI_MCP_GROUP_SCAFFOLDING',
 
   // Logging and diagnostics
-  DIAGNOSTICS = 'BOLIDEAI_MCP_GROUP_DIAGNOSTICS',
+  DIAGNOSTICS = 'BOLIDE_AI_MCP_GROUP_DIAGNOSTICS',
 
   // Content generation tools
-  CONTENT_GENERATORS = 'BOLIDEAI_MCP_GROUP_CONTENT_GENERATORS',
+  CONTENT_GENERATORS = 'BOLIDE_AI_MCP_GROUP_CONTENT_GENERATORS',
 
   // Research tools
-  RESEARCH = 'BOLIDEAI_MCP_GROUP_RESEARCH',
+  RESEARCH = 'BOLIDE_AI_MCP_GROUP_RESEARCH',
 
   // Notion integration tools
-  NOTION = 'BOLIDEAI_MCP_GROUP_NOTION',
+  NOTION = 'BOLIDE_AI_MCP_GROUP_NOTION',
 
   // Slack integration tools
-  SLACK = 'BOLIDEAI_MCP_GROUP_SLACK',
+  SLACK = 'BOLIDE_AI_MCP_GROUP_SLACK',
 
   // Linear integration tools
-  LINEAR = 'BOLIDEAI_MCP_GROUP_LINEAR',
+  LINEAR = 'BOLIDE_AI_MCP_GROUP_LINEAR',
 }
 
 // Map tool registration functions to their respective groups and individual env var names
@@ -47,12 +47,12 @@ export interface ToolRegistration {
 export function isSelectiveToolsEnabled(): boolean {
   // Check if any tool-specific environment variables are set
   const hasToolEnvVars = Object.keys(process.env).some(
-    (key) => key.startsWith('BOLIDEAI_MCP_TOOL_') && process.env[key] === 'true',
+    (key) => key.startsWith('BOLIDE_AI_MCP_TOOL_') && process.env[key] === 'true',
   );
 
   // Check if any group-specific environment variables are set
   const hasGroupEnvVars = Object.keys(process.env).some(
-    (key) => key.startsWith('BOLIDEAI_MCP_GROUP_') && process.env[key] === 'true',
+    (key) => key.startsWith('BOLIDE_AI_MCP_GROUP_') && process.env[key] === 'true',
   );
 
   const isEnabled = hasToolEnvVars || hasGroupEnvVars;
@@ -113,12 +113,12 @@ export function registerIfEnabled(server: McpServer, toolReg: ToolRegistration):
   const shouldRegister = shouldRegisterTool(toolReg);
 
   if (shouldRegister) {
-    if (process.env.BOLIDEAI_MCP_DEBUG === 'true') {
+    if (process.env.BOLIDE_AI_MCP_DEBUG === 'true') {
       log('debug', `Registering tool: ${toolReg.envVar}`);
     }
     toolReg.register(server);
   } else {
-    if (process.env.BOLIDEAI_MCP_DEBUG === 'true') {
+    if (process.env.BOLIDE_AI_MCP_DEBUG === 'true') {
       log('debug', `Skipping tool: ${toolReg.envVar} (not enabled)`);
     }
   }

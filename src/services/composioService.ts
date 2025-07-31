@@ -6,7 +6,7 @@
  */
 
 import { log } from '../utils/logger.js';
-import { BOLIDEAI_API_URL } from '../utils/constants.js';
+import { BOLIDE_AI_API_URL } from '../utils/constants.js';
 
 interface ComposioToolCallParams {
   toolName: string;
@@ -31,13 +31,13 @@ export class ComposioService {
   static async callTool(params: ComposioToolCallParams): Promise<ComposioToolResponse> {
     const { toolName, parameters } = params;
     
-    const webApiUrl = process.env.BOLIDEAI_API_URL || BOLIDEAI_API_URL;
-    const authToken = process.env.BOLIDEAI_API_TOKEN;
+    const webApiUrl = process.env.BOLIDE_AI_API_URL || BOLIDE_AI_API_URL;
+    const authToken = process.env.BOLIDE_AI_API_TOKEN;
 
     if (!authToken) {
       return {
         success: false,
-        error: 'BOLIDEAI_API_TOKEN environment variable is required for Composio tool calls'
+        error: 'BOLIDE_AI_API_TOKEN environment variable is required for Composio tool calls'
       };
     }
 

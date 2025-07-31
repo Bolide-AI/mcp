@@ -1,6 +1,6 @@
-# BolideAI MCP Tool Options
+# Bolide AI MCP Tool Options
 
-This document explains how to configure tool registration in BolideAI MCP to optimise for different workflows and reduce the number of tools presented to LLM clients.
+This document explains how to configure tool registration in Bolide AI MCP to optimise for different workflows and reduce the number of tools presented to LLM clients.
 
 ## Overview
 
@@ -17,27 +17,27 @@ BolideA IMCP supports selective tool registration based on environment variables
 
 ## Available Tool Groups and Environment Variables
 
-BolideAI MCP provides workflow-based tool groups that organise tools logically based on common developer workflows.
+Bolide AI MCP provides workflow-based tool groups that organise tools logically based on common developer workflows.
 
 ### Workflow-based Groups
 
 These groups organise tools based on common developer workflows, making it easier to enable just the tools needed for specific tasks:
 
-- **BOLIDEAI_MCP_GROUP_LAUNCH=true** - Launch and utility tools
+- **BOLIDE_AI_MCP_GROUP_LAUNCH=true** - Launch and utility tools
   - _e.g., Launch companion app for marketing capture, stop running utilities._
-- **BOLIDEAI_MCP_GROUP_SCAFFOLDING=true** - Project scaffolding and creation tools
+- **BOLIDE_AI_MCP_GROUP_SCAFFOLDING=true** - Project scaffolding and creation tools
   - _e.g., Create marketing project directories and structures._
-- **BOLIDEAI_MCP_GROUP_CONTENT_GENERATORS=true** - Content generation tools
+- **BOLIDE_AI_MCP_GROUP_CONTENT_GENERATORS=true** - Content generation tools
   - _e.g., Generate social media posts using AI from captured screenshots and videos._
-- **BOLIDEAI_MCP_GROUP_RESEARCH=true** - Research and information gathering tools
+- **BOLIDE_AI_MCP_GROUP_RESEARCH=true** - Research and information gathering tools
   - _e.g., Perform research using Perplexity AI for information gathering and question answering._
-- **BOLIDEAI_MCP_GROUP_NOTION=true** - Notion integration tools
+- **BOLIDE_AI_MCP_GROUP_NOTION=true** - Notion integration tools
   - _e.g., Add content to Notion pages, fetch page and database information._
-- **BOLIDEAI_MCP_GROUP_SLACK=true** - Slack integration tools
+- **BOLIDE_AI_MCP_GROUP_SLACK=true** - Slack integration tools
   - _e.g., Send messages, search conversations, list channels, update messages._
-- **BOLIDEAI_MCP_GROUP_LINEAR=true** - Linear project management tools
+- **BOLIDE_AI_MCP_GROUP_LINEAR=true** - Linear project management tools
   - _e.g., Create and manage issues, track projects, organize teams and workflows._
-- **BOLIDEAI_MCP_GROUP_DIAGNOSTICS=true** - Logging and diagnostics tools
+- **BOLIDE_AI_MCP_GROUP_DIAGNOSTICS=true** - Logging and diagnostics tools
   - _e.g., System diagnostics, environment validation._
 
 ## Enabling Individual Tools
@@ -45,36 +45,36 @@ These groups organise tools based on common developer workflows, making it easie
 To enable specific tools rather than entire groups, use the following environment variables. Each tool is enabled by setting its corresponding variable to `true`.
 
 ### Project Scaffolding Tools
-- **BOLIDEAI_MCP_TOOL_SCAFFOLD_PROJECT=true** - Create bolide.ai project directories.
+- **BOLIDE_AI_MCP_TOOL_SCAFFOLD_PROJECT=true** - Create bolide.ai project directories.
 
 ### Content Generation Tools
-- **BOLIDEAI_MCP_TOOL_CONTENT_GENERATORS=true** - Analyze screencasts, generate GIFs, and enhance audio using AI.
+- **BOLIDE_AI_MCP_TOOL_CONTENT_GENERATORS=true** - Analyze screencasts, generate GIFs, and enhance audio using AI.
 
 ### Research Tools
-- **BOLIDEAI_MCP_TOOL_USE_PERPLEXITY=true** - Perform research and information gathering using Perplexity AI.
-- **BOLIDEAI_MCP_TOOL_USE_OPENAI_DEEP_RESEARCH=true** - Perform deep research using OpenAI o4-mini-deep-research model.
+- **BOLIDE_AI_MCP_TOOL_USE_PERPLEXITY=true** - Perform research and information gathering using Perplexity AI.
+- **BOLIDE_AI_MCP_TOOL_USE_OPENAI_DEEP_RESEARCH=true** - Perform deep research using OpenAI o4-mini-deep-research model.
 
 ### Notion Integration Tools
-- **BOLIDEAI_MCP_TOOL_NOTION=true** - Add content to Notion pages and fetch page/database information.
+- **BOLIDE_AI_MCP_TOOL_NOTION=true** - Add content to Notion pages and fetch page/database information.
 
 ### Slack Integration Tools
-- **BOLIDEAI_MCP_TOOL_SLACK=true** - Send messages, search conversations, list channels, and update Slack messages.
+- **BOLIDE_AI_MCP_TOOL_SLACK=true** - Send messages, search conversations, list channels, and update Slack messages.
 
 ### Linear Integration Tools
-- **BOLIDEAI_MCP_TOOL_LINEAR=true** - Create and manage Linear issues, track projects, organize teams and workflows, manage cycles, and collaborate on project management tasks.
+- **BOLIDE_AI_MCP_TOOL_LINEAR=true** - Create and manage Linear issues, track projects, organize teams and workflows, manage cycles, and collaborate on project management tasks.
 
 ### Utility Tools
-- **BOLIDEAI_MCP_TOOL_CHECK_COMPANION_APP_STATUS=true** - Check whether the companion app is currently running or not.
-- **BOLIDEAI_MCP_TOOL_LAUNCH_COMPANION_APP=true** - Launch companion app for capturing screenshots and videos for marketing projects.
-- **BOLIDEAI_MCP_TOOL_STOP_COMPANION_APP=true** - Stop any running instances of the companion app.
-- **BOLIDEAI_MCP_TOOL_INSTALL_BREW_AND_FFMPEG=true** - Install Homebrew package manager and FFmpeg for video processing dependencies.
+- **BOLIDE_AI_MCP_TOOL_CHECK_COMPANION_APP_STATUS=true** - Check whether the companion app is currently running or not.
+- **BOLIDE_AI_MCP_TOOL_LAUNCH_COMPANION_APP=true** - Launch companion app for capturing screenshots and videos for marketing projects.
+- **BOLIDE_AI_MCP_TOOL_STOP_COMPANION_APP=true** - Stop any running instances of the companion app.
+- **BOLIDE_AI_MCP_TOOL_INSTALL_BREW_AND_FFMPEG=true** - Install Homebrew package manager and FFmpeg for video processing dependencies.
 
 ### Diagnostics
-- **BOLIDEAI_MCP_DEBUG=true** - Enable diagnostic tool for BolideAI MCP server.
+- **BOLIDE_AI_MCP_DEBUG=true** - Enable diagnostic tool for Bolide AI MCP server.
 
 ## Available Tools
 
-BolideAI MCP currently provides **38 tools** across different categories:
+Bolide AI MCP currently provides **38 tools** across different categories:
 
 ### Project Scaffolding Tools  
 - `scaffold_bolide_ai_project` - Create a bolide.ai project directory with organized directory structure
@@ -118,7 +118,7 @@ BolideAI MCP currently provides **38 tools** across different categories:
 - `install_brew_and_ffmpeg` - Installs Homebrew package manager and FFmpeg for video processing dependencies
 
 ### Diagnostic Tools (Debug Mode Only)
-- `diagnostic` - Provides comprehensive system environment information (requires `BOLIDEAI_MCP_DEBUG=true`)
+- `diagnostic` - Provides comprehensive system environment information (requires `BOLIDE_AI_MCP_DEBUG=true`)
 
 ## Recommended Tool Combinations for Common Use Cases
 
@@ -131,7 +131,7 @@ For developers focused on creating new projects and directory structures:
 ```json
 {
   "env": {
-    "BOLIDEAI_MCP_GROUP_SCAFFOLDING": "true"
+    "BOLIDE_AI_MCP_GROUP_SCAFFOLDING": "true"
   }
 }
 ```
@@ -147,7 +147,7 @@ For developers who need to launch applications and manage utilities:
 ```json
 {
   "env": {
-    "BOLIDEAI_MCP_GROUP_LAUNCH": "true"
+    "BOLIDE_AI_MCP_GROUP_LAUNCH": "true"
   }
 }
 ```
@@ -165,7 +165,7 @@ For troubleshooting and system diagnostics:
 ```json
 {
   "env": {
-    "BOLIDEAI_MCP_GROUP_DIAGNOSTICS": "true"
+    "BOLIDE_AI_MCP_GROUP_DIAGNOSTICS": "true"
   }
 }
 ```
@@ -182,8 +182,8 @@ For generating social media content from captured artifacts:
 ```json
 {
   "env": {
-    "BOLIDEAI_MCP_GROUP_CONTENT_GENERATORS": "true",
-    "BOLIDEAI_API_TOKEN": "your-api-token"
+    "BOLIDE_AI_MCP_GROUP_CONTENT_GENERATORS": "true",
+    "BOLIDE_AI_API_TOKEN": "your-api-token"
   }
 }
 ```
@@ -200,11 +200,11 @@ For a complete marketing content creation workflow:
 ```json
 {
   "env": {
-    "BOLIDEAI_MCP_GROUP_SCAFFOLDING": "true",
-    "BOLIDEAI_MCP_GROUP_LAUNCH": "true",
-    "BOLIDEAI_MCP_GROUP_CONTENT_GENERATORS": "true",
-    "BOLIDEAI_MCP_GROUP_RESEARCH": "true",
-    "BOLIDEAI_API_TOKEN": "your-api-token"
+    "BOLIDE_AI_MCP_GROUP_SCAFFOLDING": "true",
+    "BOLIDE_AI_MCP_GROUP_LAUNCH": "true",
+    "BOLIDE_AI_MCP_GROUP_CONTENT_GENERATORS": "true",
+    "BOLIDE_AI_MCP_GROUP_RESEARCH": "true",
+    "BOLIDE_AI_API_TOKEN": "your-api-token"
   }
 }
 ```
@@ -216,10 +216,10 @@ To enable only specific tools:
 ```json
 {
       "env": {
-        "BOLIDEAI_MCP_TOOL_SCAFFOLD_PROJECT": "true",
-        "BOLIDEAI_MCP_TOOL_CHECK_COMPANION_APP_STATUS": "true",
-        "BOLIDEAI_MCP_TOOL_LAUNCH_COMPANION_APP": "true",
-        "BOLIDEAI_MCP_TOOL_STOP_COMPANION_APP": "true"
+        "BOLIDE_AI_MCP_TOOL_SCAFFOLD_PROJECT": "true",
+        "BOLIDE_AI_MCP_TOOL_CHECK_COMPANION_APP_STATUS": "true",
+        "BOLIDE_AI_MCP_TOOL_LAUNCH_COMPANION_APP": "true",
+        "BOLIDE_AI_MCP_TOOL_STOP_COMPANION_APP": "true"
     }
 }
 ```
@@ -235,8 +235,8 @@ Here is a fully worked example of how to configure Cursor/Windsurf to use specif
       "command": "npx",
       "args": ["-y", "@bolide-ai/mcp@latest"],
       "env": {
-        "BOLIDEAI_API_TOKEN": "your-api-key",
-        "BOLIDEAI_MCP_GROUP_SCAFFOLDING": "true"
+        "BOLIDE_AI_API_TOKEN": "your-api-key",
+        "BOLIDE_AI_MCP_GROUP_SCAFFOLDING": "true"
       }
     }
   }
@@ -256,8 +256,8 @@ To enable the diagnostic tool and additional debugging information:
       "command": "npx",
       "args": ["-y", "@bolide-ai/mcp@latest"],
       "env": {
-        "BOLIDEAI_API_TOKEN": "your-api-key",
-        "BOLIDEAI_MCP_DEBUG": "true"
+        "BOLIDE_AI_API_TOKEN": "your-api-key",
+        "BOLIDE_AI_MCP_DEBUG": "true"
       }
     }
   }
@@ -269,29 +269,29 @@ With debug mode enabled, you can use the diagnostic tool to troubleshoot issues 
 ## Environment Variables Summary
 
 ### Required for All API Operations
-- `BOLIDEAI_API_TOKEN` - Required for content generation and research tools
-- `BOLIDEAI_API_URL` - Optional, defaults to https://bolide.ai/api
+- `BOLIDE_AI_API_TOKEN` - Required for content generation and research tools
+- `BOLIDE_AI_API_URL` - Optional, defaults to https://bolide.ai/api
 
 ### Tool Groups
-- `BOLIDEAI_MCP_GROUP_LAUNCH` - Launch and utility tools
-- `BOLIDEAI_MCP_GROUP_SCAFFOLDING` - Project scaffolding tools
-- `BOLIDEAI_MCP_GROUP_CONTENT_GENERATORS` - Content generation tools
-- `BOLIDEAI_MCP_GROUP_RESEARCH` - Research tools
-- `BOLIDEAI_MCP_GROUP_NOTION` - Notion integration tools
-- `BOLIDEAI_MCP_GROUP_SLACK` - Slack integration tools
-- `BOLIDEAI_MCP_GROUP_LINEAR` - Linear project management tools
-- `BOLIDEAI_MCP_GROUP_DIAGNOSTICS` - Diagnostic tools
+- `BOLIDE_AI_MCP_GROUP_LAUNCH` - Launch and utility tools
+- `BOLIDE_AI_MCP_GROUP_SCAFFOLDING` - Project scaffolding tools
+- `BOLIDE_AI_MCP_GROUP_CONTENT_GENERATORS` - Content generation tools
+- `BOLIDE_AI_MCP_GROUP_RESEARCH` - Research tools
+- `BOLIDE_AI_MCP_GROUP_NOTION` - Notion integration tools
+- `BOLIDE_AI_MCP_GROUP_SLACK` - Slack integration tools
+- `BOLIDE_AI_MCP_GROUP_LINEAR` - Linear project management tools
+- `BOLIDE_AI_MCP_GROUP_DIAGNOSTICS` - Diagnostic tools
 
 ### Individual Tools
-- `BOLIDEAI_MCP_TOOL_SCAFFOLD_PROJECT` - Project scaffolding
-- `BOLIDEAI_MCP_TOOL_CONTENT_GENERATORS` - Content generation tools (analyze screencasts, generate GIFs, enhance audio)
-- `BOLIDEAI_MCP_TOOL_USE_PERPLEXITY` - Perplexity AI research tool
-- `BOLIDEAI_MCP_TOOL_USE_OPENAI_DEEP_RESEARCH` - OpenAI deep research tool
-- `BOLIDEAI_MCP_TOOL_NOTION` - Notion integration tools
-- `BOLIDEAI_MCP_TOOL_SLACK` - Slack integration tools  
-- `BOLIDEAI_MCP_TOOL_LINEAR` - Linear project management tools
-- `BOLIDEAI_MCP_TOOL_CHECK_COMPANION_APP_STATUS` - Status check utility
-- `BOLIDEAI_MCP_TOOL_LAUNCH_COMPANION_APP` - Launch utility
-- `BOLIDEAI_MCP_TOOL_STOP_COMPANION_APP` - Stop utility
-- `BOLIDEAI_MCP_TOOL_INSTALL_BREW_AND_FFMPEG` - Install development dependencies
-- `BOLIDEAI_MCP_DEBUG` - Diagnostic tool
+- `BOLIDE_AI_MCP_TOOL_SCAFFOLD_PROJECT` - Project scaffolding
+- `BOLIDE_AI_MCP_TOOL_CONTENT_GENERATORS` - Content generation tools (analyze screencasts, generate GIFs, enhance audio)
+- `BOLIDE_AI_MCP_TOOL_USE_PERPLEXITY` - Perplexity AI research tool
+- `BOLIDE_AI_MCP_TOOL_USE_OPENAI_DEEP_RESEARCH` - OpenAI deep research tool
+- `BOLIDE_AI_MCP_TOOL_NOTION` - Notion integration tools
+- `BOLIDE_AI_MCP_TOOL_SLACK` - Slack integration tools  
+- `BOLIDE_AI_MCP_TOOL_LINEAR` - Linear project management tools
+- `BOLIDE_AI_MCP_TOOL_CHECK_COMPANION_APP_STATUS` - Status check utility
+- `BOLIDE_AI_MCP_TOOL_LAUNCH_COMPANION_APP` - Launch utility
+- `BOLIDE_AI_MCP_TOOL_STOP_COMPANION_APP` - Stop utility
+- `BOLIDE_AI_MCP_TOOL_INSTALL_BREW_AND_FFMPEG` - Install development dependencies
+- `BOLIDE_AI_MCP_DEBUG` - Diagnostic tool

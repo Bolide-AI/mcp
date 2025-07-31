@@ -39,64 +39,64 @@ const toolRegistrations = [
   {
     register: registerCheckCompanionAppStatusTool,
     groups: [ToolGroup.LAUNCH],
-    envVar: 'BOLIDEAI_MCP_TOOL_CHECK_COMPANION_APP_STATUS',
+    envVar: 'BOLIDE_AI_MCP_TOOL_CHECK_COMPANION_APP_STATUS',
   },
   {
     register: registerLaunchCompanionAppTool,
     groups: [ToolGroup.LAUNCH],
-    envVar: 'BOLIDEAI_MCP_TOOL_LAUNCH_COMPANION_APP',
+    envVar: 'BOLIDE_AI_MCP_TOOL_LAUNCH_COMPANION_APP',
   },
   {
     register: registerStopCompanionAppTool,
     groups: [ToolGroup.LAUNCH],
-    envVar: 'BOLIDEAI_MCP_TOOL_STOP_COMPANION_APP',
+    envVar: 'BOLIDE_AI_MCP_TOOL_STOP_COMPANION_APP',
   },
   {
     register: registerInstallBrewAndFfmpegTool,
     groups: [ToolGroup.LAUNCH],
-    envVar: 'BOLIDEAI_MCP_TOOL_INSTALL_BREW_AND_FFMPEG',
+    envVar: 'BOLIDE_AI_MCP_TOOL_INSTALL_BREW_AND_FFMPEG',
   },
 
   // Scaffold tool
   {
     register: registerScaffoldTools,
     groups: [ToolGroup.SCAFFOLDING],
-    envVar: 'BOLIDEAI_MCP_TOOL_SCAFFOLD_PROJECT',
+    envVar: 'BOLIDE_AI_MCP_TOOL_SCAFFOLD_PROJECT',
   },
 
   // Content generator tools
   {
     register: registerContentGeneratorTools,
     groups: [ToolGroup.CONTENT_GENERATORS],
-    envVar: 'BOLIDEAI_MCP_TOOL_CONTENT_GENERATORS',
+    envVar: 'BOLIDE_AI_MCP_TOOL_CONTENT_GENERATORS',
   },
 
   // Research tools
   {
     register: registerResearchTools,
     groups: [ToolGroup.RESEARCH],
-    envVar: 'BOLIDEAI_MCP_TOOL_USE_PERPLEXITY',
+    envVar: 'BOLIDE_AI_MCP_TOOL_USE_PERPLEXITY',
   },
 
   // Notion tools
   {
     register: registerNotionTools,
     groups: [ToolGroup.NOTION],
-    envVar: 'BOLIDEAI_MCP_TOOL_NOTION',
+    envVar: 'BOLIDE_AI_MCP_TOOL_NOTION',
   },
 
   // Slack tools
   {
     register: registerSlackTools,
     groups: [ToolGroup.SLACK],
-    envVar: 'BOLIDEAI_MCP_TOOL_SLACK',
+    envVar: 'BOLIDE_AI_MCP_TOOL_SLACK',
   },
 
   // Linear tools
   {
     register: registerLinearTools,
     groups: [ToolGroup.LINEAR],
-    envVar: 'BOLIDEAI_MCP_TOOL_LINEAR',
+    envVar: 'BOLIDE_AI_MCP_TOOL_LINEAR',
   },
 ];
 
@@ -104,7 +104,7 @@ const toolRegistrations = [
 const diagnosticTool = {
   register: registerDiagnosticTool,
   groups: [ToolGroup.DIAGNOSTICS],
-  envVar: 'BOLIDEAI_MCP_DEBUG',
+  envVar: 'BOLIDE_AI_MCP_DEBUG',
 };
 
 export function registerTools(server: McpServer): void {
@@ -114,7 +114,7 @@ export function registerTools(server: McpServer): void {
   }
 
   // Register diagnostic tool - conditionally based on debug env var
-  if (process.env.BOLIDEAI_MCP_DEBUG) {
+  if (process.env.BOLIDE_AI_MCP_DEBUG) {
     registerIfEnabled(server, diagnosticTool);
   }
 }

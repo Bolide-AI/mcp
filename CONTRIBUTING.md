@@ -1,6 +1,6 @@
 # Contributing
 
-Contributions are welcome! Here's how you can help improve BolideAI MCP.
+Contributions are welcome! Here's how you can help improve Bolide AI MCP.
 
 ## Local development setup
 
@@ -56,7 +56,7 @@ To configure your MCP client to use your local BolideA IMCP server you can use t
 
 ### Developing using VS Code
 
-VS Code is especially good for developing BolideAI MCP as it has a built-in way to view MCP client/server logs as well as the ability to configure MCP servers at a project level. It probably has the most comprehensive support for MCP development. 
+VS Code is especially good for developing Bolide AI MCP as it has a built-in way to view MCP client/server logs as well as the ability to configure MCP servers at a project level. It probably has the most comprehensive support for MCP development. 
 
 To make your development workflow in VS Code more efficient:
 
@@ -82,11 +82,11 @@ npx @modelcontextprotocol/inspector node build/index.js
 
 #### Using the diagnostic tool
 
-Running the BolideAI MCP server with the environmental variable `BOLIDEAI_MCP_DEBUG=true` will expose a new diagnostic tool which you can run using MCP Inspector:
+Running the Bolide AI MCP server with the environmental variable `BOLIDE_AI_MCP_DEBUG=true` will expose a new diagnostic tool which you can run using MCP Inspector:
 
 
 ```bash
-BOLIDEAI_MCP_DEBUG=true npm run inspect
+BOLIDE_AI_MCP_DEBUG=true npm run inspect
 ```
 
 Alternatively, you can run the diagnostic tool directly:
@@ -103,7 +103,7 @@ node build/diagnostic-cli.js
 
 ### Working with Marketing Projects
 
-BolideAI MCP provides tools for marketing automation and content generation. The main workflow involves:
+Bolide AI MCP provides tools for marketing automation and content generation. The main workflow involves:
 
 1. **Project scaffolding** - Create marketing directory structures
 2. **Artifact management** - Organize screenshots, videos, and posts
@@ -112,7 +112,7 @@ BolideAI MCP provides tools for marketing automation and content generation. The
 
 #### Marketing Project Structure
 
-When you scaffold a marketing project, BolideAI MCP creates:
+When you scaffold a marketing project, Bolide AI MCP creates:
 
 ```
 marketing/

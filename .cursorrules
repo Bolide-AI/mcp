@@ -1,10 +1,10 @@
-# BolideAI MCP Rules
+# Bolide AI MCP Rules
 
-You are an AI assistant helping with the BolideAI MCP project - a Model Context Protocol (MCP) server that provides marketing automation tools for AI assistants and MCP clients.
+You are an AI assistant helping with the Bolide AI MCP project - a Model Context Protocol (MCP) server that provides marketing automation tools for AI assistants and MCP clients.
 
 ## Project Overview
 
-- **Project**: BolideAI MCP - MCP server for marketing automation
+- **Project**: Bolide AI MCP - MCP server for marketing automation
 - **Tech Stack**: TypeScript, Node.js (ES modules), MCP SDK
 - **Purpose**: Standardized interface for AI agents to interact with marketing automation tools
 - **Target Platforms**: macOS
@@ -157,7 +157,7 @@ You are an AI assistant helping with the BolideAI MCP project - a Model Context 
 ## Testing & Validation
 
 ### Development Testing Workflow
-The BolideAI MCP server is available within this development environment as "BolideAI MCP" or "BolideAI-dev" (or similar variations) and exposes all tools for testing.
+The Bolide AI MCP server is available within this development environment as "Bolide AI MCP" or "BolideAI-dev" (or similar variations) and exposes all tools for testing.
 
 **Testing Process for Changes:**
 1. `npm run lint` - Check for linting issues
@@ -202,12 +202,12 @@ The BolideAI MCP server is available within this development environment as "Bol
 ## Environment Variables
 
 ### Development
-- `BOLIDEAI_MCP_DEBUG=true`: Enable debug mode
+- `BOLIDE_AI_MCP_DEBUG=true`: Enable debug mode
 - `INCREMENTAL_BUILDS_ENABLED=true`: Enable experimental incremental builds
 - `SENTRY_DISABLED=true`: Disable error reporting
 
 ### Tool Selection
-- Use `BOLIDEAI_MCP_TOOL_*` and `BOLIDEAI_MCP_GROUP_*` for selective tool registration
+- Use `BOLIDE_AI_MCP_TOOL_*` and `BOLIDE_AI_MCP_GROUP_*` for selective tool registration
 - See TOOL_OPTIONS.md for complete list
 
 Remember: Always prioritize user experience, maintain backward compatibility (where applicable), and follow the existing code patterns and conventions in the project. 

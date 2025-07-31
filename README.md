@@ -1,9 +1,9 @@
-# BolideAI MCP
+# Bolide AI MCP
 
 [![npm version](https://badge.fury.io/js/@bolide-ai/mcp.svg)](https://badge.fury.io/js/@bolide-ai/mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-BolideAI MCP is a comprehensive ModelContextProtocol (MCP) server that provides tools for marketing automation, content generation, research, and project management. It integrates with various AI services to streamline workflows for developers and marketers.
+Bolide AI MCP is a comprehensive ModelContextProtocol (MCP) server that provides tools for marketing automation, content generation, research, and project management. It integrates with various AI services to streamline workflows for developers and marketers.
 
 ## Features
 
@@ -44,7 +44,7 @@ Configure your MCP client with the following:
     "BolideAI": {
       "command": "npx --package=@bolide-ai/mcp bolide-ai-mcp",
       "env": {
-        "BOLIDEAI_API_KEY": "your-api-key",
+        "BOLIDE_AI_API_KEY": "your-api-key",
       }
     }
   }
@@ -80,7 +80,7 @@ npm install && npm run build
 3. Click **New MCP Server**
 4. Insert the MCP server configuration, replacing:
    - `<PATH TO MCP DIRECTORY>` with the path to the MCP directory
-   - `<BOLIDEAI_API_TOKEN>` with your BolideAI key (can be generated at [here](https://bolide.ai/settings/api-keys))
+   - `<BOLIDE_AI_API_TOKEN>` with your BolideAI key (can be generated at [here](https://bolide.ai/settings/api-keys))
 
 ```json
 {
@@ -93,8 +93,8 @@ npm install && npm run build
         "<PATH TO MCP DIRECTORY>/build/index.js"
       ],
       "env": {
-        "BOLIDEAI_MCP_DEBUG": "true",
-        "BOLIDEAI_API_TOKEN": "<your-api-key-here>"
+        "BOLIDE_AI_MCP_DEBUG": "true",
+        "BOLIDE_AI_API_TOKEN": "<your-api-key-here>"
       }
     }
   }
@@ -124,18 +124,18 @@ analyze_screencasts({
 
 ## Environment Variables
 
-- **`BOLIDEAI_API_TOKEN`** - Required for research tools
-- **`BOLIDEAI_API_URL`** - Optional, defaults to https://bolide.ai/api
+- **`BOLIDE_AI_API_TOKEN`** - Required for research tools
+- **`BOLIDE_AI_API_URL`** - Optional, defaults to https://bolide.ai/api
 
 ### Tool Configuration
 
-- **`BOLIDEAI_MCP_DEBUG=true`** - Enable diagnostic tools and detailed logging
+- **`BOLIDE_AI_MCP_DEBUG=true`** - Enable diagnostic tools and detailed logging
 - **Tool Groups** - Enable specific tool categories (see [Tool Options](TOOL_OPTIONS.md))
 - **Individual Tools** - Enable specific tools only (see [Tool Options](TOOL_OPTIONS.md))
 
 ## Available Tools
 
-BolideAI MCP provides **38 tools** across 8 categories:
+Bolide AI MCP provides **38 tools** across 8 categories:
 
 ### 🚀 Project Scaffolding
 - `scaffold_bolide_ai_project` - Create bolide.ai project directory structure
@@ -211,7 +211,7 @@ The deep research tool:
 
 ## Linear Project Management
 
-BolideAI MCP provides comprehensive Linear integration for project management and issue tracking. Connect to your Linear workspace through Composio authentication.
+Bolide AI MCP provides comprehensive Linear integration for project management and issue tracking. Connect to your Linear workspace through Composio authentication.
 
 ### Issue Management
 
@@ -285,7 +285,7 @@ linear_list_issues({
 
 ## Slack Integration
 
-BolideAI MCP provides comprehensive Slack integration for workspace communication and management. Connect to your Slack workspace through Composio authentication.
+Bolide AI MCP provides comprehensive Slack integration for workspace communication and management. Connect to your Slack workspace through Composio authentication.
 
 ### Channel and Workspace Management
 
@@ -464,23 +464,23 @@ Enable only the tools you need to optimize performance:
 ```json
 {
   "env": {
-    "BOLIDEAI_MCP_GROUP_RESEARCH": "true",
-    "BOLIDEAI_MCP_GROUP_CONTENT_GENERATORS": "true",
-    "BOLIDEAI_API_TOKEN": "your-api-key"
+    "BOLIDE_AI_MCP_GROUP_RESEARCH": "true",
+    "BOLIDE_AI_MCP_GROUP_CONTENT_GENERATORS": "true",
+    "BOLIDE_AI_API_TOKEN": "your-api-key"
   }
 }
 ```
 
 ### Available Tool Groups
 
-- `BOLIDEAI_MCP_GROUP_LAUNCH` - Launch and utility tools
-- `BOLIDEAI_MCP_GROUP_SCAFFOLDING` - Project scaffolding tools
-- `BOLIDEAI_MCP_GROUP_CONTENT_GENERATORS` - Content generation tools
-- `BOLIDEAI_MCP_GROUP_RESEARCH` - Research and information gathering tools
-- `BOLIDEAI_MCP_GROUP_SLACK` - Slack integration tools
-- `BOLIDEAI_MCP_GROUP_LINEAR` - Linear project management tools
-- `BOLIDEAI_MCP_GROUP_NOTION` - Notion integration tools
-- `BOLIDEAI_MCP_GROUP_DIAGNOSTICS` - Diagnostic tools
+- `BOLIDE_AI_MCP_GROUP_LAUNCH` - Launch and utility tools
+- `BOLIDE_AI_MCP_GROUP_SCAFFOLDING` - Project scaffolding tools
+- `BOLIDE_AI_MCP_GROUP_CONTENT_GENERATORS` - Content generation tools
+- `BOLIDE_AI_MCP_GROUP_RESEARCH` - Research and information gathering tools
+- `BOLIDE_AI_MCP_GROUP_SLACK` - Slack integration tools
+- `BOLIDE_AI_MCP_GROUP_LINEAR` - Linear project management tools
+- `BOLIDE_AI_MCP_GROUP_NOTION` - Notion integration tools
+- `BOLIDE_AI_MCP_GROUP_DIAGNOSTICS` - Diagnostic tools
 
 ## Documentation
 
@@ -503,7 +503,7 @@ Enable only the tools you need to optimize performance:
 ```json
 {
   "env": {
-    "BOLIDEAI_MCP_DEBUG": "true"
+    "BOLIDE_AI_MCP_DEBUG": "true"
   }
 }
 ```
@@ -535,4 +535,4 @@ MIT © [Data Route LLC](https://bolide.ai)
 
 ---
 
-**BolideAI MCP** - Streamline your marketing automation and research workflows with AI-powered tools.
+**Bolide AI MCP** - Streamline your marketing automation and research workflows with AI-powered tools.

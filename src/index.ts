@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 /**
- * BolideAI MCP - Main entry point
+ * Bolide AI MCP - Main entry point
  *
- * This file serves as the entry point for the BolideAI MCP server, importing and registering
+ * This file serves as the entry point for the Bolide AI MCP server, importing and registering
  * all tool modules with the MCP server. It follows the platform-specific approach for Xcode tools.
  *
  * Responsibilities:
