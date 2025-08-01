@@ -103,11 +103,13 @@ async function scaffoldProject(params: ScaffoldBolideAIProjectParams): Promise<s
   log('info', `Scaffolding project at ${workspacePath}`);
 
   const projectPath = getProjectPath();
+  const audioPath = join(projectPath, 'audio');
   const callsPath = join(projectPath, 'calls');
   const dictationPath = join(projectPath, 'dictation');
   const gifsPath = join(projectPath, 'gifs');
   const screencastsPath = join(projectPath, 'screencasts');
   const screenshotsPath = join(projectPath, 'screenshots');
+  const videoPath = join(projectPath, 'video');
 
   const currentFileUrl = import.meta.url;
   const currentFilePath = fileURLToPath(currentFileUrl);
@@ -125,17 +127,21 @@ async function scaffoldProject(params: ScaffoldBolideAIProjectParams): Promise<s
 
   try {
     await mkdir(projectPath, { recursive: true });
+    await mkdir(audioPath, { recursive: true });
     await mkdir(callsPath, { recursive: true });
     await mkdir(dictationPath, { recursive: true });
     await mkdir(gifsPath, { recursive: true });
     await mkdir(screencastsPath, { recursive: true });
     await mkdir(screenshotsPath, { recursive: true });
+    await mkdir(videoPath, { recursive: true });
 
+    await writeFile(join(audioPath, '.gitkeep'), '');
     await writeFile(join(callsPath, '.gitkeep'), '');
     await writeFile(join(dictationPath, '.gitkeep'), '');
     await writeFile(join(gifsPath, '.gitkeep'), '');
     await writeFile(join(screencastsPath, '.gitkeep'), '');
     await writeFile(join(screenshotsPath, '.gitkeep'), '');
+    await writeFile(join(videoPath, '.gitkeep'), '');
 
     await copyTemplateContents(templatePath, projectPath);
 
@@ -165,6 +171,9 @@ export function registerScaffoldTools(server: McpServer): void {
           message: `Successfully created project at ${projectPath}`,
           structure: {
             [PROJECT_NAME]: {
+              audio: {
+                description: 'Directory for audio recordings',
+              },
               calls: {
                 description: 'Directory for call recordings',
               },
@@ -179,6 +188,9 @@ export function registerScaffoldTools(server: McpServer): void {
               },
               screenshots: {
                 description: 'Directory for screenshot recordings',
+              },
+              video: {
+                description: 'Directory for video recordings',
               },
             },
           },
