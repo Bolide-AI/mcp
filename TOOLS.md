@@ -48,8 +48,24 @@ Tools for integrating with Notion workspaces.
 
 | Tool Name | Description |
 |-----------|-------------|
-| `notionAddPageContent` | Appends a single content block to a notion page or a parent block (must be page, toggle, to-do, bulleted/numbered list, callout, or quote); invoke repeatedly to add multiple blocks. |
-| `notionFetchData` | Fetches notion items (pages and/or databases) from the notion workspace, always call this action to get page id or database id in the simplest way |
+| `notion_add_page_content` | Appends a single content block to a notion page or a parent block (must be page, toggle, to-do, bulleted/numbered list, callout, or quote); invoke repeatedly to add multiple blocks. |
+| `notion_fetch_data` | Fetches notion items (pages and/or databases) from the notion workspace, always call this action to get page id or database id in the simplest way |
+| `notion_create_comment` | Adds a comment to a notion page (via `parent page id`) or to an existing discussion thread (via `discussion id`); cannot create new discussion threads on specific blocks (inline comments). |
+| `notion_create_database` | Creates a new notion database as a subpage under a specified parent page with a defined properties schema; use this action exclusively for creating new databases. |
+| `notion_create_notion_page` | Creates a new empty page in a notion workspace. |
+| `notion_fetch_database` | Fetches a notion database's structural metadata (properties, title, etc.) via its `database id`, not the data entries; `database id` must reference an existing database. |
+| `notion_fetch_row` | Retrieves a notion database row's properties and metadata; use a different action for page content blocks. |
+| `notion_insert_row_database` | Creates a new page (row) in a specified notion database. |
+| `notion_query_database` | Queries a notion database for pages (rows), where rows are pages and columns are properties; ensure sort property names correspond to existing database properties. |
+| `notion_retrieve_database_property` | Tool to retrieve a specific property object of a notion database. use when you need to get details about a single database column/property. |
+| `notion_update_page` | Tool to update the properties, icon, cover, or archive status of a page. use when you need to modify existing page attributes. |
+| `notion_update_row_database` | Updates or archives an existing notion database row (page) using its `row id`, allowing modification of its icon, cover, and/or properties; ensure the target page is accessible and property details (names/ids and values) align with the database schema and specified formats. |
+| `notion_update_schema_database` | Updates an existing notion database's title, description, and/or properties; at least one of these attributes must be provided to effect a change. |
+| `notion_append_block_children` | Appends new child blocks to a specified parent block or page in notion, ideal for adding content within an existing structure (e.g., list items, toggle content) rather than creating new pages; the parent must be able to accept children. |
+| `notion_fetch_notion_block` | Retrieves a notion block (or page, as pages are blocks) using its valid uuid; if the block has children, use a separate action to fetch them. |
+| `notion_fetch_notion_child_block` | Retrieves a paginated list of direct, first-level child block objects for a given parent notion block or page id; use block ids from the response for subsequent calls to access deeply nested content. |
+| `notion_notion_update_block` | Updates an existing notion block's textual content or type-specific properties (e.g., 'checked' status, 'color'), using its `block id` and the specified `block type`. |
+| `notion_search_notion_page` | Searches notion pages and databases by title; an empty query lists all accessible items, useful for discovering ids or as a fallback when a specific query yields no results. |
 
 ### Slack Integration Tools
 
@@ -125,6 +141,15 @@ Tools for system diagnostics and environment validation.
    linear_list_issues({ project_id: "project-id", first: 20 })
    ```
 
+6. **Notion Content Management**:
+   ```
+   notion_fetch_data({ get_all: true })
+   notion_create_notion_page({ parent_id: "page-id", title: "New Documentation" })
+   notion_add_page_content({ parent_block_id: "page-id", content_block: { content: "Hello world" } })
+   notion_create_database({ parent_id: "page-id", title: "Tasks", properties: [{ name: "Task", type: "title" }] })
+   notion_insert_row_database({ database_id: "db-id", properties: [{ name: "Task", type: "title", value: "New task" }] })
+   ```
+
 ### Parameter Requirements
 
 Many tools require specific parameters:
@@ -134,6 +159,7 @@ Many tools require specific parameters:
 - **Research tools**: `query` required; `search_mode` for Perplexity
 - **Slack tools**: `channel` required for messaging/history; `query` required for search; various optional parameters for filtering and formatting
 - **Linear tools**: `project_id` and `team_id` required for issue creation; `issue_id` required for updates/comments; various optional parameters for filtering and pagination
+- **Notion tools**: `parent_block_id` or `page_id` required for most operations; `database_id` required for database operations; `block_id` required for block operations; various optional parameters for content formatting and filtering
 
 ### Environment Variables
 
@@ -150,6 +176,7 @@ Available tool groups:
 - `BOLIDE_AI_MCP_GROUP_RESEARCH=true` - Research and information gathering tools
 - `BOLIDE_AI_MCP_GROUP_SLACK=true` - Slack integration tools
 - `BOLIDE_AI_MCP_GROUP_LINEAR=true` - Linear project management tools
+- `BOLIDE_AI_MCP_GROUP_NOTION=true` - Notion integration tools
 - `BOLIDE_AI_MCP_GROUP_DIAGNOSTICS=true` - Logging and diagnostics tools
 
 ## Notes
@@ -163,7 +190,8 @@ Available tool groups:
 - Content generation tools work with screencast files directly
 - Slack tools require proper Composio authentication and Slack workspace access
 - Linear tools require proper Composio authentication and Linear workspace access
+- Notion tools require proper Composio authentication and Notion workspace access
 
 ## Total Tool Count
 
-This MCP server currently provides **38 tools** across 8 categories for project scaffolding, content generation, research, marketing capture, Slack integration, Linear project management, Notion integration, and system diagnostics.
+This MCP server currently provides **54 tools** across 8 categories for project scaffolding, content generation, research, marketing capture, Slack integration, Linear project management, Notion integration, and system diagnostics.
